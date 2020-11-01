@@ -1,0 +1,6 @@
+"0","bounds <- get_bounds_two_sided(alpha = .05, n = 1000)"
+"0","bounds_df <- as.data.frame(bounds)"
+"0","bounds_df <- bounds_df %>% mutate(p_val = p_t_test_vec)"
+"2","Error in mutate_impl(.data, dots) : 
+  Column `p_val` must be length 1000 (the number of rows) or one, not 500000
+"

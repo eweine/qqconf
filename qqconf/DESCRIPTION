@@ -1,0 +1,20 @@
+Package: qqconf
+Type: Package
+Title: Creates Simultaneous Testing Bands for QQ-Plots
+Version: 1.0.0
+Authors@R: c(
+    person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
+    person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
+    person("Abney", "Mark", email = "abney@uchicago.edu", role = "aut"))
+Description: This package creates one-sided and two-sided simultaneoustesting bands 
+    for the order statistics of uniform(0, 1) 
+    random variables using the method of "local levels." 
+    This is useful for creating confidence bands on qqplots.
+License: MIT + file LICENSE
+Depends: R (>= 3.0.0)
+Imports:
+    dplyr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+

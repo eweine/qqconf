@@ -1,0 +1,3 @@
+"0","x = rmix(n=10,pi=c(0.2,0.8),mu=c(-2,2),s=c(1,1))"
+"0","res <- gibbs(x,2,niter =1000)"
+"0","plot(res$pi[,1],ylim=c(0,1),type=""l"", ylab = ""pi"", xlab = ""Sample Index"", main = ""n = 10"")"

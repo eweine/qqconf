@@ -1,0 +1,6 @@
+"0","te_mean <- mean(schools_out$mu)"
+"0","te_sd <- sd(schools_out$mu)"
+"0","te_ci <- quantile(schools_out$mu, probs = c(.05, .95))"
+"0","sigma_mean <- mean(exp(schools_out$eta))"
+"0","sigma_sd <- sd(exp(schools_out$eta))"
+"0","sigma_ci <- quantile(exp(schools_out$eta), probs = c(.05, .95))"

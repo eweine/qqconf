@@ -1,0 +1,6 @@
+"0","asymp_eta <- function(alpha, n) {"
+"0","      ## Asymptotic formula for the local level eta to have an overall type 1"
+"0","      ## error rate of alpha. This value is always larger than the finite sample"
+"0","      ## size local level eta."
+"0","      -log(1 - alpha) / (2 * log(log(n)) * log(n))"
+"0","}"

@@ -1,0 +1,6 @@
+"0","# Here, want to test the code."
+"0","# I'll answer these questions once I know this actually works"
+"0","fp_samp <- fpsampler(nAA = 50, nAa = 21, naa = 29, niter = 10000, pstartval = .5, fstartval = .5, fproposalsd = .1, pproposalsd = .1)"
+"0","# Now, plot the paths"
+"0","# I may want to get rid of some of the samples"
+"0","plot(fp_samp$f[1:1000], type = ""l"", ylab = ""f"", main = ""First 1000 samples of f"")"

@@ -1,0 +1,1 @@
+"0","hist(res$pi[,1], xlab = ""pi"", freq = FALSE, main = ""n = 1000"", breaks = seq(from = 0, to = 1, length.out = 20))"

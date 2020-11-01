@@ -1,0 +1,1 @@
+"0","plot(fp_samp$p[1:1000], type = ""l"", ylab = ""p"", main = ""First 1000 samples of p"")"

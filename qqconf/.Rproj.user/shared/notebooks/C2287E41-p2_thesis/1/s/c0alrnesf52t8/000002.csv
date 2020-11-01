@@ -1,0 +1,7 @@
+"0","order_stats_mean <- function(n) {"
+"0","  "
+"0","  alpha_vec <- seq(from = 1, to = n, by = 1)"
+"0","  beta_vec <- n - alpha_vec + 1"
+"0","  alpha_vec / (alpha_vec + beta_vec)"
+"0","  "
+"0","}"

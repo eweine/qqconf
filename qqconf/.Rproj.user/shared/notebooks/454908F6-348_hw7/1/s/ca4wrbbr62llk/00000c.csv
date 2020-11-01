@@ -1,0 +1,2 @@
+"0","test3_data <- simulate_data(pi_zero = 0, mixt_sd = 3)"
+"0","hist(x = comp_p_val(test3_data$D), freq = FALSE, xlab = ""p value"", main = ""pi_0 = 0, sigma_b = 3"", breaks = 20)"

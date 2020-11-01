@@ -1,0 +1,7 @@
+"0","posterior_prob_zero <- function(d_bar_j, pi_zero_hat, sigma_b_hat, n, sigma_j = 1) {"
+"0","  "
+"0","  num <- dnorm(x = d_bar_j, mean = 0, sd = sqrt((sigma_j ^ 2) / n)) * pi_zero_hat"
+"0","  denom_term <- (1 - pi_zero_hat) * dnorm(x = d_bar_j, mean = 0, sd = sqrt((sigma_b_hat ^ 2) + ((sigma_j ^ 2) / n)))"
+"0","  num / (num + denom_term)"
+"0","  "
+"0","}"

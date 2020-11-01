@@ -1,0 +1,7 @@
+"0","# Here, will make a variance plot of the order statistics."
+"0","alpha_vec <- seq(from = 1, to = 100, by = 1)"
+"0","beta_vec <- 100 - alpha_vec + 1"
+"0","var_vec <- (alpha_vec * beta_vec) / (((alpha_vec + beta_vec) ^ 2) * (alpha_vec + beta_vec + 1))"
+"0","library(ggplot2)"
+"0","var_df <- data.frame(order_stat = seq(from = 1, to = 100, by = 1), var = var_vec)"
+"0","ggplot(data = var_df) + geom_point(aes(x = order_stat, y = var)) + ylab(""Variance"") + xlab(""Order Statistic"")"

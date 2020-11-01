@@ -1,0 +1,2 @@
+"0","schools_out_weird <- mh_normal_means(num_iter = 100000, mu_start = 12, eta_start = 4, mu_sd = .1, eta_sd = .1, x_vec = schools_df$treatment_effect, s_vec = schools_df$se)"
+"0","plot(schools_out$mu, type = ""l"", xlab = ""Sample Index"", ylab = ""Mu"", main = ""mu_start = 0, eta_start = 0"")"

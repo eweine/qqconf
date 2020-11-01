@@ -1,0 +1,124 @@
+#' Check Validity of One-Sided Bounds
+#'
+#' Given bounds for a one sided test, this checks that none of
+#' the bounds fall outside of [0, 1].
+#'
+#' @param lower_bounds Numeric vector where the ith component is the lower bound
+#' for the ith order statistic.
+#' @param upper_bounds Numeric vector where the ith component is the lower bound
+#' for the ith order statistic.
+#'
+#' @return None
+#'
+#' @examples
+#' check_bounds_two_sided(lower_bounds = c(.1, .5, .8))
+check_bounds_one_sided <- function(bounds) {
+
+  if(any(bounds > 1) || any(bounds < 0)) {
+
+    stop("Not all bounds between 0 and 1")
+
+  }
+
+}
+
+# NOTE:
+# I should ask Mary Sara how I should do this code.
+# I'm not sure what we want to make available to the user
+# and how many options we want to give them
+# Note that the relative error of the procedures add between the chopping and the binary search
+
+
+
+#' Calculates Type I Error Rate From One-Sided Bounds
+#'
+#' Given bounds for a one sided test on uniform order statistics, this computes
+#' the Type I Error Rate \eqn{\alpha} using an exact calculation. The function also
+#' allows for an approximate computation for speed with some relative tolerance.
+#'
+#' @param bounds Numeric vector where the ith component is the lower bound
+#' for the ith order statistic. The values must be in ascending order.
+#' @param approx (Optional) Indicates if an approximation method should be used for speed.
+#' Defaults to FALSE.
+#' @param rel_err (Optional) Relative error Type I Error Rate calculation for approximate procedure.
+#' This is only necessary if \code{approx = TRUE}. Defaults to 1e-7.
+#'
+#' @return Type I Error Rate \eqn{\alpha}
+#'
+#' @useDynLib qqconf jointlevel_onesided
+#'
+#' @examples
+#' get_level_from_bounds_one_sided(bounds = c(.1, .5, .8), approx = TRUE, rel_err = 1e-6)
+#'
+#' @export
+get_level_from_bounds_one_sided <- function(bounds,
+                                            approx = FALSE,
+                                            rel_err = 1e-7) {
+
+  check_bounds_one_sided(bounds)
+  n <- length(bounds)
+  if(n == 1) {
+
+    return(bounds[1]) # checks for edge case of one bound
+
+  }
+
+  if(approx == TRUE) {
+
+    first_check = 50
+    check_int = 100
+
+  } else {
+
+    first_check = n + 1
+    check_int = 2 * n
+    rel_err = 0
+
+  }
+  out <- 0.0
+  res <- .C("jointlevel_onesided", crit_vals = as.double(bounds),
+            num_points = as.integer(n), checkint = as.integer(check_int),
+            firstcheck = as.integer(first_check), relerr = as.double(rel_err),
+            out = as.double(out))
+
+  return(res$out)
+
+}
+
+
+get_bounds_onesided <- function(alpha, n, tol = 1e-8, max_it = 50) {
+
+  eta_high <- asymp_eta(alpha, n)
+  eta_low <- alpha / n
+  eta_curr <- eta_low + (eta_high - eta_low) / 2
+  n_it <- 0
+
+  while (n_it < max_it) {
+
+    n_it <- n_it + 1
+    h_vals <- qbeta(eta_curr, 1:n, n:1)
+    test_alpha <- 1 - get_level_from_bounds_one_sided(h_vals)
+
+    if (abs(test_alpha - alpha) / alpha <= tol) break
+
+    if (test_alpha > alpha) {
+
+      eta_high <- eta_curr
+      eta_curr <- eta_curr - (eta_curr - eta_low) / 2
+
+    } else if (test_alpha < alpha) {
+
+      eta_low <- eta_curr
+      eta_curr <- eta_curr + (eta_high - eta_curr) / 2
+
+    }
+
+  }
+
+  alpha_vec <- seq(from = 1, to = n, by = 1)
+  beta_vec <- n - alpha_vec + 1
+  order_stats_mean <- alpha_vec / (alpha_vec + beta_vec)
+
+  return(list(h = h_vals, x = order_stats_mean, local_level = eta_curr))
+
+}

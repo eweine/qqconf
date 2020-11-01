@@ -1,0 +1,3 @@
+"0","f_out <- fp_samp$f[201:10000]"
+"0","p_out <- fp_samp$p[201:10000]"
+"0","hist(f_out, freq = FALSE, xlab = ""f"", main = ""Posterior Density of f"")"
