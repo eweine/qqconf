@@ -1,1 +1,0 @@
-"0","plot(schools_out_weird$mu, type = ""l"", xlab = ""Sample Index"", ylab = ""Mu"", main = ""mu_start = 12, eta_start = 4"")"

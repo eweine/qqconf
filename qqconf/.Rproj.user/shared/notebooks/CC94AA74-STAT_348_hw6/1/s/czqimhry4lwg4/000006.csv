@@ -1,1 +1,0 @@
-"0","hist(schools_out$mu, xlab = ""Mu"", freq = FALSE, main = ""Histogram of Mu - 100k Samples"")"

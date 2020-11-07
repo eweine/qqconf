@@ -1,3 +1,0 @@
-"0","set.seed(348)"
-"0","test1_data <- simulate_data(pi_zero = 1, mixt_sd = 1)"
-"0","hist(x = comp_p_val(test1_data$D), freq = FALSE, xlab = ""p value"", main = ""pi_0 = 1"", breaks = 20)"

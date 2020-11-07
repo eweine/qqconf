@@ -1,1 +1,0 @@
-"0","hist(exp(schools_out$eta), xlab = ""Sigma"", freq = FALSE, main = ""Histogram of Sigma - 100k Samples"")"

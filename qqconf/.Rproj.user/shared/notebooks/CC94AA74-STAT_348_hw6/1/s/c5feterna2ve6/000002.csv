@@ -1,4 +1,0 @@
-"0","p_posterior_mean <- mean(p_out)"
-"0","p_cred_int <- quantile(p_out, c(.05, .95))"
-"0","f_posterior_mean <- mean(f_out)"
-"0","f_cred_int <- quantile(f_out, c(.05, .95))"

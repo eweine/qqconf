@@ -93,7 +93,7 @@ monte_carlo_two_sided <- function(lower_bounds,
 #' Calculates Type I Error Rate From Two-Sided Bounds
 #'
 #' Given bounds for a two sided test on uniform order statistics, this computes
-#' the Type I Error Rate \eqn{\alpha} using an exact calculation.
+#' the Type I Error Rate \eqn{\alpha} using a binary search.
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The values must be in ascending order.

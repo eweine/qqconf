@@ -1,7 +1,0 @@
-"0","e_fdr <- function(beta_vec, gamma_vec) {"
-"0","  "
-"0","  num_discoveries <- sum(gamma_vec)"
-"0","  num_false_discoveries <- sum((gamma_vec == 1) & (beta_vec == 0))"
-"0","  num_false_discoveries / pmax(1, num_discoveries)"
-"0","  "
-"0","}"

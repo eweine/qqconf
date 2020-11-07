@@ -1,9 +1,0 @@
-"0","schools_df <- readr::read_csv(""~/Documents/8_schools.csv"")"
-"2","Parsed with column specification:
-cols(
-  school = col_character(),
-  treatment_effect = col_integer(),
-  se = col_integer()
-)
-"
-"0","schools_out <- mh_normal_means(num_iter = 100000, mu_start = 0, eta_start = log(1), mu_sd = .1, eta_sd = .1, x_vec = schools_df$treatment_effect, s_vec = schools_df$se)"
