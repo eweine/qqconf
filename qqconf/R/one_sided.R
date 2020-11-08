@@ -22,18 +22,11 @@ check_bounds_one_sided <- function(bounds) {
 
 }
 
-# NOTE:
-# I should ask Mary Sara how I should do this code.
-# I'm not sure what we want to make available to the user
-# and how many options we want to give them
-# Note that the relative error of the procedures add between the chopping and the binary search
-
-
 
 #' Calculates Type I Error Rate From One-Sided Bounds
 #'
 #' Given bounds for a one sided test on uniform order statistics, this computes
-#' the Type I Error Rate \eqn{\alpha} using an exact calculation. The function also
+#' the Type I Error Rate \eqn{\alpha} using a binary search. The function also
 #' allows for an approximate computation for speed with some relative tolerance.
 #'
 #' @param bounds Numeric vector where the ith component is the lower bound
@@ -85,7 +78,9 @@ get_level_from_bounds_one_sided <- function(bounds,
 
 }
 
-
+# Not completely sure what we want to do with this yet
+# This is not really the point of the package, but it could be useful to have
+# we could also make a lookup table, but I'm not sure if that's the best course of action
 get_bounds_onesided <- function(alpha, n, tol = 1e-8, max_it = 50) {
 
   eta_high <- asymp_eta(alpha, n)

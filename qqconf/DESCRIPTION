@@ -10,7 +10,8 @@ Description: This package creates one-sided and two-sided simultaneoustesting ba
     for the order statistics of independent uniform(0, 1) random variables using the method of "local levels." 
     This is useful for creating confidence bands on qqplots.
 License: MIT + file LICENSE
-Depends: R (>= 3.0.0)
+Depends: 
+    R (>= 3.0.0)
 Imports:
     dplyr
 Encoding: UTF-8
