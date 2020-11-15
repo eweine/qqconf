@@ -143,6 +143,9 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @param max_it (Optional) Maximum number of iterations of Binary Search Algorithm
 #' used to find the bounds. Defaults to 100 which should be much larger than necessary
 #' for a reasonable tolerance.
+#' @param method (Optional) Parameter indicating if the calculation should be done using a highly
+#' accurate approximation, "approximate", or if the calculations should be done using an exact
+#' binary search calculation, "search".
 #'
 #' @return A list with components
 #' \itemize{
@@ -159,51 +162,63 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 get_bounds_two_sided <- function(alpha,
                                 n,
                                 tol = 1e-8,
-                                max_it = 100) {
+                                max_it = 100,
+                                method="approximate") {
 
-  # Note, I'll probably add something here that allows the user to choose either
-  # an approximate method or an exact method that looks between the different local levels.
-  eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
-  eta_low <- alpha / n
-  eta_curr <- eta_low + (eta_high - eta_low) / 2
-  n_it <- 0
+  if (method == "search") {
 
-  while (n_it < max_it) {
+    eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
+    eta_low <- alpha / n
+    eta_curr <- eta_low + (eta_high - eta_low) / 2
+    n_it <- 0
 
-    n_it <- n_it + 1
-    h_vals <- qbeta(eta_curr / 2, 1:n, n:1)
-    g_vals <- qbeta(1 - (eta_curr / 2), 1:n, n:1)
-    test_alpha <- 1 - get_level_from_bounds_two_sided(h_vals, g_vals)
+    while (n_it < max_it) {
 
-    if (abs(test_alpha - alpha) / alpha <= tol) break
+      n_it <- n_it + 1
+      h_vals <- qbeta(eta_curr / 2, 1:n, n:1)
+      g_vals <- qbeta(1 - (eta_curr / 2), 1:n, n:1)
+      test_alpha <- 1 - get_level_from_bounds_two_sided(h_vals, g_vals)
 
-    if (test_alpha > alpha) {
+      if (abs(test_alpha - alpha) / alpha <= tol) break
 
-      eta_high <- eta_curr
-      eta_curr <- eta_curr - (eta_curr - eta_low) / 2
+      if (test_alpha > alpha) {
 
-    } else if (test_alpha < alpha) {
+        eta_high <- eta_curr
+        eta_curr <- eta_curr - (eta_curr - eta_low) / 2
 
-      eta_low <- eta_curr
-      eta_curr <- eta_curr + (eta_high - eta_curr) / 2
+      } else if (test_alpha < alpha) {
+
+        eta_low <- eta_curr
+        eta_curr <- eta_curr + (eta_high - eta_curr) / 2
+
+      }
 
     }
 
+    if(n_it == max_it) {
+
+      warning("Maximum number of iterations reached.")
+
+    }
+
+    alpha_vec <- seq(from = 1, to = n, by = 1)
+    beta_vec <- n - alpha_vec + 1
+    order_stats_mean <- alpha_vec / (alpha_vec + beta_vec)
+
+    return(list(lower_bound = h_vals,
+                upper_bound = g_vals,
+                x = order_stats_mean,
+                local_level = eta_curr))
+
+  }
+  else if (method == "approximate") {
+
+    lookup_table <- NA
+    # In this case, I think that we should generally use interpolation, but sometimes
+    # we're going to need to use the approximation
+    # I'm not totally clear on when what should be used
+
   }
 
-  if(n_it == max_it) {
-
-    warning("Maximum number of iterations reached.")
-
-  }
-
-  alpha_vec <- seq(from = 1, to = n, by = 1)
-  beta_vec <- n - alpha_vec + 1
-  order_stats_mean <- alpha_vec / (alpha_vec + beta_vec)
-
-  return(list(lower_bound = h_vals,
-              upper_bound = g_vals,
-              x = order_stats_mean,
-              local_level = eta_curr))
 
 }
