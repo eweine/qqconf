@@ -90,6 +90,38 @@ monte_carlo_two_sided <- function(lower_bounds,
 
 }
 
+#' Calculates Approximate Local Level
+#'
+#' This function uses the approximation from Gontscharuk & Finner's Asymptotics of
+#' goodness-of-fit tests based on minimum p-value statistics (2017) to approximate
+#' local levels for finite sample size. We use these authors constants for \eqn{\alpha} = .1, and .05,
+#' and for \eqn{\alpha} = .01 we use a slightly different approximation.
+#'
+#' @param n Number of tests to do
+#' @param alpha Global type I error rate \eqn{\alpha} of the tests
+#'
+#' @return Approximate local level
+get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
+
+  if (alpha == .01) {
+
+    c_alpha <- 1.591
+
+  } else if (alpha == .05) {
+
+    c_alpha <- 1.3
+
+  } else if (alpha == .01) {
+
+    c_alpha <- 1.1
+
+  }
+
+  eta_approx = -log(1-alpha)/(2*log(log(n))*log(n))*(1-c_alpha*log(log(log(n)))/log(log(n)))
+  return(eta_approx)
+
+}
+
 #' Calculates Type I Error Rate From Two-Sided Bounds
 #'
 #' Given bounds for a two sided test on uniform order statistics, this computes
@@ -145,7 +177,8 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' for a reasonable tolerance.
 #' @param method (Optional) Parameter indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
-#' binary search calculation, "search".
+#' binary search calculation, "search". The approximate method is only usable for alpha values
+#' of .1, .05, and .01.
 #'
 #' @return A list with components
 #' \itemize{
@@ -205,6 +238,12 @@ get_bounds_two_sided <- function(alpha,
 
   else if (method == "approximate") {
 
+    if (!(alpha %in% c(.1, .05, .01))) {
+
+      stop("The approximate method is only configured for alpha = .1, .05, .01")
+
+    }
+
     if (alpha == .01) {
 
       lookup_table <- alpha_01_df
@@ -222,7 +261,12 @@ get_bounds_two_sided <- function(alpha,
 
       eta <- eta_df$local_level[1]
 
-    } else {
+    } else if ((alpha == .05 && n > 5 * (10 ^ 4)) || (alpha == .01 && n > 10 ^ 5)) {
+
+      eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
+
+    }
+    else {
 
       # Do linear interpolation
       larger_n_df <- eta_df %>%
