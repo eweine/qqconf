@@ -78,9 +78,7 @@ get_level_from_bounds_one_sided <- function(bounds,
 
 }
 
-# Not completely sure what we want to do with this yet
-# This is not really the point of the package, but it could be useful to have
-# we could also make a lookup table, but I'm not sure if that's the best course of action
+# Not sure what error options to give the user here
 get_bounds_onesided <- function(alpha, n, tol = 1e-8, max_it = 50) {
 
   eta_high <- asymp_eta(alpha, n)

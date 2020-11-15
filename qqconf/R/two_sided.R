@@ -165,7 +165,7 @@ get_bounds_two_sided <- function(alpha,
                                 max_it = 100,
                                 method="approximate") {
 
-  if (method == "search") {
+  if (method == "search" && alpha != .05 && alpha != .01) {
 
     eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
     eta_low <- alpha / n
@@ -201,24 +201,65 @@ get_bounds_two_sided <- function(alpha,
 
     }
 
-    alpha_vec <- seq(from = 1, to = n, by = 1)
-    beta_vec <- n - alpha_vec + 1
-    order_stats_mean <- alpha_vec / (alpha_vec + beta_vec)
-
-    return(list(lower_bound = h_vals,
-                upper_bound = g_vals,
-                x = order_stats_mean,
-                local_level = eta_curr))
-
   }
+
   else if (method == "approximate") {
 
-    lookup_table <- NA
-    # In this case, I think that we should generally use interpolation, but sometimes
-    # we're going to need to use the approximation
-    # I'm not totally clear on when what should be used
+    if (alpha == .01) {
+
+      lookup_table <- alpha_01_df
+
+    } else if (alpha == .05) {
+
+      lookup_table <- alpha_05_df
+
+    }
+
+    if (n %in% lookup_table$n) {
+
+      eta_df <- lookup_table %>%
+        dplyr::filter(n == n)
+
+      eta <- eta_df$local_level[1]
+
+    } else {
+
+      # Do linear interpolation
+      larger_n_df <- eta_df %>%
+        dplyr::filter(n > n) %>%
+        dplyr::arrange(n) %>%
+        dplyr::slice_head(1)
+
+      larger_n <- larger_n_df$n[1]
+      larger_n_eta <- larger_n_df$local_level[1]
+
+      smaller_n_df <- eta_df %>%
+        dplyr::filter(n < n) %>%
+        dplyr::arrange(n) %>%
+        dplyr::slice_tail(1)
+
+      smaller_n <- smaller_n_df$n[1]
+      smaller_n_eta <- smaller_n_df$local_level[1]
+
+      # y = mx + b
+      m <- (larger_n_eta - smaller_n_eta) / (larger_n - smaller_n)
+      b <- smaller_n_eta - m * smaller_n
+      eta <- m * n + b
+
+    }
+
+    h_vals <- qbeta(eta / 2, 1:n, n:1)
+    g_vals <- qbeta(1 - (eta / 2), 1:n, n:1)
 
   }
 
+  alpha_vec <- seq(from = 1, to = n, by = 1)
+  beta_vec <- n - alpha_vec + 1
+  order_stats_mean <- alpha_vec / (alpha_vec + beta_vec)
+
+  return(list(lower_bound = h_vals,
+              upper_bound = g_vals,
+              x = order_stats_mean,
+              local_level = eta_curr))
 
 }
