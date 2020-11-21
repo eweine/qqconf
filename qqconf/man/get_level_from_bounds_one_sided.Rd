@@ -22,7 +22,7 @@ Type I Error Rate \eqn{\alpha}
 }
 \description{
 Given bounds for a one sided test on uniform order statistics, this computes
-the Type I Error Rate \eqn{\alpha} using an exact calculation. The function also
+the Type I Error Rate \eqn{\alpha} using a binary search. The function also
 allows for an approximate computation for speed with some relative tolerance.
 }
 \examples{

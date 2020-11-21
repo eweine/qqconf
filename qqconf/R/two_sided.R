@@ -111,7 +111,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 
     c_alpha <- 1.3
 
-  } else if (alpha == .01) {
+  } else if (alpha == .1) {
 
     c_alpha <- 1.1
 
@@ -191,6 +191,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @examples
 #' get_level_from_bounds_twosided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
 #'
+#'
 #' @export
 get_bounds_two_sided <- function(alpha,
                                 n,
@@ -198,7 +199,11 @@ get_bounds_two_sided <- function(alpha,
                                 max_it = 100,
                                 method="approximate") {
 
-  if (method == "search" && alpha != .05 && alpha != .01) {
+  `%>%` <- magrittr::`%>%`
+  n_param <- n
+
+  # Approximations are only available for alpha = .05 or alpha = .01
+  if (method == "search") {
 
     eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
     eta_low <- alpha / n
@@ -225,6 +230,8 @@ get_bounds_two_sided <- function(alpha,
         eta_curr <- eta_curr + (eta_high - eta_curr) / 2
 
       }
+
+      eta <- eta_curr
 
     }
 
@@ -254,41 +261,49 @@ get_bounds_two_sided <- function(alpha,
 
     }
 
-    if (n %in% lookup_table$n) {
+    if (alpha == .01 || alpha == .05) {
 
-      eta_df <- lookup_table %>%
-        dplyr::filter(n == n)
+      if (n %in% lookup_table$n) {
 
-      eta <- eta_df$local_level[1]
+        eta_df <- lookup_table %>%
+          dplyr::filter(n == n_param)
 
-    } else if ((alpha == .05 && n > 5 * (10 ^ 4)) || (alpha == .01 && n > 10 ^ 5)) {
+        eta <- eta_df$local_level[1]
+
+      } else if ((alpha == .05 && n > 5 * (10 ^ 4)) || (alpha == .01 && n > 10 ^ 5)) {
+
+        eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
+
+      }
+      else {
+
+        # Do linear interpolation
+        larger_n_df <- lookup_table %>%
+          dplyr::filter(n > n_param) %>%
+          dplyr::arrange(n) %>%
+          dplyr::slice_head(1)
+
+        larger_n <- larger_n_df$n[1]
+        larger_n_eta <- larger_n_df$local_level[1]
+
+        smaller_n_df <- lookup_table %>%
+          dplyr::filter(n < n_param) %>%
+          dplyr::arrange(n) %>%
+          dplyr::slice_tail(1)
+
+        smaller_n <- smaller_n_df$n[1]
+        smaller_n_eta <- smaller_n_df$local_level[1]
+
+        # y = mx + b
+        m <- (larger_n_eta - smaller_n_eta) / (larger_n - smaller_n)
+        b <- smaller_n_eta - m * smaller_n
+        eta <- m * n + b
+
+      }
+
+    } else {
 
       eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
-
-    }
-    else {
-
-      # Do linear interpolation
-      larger_n_df <- eta_df %>%
-        dplyr::filter(n > n) %>%
-        dplyr::arrange(n) %>%
-        dplyr::slice_head(1)
-
-      larger_n <- larger_n_df$n[1]
-      larger_n_eta <- larger_n_df$local_level[1]
-
-      smaller_n_df <- eta_df %>%
-        dplyr::filter(n < n) %>%
-        dplyr::arrange(n) %>%
-        dplyr::slice_tail(1)
-
-      smaller_n <- smaller_n_df$n[1]
-      smaller_n_eta <- smaller_n_df$local_level[1]
-
-      # y = mx + b
-      m <- (larger_n_eta - smaller_n_eta) / (larger_n - smaller_n)
-      b <- smaller_n_eta - m * smaller_n
-      eta <- m * n + b
 
     }
 
@@ -304,6 +319,6 @@ get_bounds_two_sided <- function(alpha,
   return(list(lower_bound = h_vals,
               upper_bound = g_vals,
               x = order_stats_mean,
-              local_level = eta_curr))
+              local_level = eta))
 
 }

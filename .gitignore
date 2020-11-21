@@ -46,3 +46,4 @@ po/*~
 
 # Mac Files
 .DS_Store
+.Rproj.user

@@ -19,7 +19,7 @@ Type I Error Rate \eqn{\alpha}
 }
 \description{
 Given bounds for a two sided test on uniform order statistics, this computes
-the Type I Error Rate \eqn{\alpha} using an exact calculation.
+the Type I Error Rate \eqn{\alpha} using a binary search.
 }
 \examples{
 get_level_from_bounds_twosided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))

@@ -4,7 +4,8 @@
 \alias{get_bounds_two_sided}
 \title{Calculates Local Bounds For Two-Sided Test}
 \usage{
-get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100)
+get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100,
+  method = "approximate")
 }
 \arguments{
 \item{alpha}{Desired Type I Error rate of the complete test.}
@@ -17,6 +18,11 @@ simultaneous test. Defaults to 1e-8.}
 \item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm
 used to find the bounds. Defaults to 100 which should be much larger than necessary
 for a reasonable tolerance.}
+
+\item{method}{(Optional) Parameter indicating if the calculation should be done using a highly
+accurate approximation, "approximate", or if the calculations should be done using an exact
+binary search calculation, "search". The approximate method is only usable for alpha values
+of .1, .05, and .01.}
 }
 \value{
 A list with components
@@ -36,5 +42,6 @@ on its corresponding order statistic.
 }
 \examples{
 get_level_from_bounds_twosided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
+
 
 }
