@@ -18,7 +18,7 @@ get_approx <- function(alpha, n, c_alpha) {
 approx_alphas <- get_approx(
   alpha = .01,
   n = approx_table_df$n,
-  c_alpha = 1.61
+  c_alpha = 1.6
 )
 
 approx_table_df <- approx_table_df %>%
@@ -33,7 +33,7 @@ approx_table_df <- approx_table_df %>%
 approx_table_df <- approx_table_df %>%
   filter(n >= 1000)
 
-plot(approx_table_df$n, approx_table_df$relative_error, xlab = "n", ylab = "Relative Error", main = "C = 1.61")
+plot(approx_table_df$n, approx_table_df$relative_error, xlab = "n", ylab = "Relative Error", main = "C = 1.6")
 abline(h = 0)
 
 readr::write_csv(approx_table_df, "~/Documents/local_levels_relative_error.csv")
