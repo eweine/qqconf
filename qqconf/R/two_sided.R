@@ -281,7 +281,7 @@ get_bounds_two_sided <- function(alpha,
         larger_n_df <- lookup_table %>%
           dplyr::filter(n > n_param) %>%
           dplyr::arrange(n) %>%
-          dplyr::slice_head(1)
+          dplyr::slice_head()
 
         larger_n <- larger_n_df$n[1]
         larger_n_eta <- larger_n_df$local_level[1]
@@ -289,7 +289,7 @@ get_bounds_two_sided <- function(alpha,
         smaller_n_df <- lookup_table %>%
           dplyr::filter(n < n_param) %>%
           dplyr::arrange(n) %>%
-          dplyr::slice_tail(1)
+          dplyr::slice_tail()
 
         smaller_n <- smaller_n_df$n[1]
         smaller_n_eta <- smaller_n_df$local_level[1]
