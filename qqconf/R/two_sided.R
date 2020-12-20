@@ -189,7 +189,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' }
 #'
 #' @examples
-#' get_level_from_bounds_twosided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
+#' get_bounds_two_sided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
 #'
 #'
 #' @export

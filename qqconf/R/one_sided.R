@@ -44,8 +44,12 @@ get_level_from_bounds_one_sided <- function(bounds) {
   
   check_bounds_one_sided(bounds)
   n <- length(bounds)
-  n_factorial_vec <- factorial(seq(0, n))
   bounds <- append(bounds, 1) # adding h_(n+1) = 1
+  if (is.unsorted(bounds)) {
+    
+    stop("crit.vals must satisfy 0 < h_1 < h_2 < ... h_n < 1")
+    
+  }
   
   if (n == 1) {
     
@@ -53,26 +57,49 @@ get_level_from_bounds_one_sided <- function(bounds) {
     
   } else {
     
+    lgamma_vec <- rep(0, n)
+    lgamma_vec[1] <- 0
+    for (i in seq(from = 2, to = n + 1, by = 1)) {
+      
+      lgamma_vec[i] <- lgamma_vec[i - 1] + log(i - 1)
+      
+    }
+    
     c_0_1 <- (1 - bounds[2]) ^ n
     c_1_1 <- n * (bounds[2] - bounds[1]) * ((1 - bounds[2]) ^ (n - 1))
     c_prev <- c(c_0_1, c_1_1)
     
     for (k in seq(from = 2, to = (n - 1), by = 1)) {
       
-      denom_vec <- (1 - bounds[k]) ^ seq((n - (k - 1)), n)
-      num_vec <- (bounds[k + 1] - bounds[k]) ^ seq(0, (k - 1))
       c_curr <- rep(0, (k + 1)) 
       c_curr[1] <- (1 - bounds[k + 1]) ^ n
       
-      for (j in seq(from = 1, to = (k), by = 1)) {
+      for (j in seq(from = 1, to = (k - 1), by = 1)) {
         
-        jth_factorial_vec <- n_factorial_vec[(n + 1) : (n - j + 1)] / 
-          (n_factorial_vec[(j + 1) : 1] * n_factorial_vec[(n - j + 1)])
+        c_curr[j + 1] <- exp(log(c_prev[j + 1]) + (n - j) * log(1 - bounds[k + 1])
+                             - (n - j) * log(1 - bounds[k]))
         
-        jth_quotient_vec <- ((1 - bounds[k + 1]) ^ (n - j)) * num_vec[(j + 1) : 1] / 
-          denom_vec[length(denom_vec) : (length(denom_vec) - j)]
+        for (l in seq(from = 0, to = (j - 1), by = 1)) {
+          
+          c_curr[j + 1] <- c_curr[j + 1] + c_prev[l + 1] *
+            (exp(lgamma_vec[n - l + 1]) / (exp(lgamma_vec[j - l + 1]) * exp(lgamma_vec[n - j + 1]))) *
+            ((bounds[k + 1] - bounds[k]) ^ (j - l)) * 
+            ((1 - bounds[k + 1]) ^ (n - j)) /
+            ((1 - bounds[k]) ^ (n - l))
+          
+        }
         
-        c_curr[j + 1] <- sum(c_prev[1:(j)] * jth_factorial_vec * jth_quotient_vec)
+      }
+      
+      c_curr[k+1]<- 0
+      
+      for(l in c(0:(k-1))) { 
+        
+        c_curr[k+1] <- c_curr[k+1] + 
+          exp(log(c_prev[l + 1]) + (k - l) * 
+                log(bounds[k + 1] - bounds[k]) + (n - k) * 
+                log(1 - bounds[k + 1]) - (n - l) * log(1 - bounds[k]) + 
+                lgamma_vec[n - l + 1] - lgamma_vec[k - l + 1] - lgamma_vec[n - k + 1])
         
       }
       
@@ -80,11 +107,12 @@ get_level_from_bounds_one_sided <- function(bounds) {
       
     }
     
-    return(1 - sum(c_prev))
+    sum(c_prev)
     
   }
   
 }
+
 
 #' Calculates Local Bounds For One-Sided Test
 #'
@@ -111,27 +139,25 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #' }
 #'
 #' @examples
-#' get_level_from_bounds_onesided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
+#' get_bounds_one_sided(alpha = .05, n = 10, tol = 1e-6, max_it = 50)
 #'
 #'
 #' @export
-get_bounds_onesided <- function(alpha, n, tol = 1e-8, max_it = 100) {
+get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
   
   eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
   eta_low <- alpha / n
   eta_curr <- eta_low + (eta_high - eta_low) / 2
   n_it <- 0
-  rel_err_tol <- (1 / alpha) * tol * (10 ^ (-4))
-  bin_search_tol <- tol - rel_err_tol
   
   while (n_it < max_it) {
     
     n_it <- n_it + 1
     h_vals <- qbeta(eta_curr, 1:n, n:1)
     
-    test_alpha <- 1 - get_level_from_bounds_one_sided(h_vals, approx = FALSE)
+    test_alpha <- 1 - get_level_from_bounds_one_sided(h_vals)
     
-    if (abs(test_alpha - alpha) / alpha <= bin_search_tol) break
+    if (abs(test_alpha - alpha) / alpha <= tol) break
     
     if (test_alpha > alpha) {
       
@@ -155,57 +181,3 @@ get_bounds_onesided <- function(alpha, n, tol = 1e-8, max_it = 100) {
   
 }
 
-
-
-
-
-jointlevel_onesided_exact_fast <- function(crit_vals) {
-  
-  n <- length(crit_vals)
-  n_factorial_vec <- factorial(seq(0, n))
-  crit_vals <- append(crit_vals, 1) # adding h_(n+1) = 1
-  if (is.unsorted(crit_vals)) {
-    
-    stop("crit.vals must satisfy 0 < h_1 < h_2 < ... h_n < 1")
-    
-  }
-  
-  if (n == 1) {
-    
-    return(crit_vals[1])
-    
-  } else {
-    
-    c_0_1 <- (1 - crit_vals[2]) ^ n
-    c_1_1 <- n * (crit_vals[2] - crit_vals[1]) * ((1 - crit_vals[2]) ^ (n - 1))
-    c_prev <- c(c_0_1, c_1_1)
-    
-    for (k in seq(from = 2, to = (n - 1), by = 1)) {
-      
-      denom_vec <- (1 - crit_vals[k]) ^ seq((n - (k - 1)), n)
-      num_vec <- (crit_vals[k + 1] - crit_vals[k]) ^ seq(0, (k - 1))
-      c_curr <- rep(0, (k + 1)) 
-      c_curr[1] <- (1 - crit_vals[k + 1]) ^ n
-      
-      # this was a k - 1
-      for (j in seq(from = 1, to = (k), by = 1)) {
-        
-        jth_factorial_vec <- n_factorial_vec[(n + 1) : (n - j + 1)] / 
-          (n_factorial_vec[(j + 1) : 1] * n_factorial_vec[(n - j + 1)])
-        
-        jth_quotient_vec <- ((1 - crit_vals[k + 1]) ^ (n - j)) * num_vec[(j + 1) : 1] / 
-          denom_vec[length(denom_vec) : (length(denom_vec) - j)]
-        
-        c_curr[j + 1] <- sum(c_prev[1:(j)] * jth_factorial_vec * jth_quotient_vec)
-        
-      }
-      
-      c_prev <- c_curr
-      
-    }
-    
-    return(1 - sum(c_prev))
-    
-  }
-  
-}
