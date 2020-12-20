@@ -34,8 +34,6 @@ check_bounds_one_sided <- function(bounds) {
 #'
 #' @return Type I Error Rate \eqn{\alpha}
 #'
-#' @useDynLib qqconf jointlevel_onesided
-#'
 #' @examples
 #' get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
 #'
