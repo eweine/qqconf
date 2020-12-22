@@ -148,7 +148,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   n <- length(lower_bounds)
   b_vec <- c(lower_bounds, upper_bounds)
   h_g_df <- data.frame(b = b_vec, h_or_g = c(rep(0, n), rep(1, n)))
-  h_g_df <- dplyr::arrange(h_g_df, b)
+  h_g_df <- h_g_df[order(b), ]
   b_vec <- h_g_df$b
   bound_id <- h_g_df$h_or_g
   out <- 0.0
@@ -199,7 +199,6 @@ get_bounds_two_sided <- function(alpha,
                                 max_it = 100,
                                 method="approximate") {
 
-  `%>%` <- magrittr::`%>%`
   n_param <- n
 
   # Approximations are only available for alpha = .05 or alpha = .01
@@ -265,8 +264,7 @@ get_bounds_two_sided <- function(alpha,
 
       if (n %in% lookup_table$n) {
 
-        eta_df <- lookup_table %>%
-          dplyr::filter(n == n_param)
+        eta_df <- lookup_table[lookup_table$n == n_param, ]
 
         eta <- eta_df$local_level[1]
 
@@ -278,18 +276,17 @@ get_bounds_two_sided <- function(alpha,
       else {
 
         # Do linear interpolation
-        larger_n_df <- lookup_table %>%
-          dplyr::filter(n > n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_head()
+        larger_n_df <- lookup_table[lookup_table$n > n_param, ]
+        larger_n_df <- larger_n_df[order(n), ]
+        larger_n_df <- head(larger_n_df, 1)
+        
 
         larger_n <- larger_n_df$n[1]
         larger_n_eta <- larger_n_df$local_level[1]
 
-        smaller_n_df <- lookup_table %>%
-          dplyr::filter(n < n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_tail()
+        smaller_n_df <- lookup_table[lookup_table$n < n_param, ]
+        smaller_n_df <- smaller_n_df[order(n), ]
+        smaller_n_df <- tail(smaller_n_df, 1)
 
         smaller_n <- smaller_n_df$n[1]
         smaller_n_eta <- smaller_n_df$local_level[1]
