@@ -245,7 +245,7 @@ get_bounds_two_sided <- function(alpha,
 
     if (!(alpha %in% c(.1, .05, .01))) {
 
-      stop("The approximate method is only configured for alpha = .1, .05, .01")
+      stop("The approximate method is only configured for alpha = .1, .05, .01. Consider setting method='search'")
 
     }
 
