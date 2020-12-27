@@ -3,18 +3,14 @@
 #' Given bounds for a one sided test, this checks that none of
 #' the bounds fall outside of [0, 1].
 #'
-#' @param lower_bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic.
-#' @param upper_bounds Numeric vector where the ith component is the lower bound
+#' @param upper_bounds Numeric vector where the ith component is the upper bound
 #' for the ith order statistic.
 #'
 #' @return None
 #'
-#' @examples
-#' check_bounds_two_sided(lower_bounds = c(.1, .5, .8))
-check_bounds_one_sided <- function(bounds) {
+check_bounds_one_sided <- function(upper_bounds) {
   
-  if(any(bounds > 1) || any(bounds < 0)) {
+  if(any(upper_bounds > 1) || any(upper_bounds < 0)) {
     
     stop("Not all bounds between 0 and 1")
     
@@ -151,7 +147,7 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
   while (n_it < max_it) {
     
     n_it <- n_it + 1
-    h_vals <- qbeta(eta_curr, 1:n, n:1)
+    h_vals <- stats::qbeta(eta_curr, 1:n, n:1)
     
     test_alpha <- 1 - get_level_from_bounds_one_sided(h_vals)
     

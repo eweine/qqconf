@@ -13,8 +13,6 @@
 #'
 #' @return None
 #'
-#' @examples
-#' check_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.2, .6))
 check_bounds_two_sided <- function(lower_bounds,
                                    upper_bounds) {
 
@@ -59,8 +57,6 @@ check_bounds_two_sided <- function(lower_bounds,
 #'
 #' @return Type I Error Rate \eqn{\alpha}
 #'
-#' @examples
-#' monte_carlo_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.2, .6))
 monte_carlo_two_sided <- function(lower_bounds,
                                   upper_bounds,
                                   num_sims = 1000000) {
@@ -73,7 +69,7 @@ monte_carlo_two_sided <- function(lower_bounds,
   for(iter in seq(from = 1, to = num_sims, by = 1)) {
 
     # generate uniform RVs
-    iter_rvs <- runif(n)
+    iter_rvs <- stats::runif(n)
     # sort them
     iter_order_stats <- sort(iter_rvs)
 
@@ -136,7 +132,9 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' @return Type I Error Rate \eqn{\alpha}
 #'
 #' @examples
-#' get_level_from_bounds_twosided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
+#' get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
+#' 
+#' @importFrom rlang .data
 #'
 #' @useDynLib qqconf jointlevel_twosided
 #'
@@ -148,7 +146,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   n <- length(lower_bounds)
   b_vec <- c(lower_bounds, upper_bounds)
   h_g_df <- data.frame(b = b_vec, h_or_g = c(rep(0, n), rep(1, n)))
-  h_g_df <- dplyr::arrange(h_g_df, b)
+  h_g_df <- dplyr::arrange(h_g_df, .data$b)
   b_vec <- h_g_df$b
   bound_id <- h_g_df$h_or_g
   out <- 0.0
@@ -213,8 +211,8 @@ get_bounds_two_sided <- function(alpha,
     while (n_it < max_it) {
 
       n_it <- n_it + 1
-      h_vals <- qbeta(eta_curr / 2, 1:n, n:1)
-      g_vals <- qbeta(1 - (eta_curr / 2), 1:n, n:1)
+      h_vals <- stats::qbeta(eta_curr / 2, 1:n, n:1)
+      g_vals <- stats::qbeta(1 - (eta_curr / 2), 1:n, n:1)
       test_alpha <- 1 - get_level_from_bounds_two_sided(h_vals, g_vals)
 
       if (abs(test_alpha - alpha) / alpha <= tol) break
@@ -307,8 +305,8 @@ get_bounds_two_sided <- function(alpha,
 
     }
 
-    h_vals <- qbeta(eta / 2, 1:n, n:1)
-    g_vals <- qbeta(1 - (eta / 2), 1:n, n:1)
+    h_vals <- stats::qbeta(eta / 2, 1:n, n:1)
+    g_vals <- stats::qbeta(1 - (eta / 2), 1:n, n:1)
 
   }
 

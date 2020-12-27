@@ -4,13 +4,10 @@
 \alias{check_bounds_one_sided}
 \title{Check Validity of One-Sided Bounds}
 \usage{
-check_bounds_one_sided(bounds)
+check_bounds_one_sided(upper_bounds)
 }
 \arguments{
-\item{lower_bounds}{Numeric vector where the ith component is the lower bound
-for the ith order statistic.}
-
-\item{upper_bounds}{Numeric vector where the ith component is the lower bound
+\item{upper_bounds}{Numeric vector where the ith component is the upper bound
 for the ith order statistic.}
 }
 \value{
@@ -19,7 +16,4 @@ None
 \description{
 Given bounds for a one sided test, this checks that none of
 the bounds fall outside of [0, 1].
-}
-\examples{
-check_bounds_two_sided(lower_bounds = c(.1, .5, .8))
 }
