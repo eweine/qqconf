@@ -5,7 +5,7 @@
 \title{Calculates Local Bounds For Two-Sided Test}
 \usage{
 get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100,
-  method = "approximate")
+  method = c("approximate", "search"))
 }
 \arguments{
 \item{alpha}{Desired Type I Error rate of the complete test.}

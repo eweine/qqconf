@@ -195,7 +195,7 @@ get_bounds_two_sided <- function(alpha,
                                 n,
                                 tol = 1e-8,
                                 max_it = 100,
-                                method="approximate") {
+                                method=c("approximate", "search")) {
 
   `%>%` <- magrittr::`%>%`
   n_param <- n
