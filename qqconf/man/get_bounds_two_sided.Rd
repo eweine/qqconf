@@ -5,7 +5,7 @@
 \title{Calculates Local Bounds For Two-Sided Test}
 \usage{
 get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100,
-  method = "approximate")
+  method = c("approximate", "search"))
 }
 \arguments{
 \item{alpha}{Desired Type I Error rate of the complete test.}
@@ -41,7 +41,7 @@ each bound pair corresponds to a test that has a Type I Error rate of \eqn{\eta}
 on its corresponding order statistic.
 }
 \examples{
-get_level_from_bounds_twosided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
+get_bounds_two_sided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
 
 
 }

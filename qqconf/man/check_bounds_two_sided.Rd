@@ -23,6 +23,3 @@ are greater than the corresponding lower bounds.
 This also ensures the the length of the bounds are the same.
 This not meant to be called by the user.
 }
-\examples{
-check_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.2, .6))
-}

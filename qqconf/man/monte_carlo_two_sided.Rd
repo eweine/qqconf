@@ -23,6 +23,3 @@ Type I Error Rate \eqn{\alpha}
 Given bounds for a two sided test on uniform order statistics, this computes
 the Type I Error Rate \eqn{\alpha} using simulations.
 }
-\examples{
-monte_carlo_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.2, .6))
-}
