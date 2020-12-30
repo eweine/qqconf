@@ -1,0 +1,32 @@
+#+Title:	Make QQ plots of CJD data subset
+#+Author:	Mark Abney
+#+Email:	mark.a.abney@gmail.com
+#+Date:		2020-12-18
+
+#+Startup: latexpreview
+#+Property: header-args :session *R:cjd* :results output
+
+* Read in data and R functions
+
+#+begin_src R :results silent
+  cjd.df <- read.table("Data/cjd_sample.txt", header = TRUE)
+  
+#+end_src
+
+#+begin_src R :results silent
+  devtools::load_all("../qqconf")
+  source("qq_plots.R")  
+#+end_src
+
+* Make plots
+
+** QQ plot, log10 scale
+   #+name: qq-log10
+   #+begin_src R :results graphics file :file Figures/qq-log10.png
+     qq_conf_plot(cjd.df[,3], log10 = TRUE, pch = 20)
+   #+end_src
+
+   #+begin_src R :noweb yes :results graphics file :file Figures/qq-log10.pdf
+     <<qq-log10>>
+   #+end_src
+
