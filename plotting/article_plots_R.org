@@ -38,3 +38,9 @@
   qq_conf_plot(y, qchisq, dist.params = list(df = 2), difference = TRUE)  
 #+end_src
 
+** Example QQ plot
+#+begin_src R :results silent
+  y <- runif(293)
+  qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds.params = list(method = "search"), pch=3)
+#+end_src
+

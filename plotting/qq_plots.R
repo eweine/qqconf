@@ -1,25 +1,40 @@
 ##' QQ plot with global and pointwise confidence bounds
+##'
+##' Create a qq-plot with with a shaded global confidence interval and,
+##' optionally, lines for point-wise bounds. The observed values are plotted
+##' against their expected values had they come from the specified distribution.
+##'
+##' For $N$ independent tests that follow a specified distribution, the global
+##' confidence interval of size $C$ is the region such that the probability of
+##' all the points being in the region is $C$. The pointwise bounds are determined
+##' by taking the marginal probability that an individual point is within the bounds
+##' is $C$. If 'difference' is set to TRUE, the vertical axis plots the value
+##' Observed quantile minus Expected quantile. Set pw.lty = 0 to suppress plotting
+##' of the pointwise bounds.
 ##' 
-##' qq-plot with shading of a confidence interval. By default the
-##' confidence interval is 95%. Note that the confidence interval shading is
-##' only a rough visual aid and not a real confidence interval. It does not,
-##' for instance, take into account the correlation of the points in a qq-plot,
-##' and it computes the confidence interval for a uniform distribution then
-##' transforms those values to the quantiles of the desired distribution, but
-##' I don't know that this is the correct confidence interval for the quantiles
-##' of the desired distribution.
-##' @param obs The observed data
-##' @param dist The quantile distribution function, qchisq by default
-##' @param conf.int The size of the confidence interval for the expected quantiles
-##' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values)
-##' @param shadecol What color to use for the confidence interval
-##' @param add whether to add points to an existing plot
-##' @param dist.params: List of additional parameters for the quantile distribution function (e.g. df=1)
-##' @param bounds.params List of optional parameters for get_bounds_two_sided (i.e. tol, max_it, method)
-##' @param lty Line type for the pointwise error bounds
-##' @param ...: additional parameters for the plot
-##' Example: qq.conf(x, qchisq, dist.params=list(df=1)) # Plots x against a 1-df chisquare
-##' Example: qq.conf(x, qnorm, pch=3) # Plots x against a standard normal
+##' @param obs The observed data.
+##' @param dist The quantile distribution function, qunif by default.
+##' @param conf.int The size of the confidence interval for the expected quantiles.
+##' @param difference Whether to plot the difference between the observed and
+##'   expected values on the vertical axis.
+##' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
+##' @param shade.col What color to use for the global confidence interval.
+##' @param xlab,ylab Labels for the axes.
+##' @param add Whether to add points to an existing plot.
+##' @param dist.params List of additional parameters for the quantile distribution
+##'   function (e.g. df=1).
+##' @param bounds.params List of optional parameters for get_bounds_two_sided
+##'   (i.e. tol, max_it, method).
+##' @param pw.lty Line type for the pointwise error bounds. Set to zero for no line.
+##' @param pw.col Color for the pointwise bounds line.
+##' @param ... Additional parameters for the plot.
+##'
+##' @examples
+##' x <- rchisq(1000, 1)
+##' qq_conf_plot(x, qchisq, dist.params=list(df=1)) # Plots x against a 1-df chisquare
+##'
+##' y <- runif(893)
+##' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds.params = list(method = "search"), pch=3)
 qq_conf_plot <- function(obs,
                          dist = qunif,
                          conf.int = 0.95,
@@ -100,64 +115,9 @@ qq_conf_plot <- function(obs,
     if (difference) {
         abline(h = 0, ...)
     } else {
-        abline(0,1, ...)
+        abline(0, 1, ...)
     }
 
     
 }
 
-qq_diff_plot <- function(obs, dist=qunif, conf=c(0.025, 0.975), log10=FALSE, shade.col='gray',
-                         xlab='Expected quantiles',
-                         ylab='Observed - Expected quantiles',
-                         add=FALSE,
-                     dist.params=NULL,
-                     ##pch=20,
-                     main=NULL,
-                     ylim=NULL,
-                     ...) {
-    ## qq.conf2 is the same as qq.conf but subtracts the expected from the observed values.
-    ## qq-plot with shading of a confidence interval. By default the
-    ## confidence interval is 95%. Note that the confidence interval shading is
-    ## only a rough visual aid and not a real confidence interval. It does not,
-    ## for instance, take into account the correlation of the points in a qq-plot,
-    ## and it computes the confidence interval for a uniform distribution then
-    ## transforms those values to the quantiles of the desired distribution, but
-    ## I don't know that this is the correct confidence interval for the quantiles
-    ## of the desired distribution.
-    ## obs: The observed data
-    ## dist: The quantile distribution function, qchisq by default
-    ## conf: The upper and lower bound confidence region to shade
-    ## log10: Whether to plot axes on -log10 scale (e.g. to see small p-values)
-    ## shade.col: What color to use for the confidence
-    ## add: whether to add points to an existing plot
-    ## dist.params: List of additional parameters for the quantile distribution function (e.g. df=1)
-    ## ...: additional parameters for the plot
-    ## Example: qq.conf(x, qchisq, dist.params=list(df=1)) # Plots x against a 1-df chisquare
-    ## Example: qq.conf(x, qnorm, pch=3) # Plots x against a standard normal
-
-    samp.size <- length(obs)
-    obs.pts <- sort(obs)
-    exp.pts <- do.call(dist, c(list(p=ppoints(samp.size, a=0)), dist.params))
-    if (log10 == TRUE) {
-        exp.pts <- -log10(exp.pts)
-        obs.pts <- -log10(obs.pts)
-    }
-    y.pts <- obs.pts - exp.pts
-    if (!add) {
-        left <- exp.pts[1]
-        right <- exp.pts[samp.size]
-        bottom <- min(y.pts)
-        top <- max(y.pts)
-        plot(c(left, right), c(bottom, top), type='n', xlab=xlab, ylab=ylab, main=main, ylim=ylim)
-        e.low <- do.call(dist, c(list(p=qbeta(conf[1], 1:(samp.size), (samp.size):1)), dist.params))
-        e.high <- do.call(dist, c(list(p=qbeta(conf[2], 1:(samp.size), (samp.size):1)), dist.params))
-        if (log10 == TRUE) {
-            e.low <- -log10(e.low)
-            e.high <- -log10(e.high)
-        }
-        polygon(c(exp.pts, exp.pts[(samp.size):1]),
-                c(e.low - exp.pts, e.high[(samp.size):1] - exp.pts[samp.size:1]), border=NA, col=shade.col)
-    }
-    points(exp.pts[1:samp.size], y.pts, ...)
-    abline(h=0)
-}
