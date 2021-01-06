@@ -118,18 +118,22 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 
 }
 
-#' Calculates Type I Error Rate From Two-Sided Bounds
+#' Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region
 #'
-#' Given bounds for a two sided test on uniform order statistics, this computes
-#' the Type I Error Rate \eqn{\alpha} using a binary search.
+#' This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
+#' F(X), and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
+#' Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
+#' Given the bounds for these intervals, this function calculates the significance level of the test where the
+#' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
+#' 
 #'
-#' @param lower_bounds Numeric vector where the ith component is the lower bound
+#' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
 #' for the ith order statistic. The values must be in ascending order.
-#' @param upper_bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic. The values must be in ascending order and
-#' the ith component must be larger than the ith component of the lower bounds.
+#' @param upper_bounds Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
+#' for the acceptance interval for the ith order statistic. The values must be in ascending order and
+#' the ith component must be larger than the ith component of the \code{lower_bounds} vector.
 #'
-#' @return Type I Error Rate \eqn{\alpha}
+#' @return Global Significance Level \eqn{\alpha}
 #'
 #' @examples
 #' get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
@@ -199,6 +203,9 @@ get_bounds_two_sided <- function(alpha,
 
   `%>%` <- magrittr::`%>%`
   n_param <- n
+  method <- match.arg(method)
+  # Value used for testing if alpha is approximately equal to a set of pre-set values
+  alpha_epsilon <- 10 ^ (-5)
 
   # Approximations are only available for alpha = .05 or alpha = .01
   if (method == "search") {
@@ -243,23 +250,28 @@ get_bounds_two_sided <- function(alpha,
 
   else if (method == "approximate") {
 
-    if (!(alpha %in% c(.1, .05, .01))) {
+    if (!(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) || 
+          dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
+          dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
 
       stop("The approximate method is only configured for alpha = .1, .05, .01. Consider setting method='search'")
 
     }
 
-    if (alpha == .01) {
+    if (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
 
       lookup_table <- alpha_01_df
 
-    } else if (alpha == .05) {
+    } else if (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
 
       lookup_table <- alpha_05_df
 
     }
 
-    if (alpha == .01 || alpha == .05) {
+    if (
+      dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) || 
+        dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
+        ) {
 
       if (n %in% lookup_table$n) {
 
@@ -268,7 +280,9 @@ get_bounds_two_sided <- function(alpha,
 
         eta <- eta_df$local_level[1]
 
-      } else if ((alpha == .05 && n > 5 * (10 ^ 4)) || (alpha == .01 && n > 10 ^ 5)) {
+      } else if (
+        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 5 * (10 ^ 4)) || 
+          (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
 
         eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
 
