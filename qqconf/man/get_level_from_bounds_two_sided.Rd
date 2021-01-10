@@ -2,24 +2,27 @@
 % Please edit documentation in R/two_sided.R
 \name{get_level_from_bounds_two_sided}
 \alias{get_level_from_bounds_two_sided}
-\title{Calculates Type I Error Rate From Two-Sided Bounds}
+\title{Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region}
 \usage{
 get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
 }
 \arguments{
-\item{lower_bounds}{Numeric vector where the ith component is the lower bound
+\item{lower_bounds}{Numeric vector where the ith component is the lower bound for the acceptance interval
 for the ith order statistic. The values must be in ascending order.}
 
-\item{upper_bounds}{Numeric vector where the ith component is the lower bound
-for the ith order statistic. The values must be in ascending order and
-the ith component must be larger than the ith component of the lower bounds.}
+\item{upper_bounds}{Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
+for the acceptance interval for the ith order statistic. The values must be in ascending order and
+the ith component must be larger than the ith component of the \code{lower_bounds} vector.}
 }
 \value{
-Type I Error Rate \eqn{\alpha}
+Global Significance Level \eqn{\alpha}
 }
 \description{
-Given bounds for a two sided test on uniform order statistics, this computes
-the Type I Error Rate \eqn{\alpha} using a binary search.
+This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
+F(X), and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
+Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
+Given the bounds for these intervals, this function calculates the significance level of the test where the
+null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
 }
 \examples{
 get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
