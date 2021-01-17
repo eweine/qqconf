@@ -20,12 +20,18 @@
 
 * Make plots
 
-** QQ plot, log10 scale
+** QQ plots of CJD data
    #+name: qq-log10
    #+begin_src R :results graphics file :file Figures/qq-log10.png
      source("qq_plots.R")
-     qq_conf_plot(cjd.df[,3], log10 = TRUE, pch = 21, pw.lty = 2, cex=2, pw.col = 'red', bg = 'blue', cex.axis = 0.5, main = 'title', cex.main = 0.3, lwd = 3, bounds.params = list(method = 'approximate'), difference = TRUE)
-     x # Do nothing     
+     pdf("qq_cjd.pdf")     
+     qq_conf_plot(cjd.df[,3], pw.lty = 0, pch = 21, cex = 0.2)
+     qq_conf_plot(cjd.df[,3], pw.lty = 0, pch = 21, cex = 0.2, difference = TRUE)
+     qq_conf_plot(cjd.df[,3], log10 = TRUE, pw.lty = 0, pch = 21, cex = 0.2)
+     qq_conf_plot(cjd.df[,3], log10 = TRUE, pw.lty = 0, pch = 21, cex = 0.2,
+                  difference = TRUE, ylim = c(-0.2, 1.1))
+     dev.off()     
+                                        #x # Do nothing     
    #+end_src
    
    #+begin_src R :noweb yes :results graphics file :file Figures/qq-log10.pdf
