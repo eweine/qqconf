@@ -33,7 +33,7 @@ approx_table_df <- approx_table_df %>%
 approx_table_df <- approx_table_df %>%
   filter(n >= 1000)
 
-plot(approx_table_df$n, approx_table_df$relative_error, xlab = "n", ylab = "Relative Error", main = "C = 1.6")
+plot(approx_table_df$n, approx_table_df$relative_error, xlab = "n", ylab = expression(paste("Relative Error of ", eta[approx])))
 abline(h = 0)
 
 readr::write_csv(approx_table_df, "~/Documents/local_levels_relative_error.csv")

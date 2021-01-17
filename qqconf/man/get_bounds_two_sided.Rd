@@ -2,13 +2,13 @@
 % Please edit documentation in R/two_sided.R
 \name{get_bounds_two_sided}
 \alias{get_bounds_two_sided}
-\title{Calculates Local Bounds For Two-Sided Test}
+\title{Calculates Rejection Region of Two-Sided Equal Local Levels Test.}
 \usage{
 get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100,
-  method = c("approximate", "search"))
+  method = c("best_available", "approximate", "search"))
 }
 \arguments{
-\item{alpha}{Desired Type I Error rate of the complete test.}
+\item{alpha}{Desired global significance level of the test.}
 
 \item{n}{Size of the dataset.}
 
@@ -21,8 +21,9 @@ for a reasonable tolerance.}
 
 \item{method}{(Optional) Parameter indicating if the calculation should be done using a highly
 accurate approximation, "approximate", or if the calculations should be done using an exact
-binary search calculation, "search". The approximate method is only usable for alpha values
-of .1, .05, and .01.}
+binary search calculation, "search". The default is "best_available" (recommended), which uses the exact
+search when the approximation isn't highly accurate and the search method isn't prohibitively slow. Of note, 
+the approximate method is only usable for alpha values of .1, .05, and .01 (within 10 ^ (-5)).}
 }
 \value{
 A list with components
@@ -34,11 +35,20 @@ A list with components
 }
 }
 \description{
-Given the size of the dataset and the desired Type I Error rate \eqn{\alpha},
-this calculates two-sided testing bounds for each order statistic.
-These bounds are created using "equal local levels," which means that
-each bound pair corresponds to a test that has a Type I Error rate of \eqn{\eta}
-on its corresponding order statistic.
+The context is that n i.i.d. observations are assumed to be drawn
+from some distribution on the unit interval with c.d.f. F(x), and it is 
+desired to test the null hypothesis that F(x) = x for all x in (0,1), 
+referred to as the "global null hypothesis," against a two-sided alternative.
+An "equal local levels" test is used, in which each of the n order statistics is
+tested for significant deviation from its null distribution by a 2-sided test 
+with significance level eta.  The global null hypothesis is rejected if at 
+least one of the order statistic tests is rejected at level eta, where eta is 
+chosen so that the significance level of the global test is alpha.  
+Given the size of the dataset n and the desired global significance level alpha, 
+this function calculates the local level eta and the acceptance/rejection regions for the test.
+There are a set of n intervals, one for each order statistic.  
+If at least one order statistic falls outside the corresponding interval, 
+the global test is rejected.
 }
 \examples{
 get_bounds_two_sided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
