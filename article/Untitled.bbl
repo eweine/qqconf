@@ -1,0 +1,59 @@
+\begin{thebibliography}{7}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Aldor-Noiman \emph{et~al.}(2013)Aldor-Noiman, Brown, Buja, Rolke, and
+  Stine}]{aldor2013power}
+Aldor-Noiman S, Brown LD, Buja A, Rolke W, Stine RA (2013).
+\newblock \enquote{The power to see: A new graphical test of normality.}
+\newblock \emph{The American Statistician}, \textbf{67}(4), 249--260.
+
+\bibitem[{Almeida \emph{et~al.}(2017)Almeida, Loy, and Hofmann}]{qqplotr}
+Almeida A, Loy A, Hofmann H (2017).
+\newblock \emph{qqplotr: Quantile-Quantile Plot Extensions for 'ggplot2'}.
+\newblock R package version 0.0.3 initially funded by Google Summer of Code
+  2017, \urlprefix\url{https://github.com/aloy/qqplotr}.
+
+\bibitem[{Gontscharuk and Finner(2017)}]{gontscharuk2017asymptotics}
+Gontscharuk V, Finner H (2017).
+\newblock \enquote{Asymptotics of goodness-of-fit tests based on minimum
+  p-value statistics.}
+\newblock \emph{Communications in Statistics - Theory and Methods},
+  \textbf{46}(5), 2332--2342.
+\newblock \doi{10.1080/03610926.2015.1041985}.
+\newblock \eprint{https://doi.org/10.1080/03610926.2015.1041985},
+  \urlprefix\url{https://doi.org/10.1080/03610926.2015.1041985}.
+
+\bibitem[{Gontscharuk \emph{et~al.}(2016)Gontscharuk, Landwehr, Finner
+  \emph{et~al.}}]{gontscharuk2016goodness}
+Gontscharuk V, Landwehr S, Finner H, \emph{et~al.} (2016).
+\newblock \enquote{Goodness of fit tests in terms of local levels with special
+  emphasis on higher criticism tests.}
+\newblock \emph{Bernoulli}, \textbf{22}(3), 1331--1363.
+
+\bibitem[{Kolmogorov(1941)}]{kolmogoroff1941confidence}
+Kolmogorov A (1941).
+\newblock \enquote{Confidence limits for an unknown distribution function.}
+\newblock \emph{The annals of mathematical statistics}, \textbf{12}(4),
+  461--463.
+
+\bibitem[{Smirnov(1944)}]{smirnov1944approximate}
+Smirnov NV (1944).
+\newblock \enquote{Approximate laws of distribution of random variables from
+  empirical data.}
+\newblock \emph{Uspekhi Matematicheskikh Nauk}, (10), 179--206.
+
+\bibitem[{Wilk and Gnanadesikan(1968)}]{wilk_gnanadesikan_1968}
+Wilk MB, Gnanadesikan R (1968).
+\newblock \enquote{Probability Plotting Methods for the Analysis of Data.}
+\newblock \emph{Biometrika}, \textbf{55}(1), 1–17.
+\newblock \doi{10.1093/biomet/55.1.1}.
+
+\end{thebibliography}
