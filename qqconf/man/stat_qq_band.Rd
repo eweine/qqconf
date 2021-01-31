@@ -8,8 +8,7 @@
 geom_qq_band(mapping = NULL, data = NULL, stat = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, distribution = "norm", dparams = list(),
-  difference = FALSE, bandType = "pointwise", B = 1000,
-  conf = 0.95, mu = NULL, sigma = NULL, ...)
+  difference = FALSE, bandType = "pointwise", conf = 0.95, ...)
 
 stat_qq_band(mapping = NULL, data = NULL, geom = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,

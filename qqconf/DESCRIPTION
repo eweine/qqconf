@@ -18,7 +18,10 @@ RoxygenNote: 6.1.1
 Imports: 
     dplyr (>= 1.0.0),
     magrittr (>= 1.5),
-    rlang (>= 0.4.9)
+    rlang (>= 0.4.9),
+    ggplot2 (>= 3.0.0),
+    MASS (>= 7.3-50),
+    robustbase (>= 0.93-4)
 Collate: 
     'geom_qq_band.R'
     'one_sided.R'

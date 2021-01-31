@@ -2,10 +2,6 @@
 #'
 #' Draws quantile-quantile confidence bands, with an additional difference option.
 #'
-#' @import ggplot2
-#' @importFrom dplyr summarize
-#' @importFrom dplyr group_by
-#' @importFrom MASS fitdistr
 #'
 #' @include stat_qq_line.R
 #'

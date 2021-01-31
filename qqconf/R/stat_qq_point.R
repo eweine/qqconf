@@ -2,8 +2,6 @@
 #'
 #' Draws quantile-quantile points, with an additional difference option.
 #'
-#' @import ggplot2
-#' @importFrom MASS fitdistr
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point

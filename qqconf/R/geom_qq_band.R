@@ -16,10 +16,7 @@ geom_qq_band <- function(
 	dparams = list(),
 	difference = FALSE,
 	bandType = "pointwise",
-	B = 1000,
 	conf = .95,
-	mu = NULL,
-	sigma = NULL,
 	...
 ) {
 	# error handling
@@ -52,10 +49,6 @@ geom_qq_band <- function(
 				 "'conf' must be between 0 and 1.",
 				 call. = FALSE)
 	}
-	if (B < 0) {
-		stop("Please provide a positive value for B.",
-				 call. = FALSE)
-	}
 
 	# vector with common discrete distributions
 	discreteDist <- c("binom", "geom", "nbinom", "pois")
@@ -77,10 +70,7 @@ geom_qq_band <- function(
 			difference = difference,
 			identity = identity,
 			bandType = bandType,
-			B = round(B),
 			conf = conf,
-			mu = mu,
-			sigma = sigma,
 			discrete = distribution %in% discreteDist,
 			...
 		)
