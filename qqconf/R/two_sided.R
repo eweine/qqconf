@@ -158,7 +158,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   res <- .C("jointlevel_twosided", b_vec = as.double(b_vec),
             bound_id = as.integer(bound_id), num_points = as.integer(n),
             out = as.double(out))
-  return(res$out)
+  return(1 - res$out)
 
 }
 
@@ -232,7 +232,7 @@ get_bounds_two_sided <- function(alpha,
       n_it <- n_it + 1
       h_vals <- stats::qbeta(eta_curr / 2, 1:n, n:1)
       g_vals <- stats::qbeta(1 - (eta_curr / 2), 1:n, n:1)
-      test_alpha <- 1 - get_level_from_bounds_two_sided(h_vals, g_vals)
+      test_alpha <- get_level_from_bounds_two_sided(h_vals, g_vals)
 
       if (abs(test_alpha - alpha) / alpha <= tol) break
 

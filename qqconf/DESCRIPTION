@@ -19,3 +19,12 @@ Imports:
     dplyr (>= 1.0.0),
     magrittr (>= 1.5),
     rlang (>= 0.4.9)
+Collate: 
+    'geom_qq_band.R'
+    'one_sided.R'
+    'qqconf-package.R'
+    'qqplot.R'
+    'stat_qq_line.R'
+    'stat_qq_band.R'
+    'stat_qq_point.R'
+    'two_sided.R'
