@@ -9,7 +9,7 @@ Authors@R: c(
 Description: This package creates one-sided and two-sided simultaneoustesting bands 
     for the order statistics of independent uniform(0, 1) random variables using the method of "local levels." 
     This is useful for creating confidence bands on qqplots.
-License: MIT + file LICENSE
+License: GPL-3 | file LICENSE
 Depends: 
     R (>= 3.0.0)
 Encoding: UTF-8
