@@ -22,18 +22,13 @@
 #'   distributions is currently not supported, so you must provide the
 #'   appropriate \code{dparams} in that case.
 #' @param difference Logical. Should the plot objects be differenceed? If \code{TRUE},
-#'   the objects will be differenceed according to the reference Q-Q line. This
-#'   procedure was described by Thode (2002), and may help reducing visual bias
-#'   caused by the orthogonal distances from Q-Q points to the reference line.
-#' @param bandType Character. Either \code{"pointwise"}, \code{"boot"}, \code{"ks"} or
-#'   \code{"ts"}. \code{"pointwise"} constructs pointwise confidence bands based
-#'   on Normal confidence intervals. \code{"boot"} creates pointwise confidence
-#'   bands based on a parametric bootstrap; parameters are estimated with MLEs.
-#'   \code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
-#'   test. Finally, \code{"ts"} constructs tail-sensitive confidence bands, as
-#'   described by Aldor-Noiman et al. (2013) (also, see 'Note' for
-#'   limitations).
-#' @param bounds.params List of optional parameters for get_bounds_two_sided
+#'   the objects will be differenceed according to the reference Q-Q line.
+#' @param bandType Character. Either \code{"pointwise"}, \code{"ks"} or
+#'   \code{"equal_local_levels"}. \code{"pointwise"} constructs pointwise confidence bands based
+#'   on Normal confidence intervals. \code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
+#'   test. Finally, \code{"equal_local_levels"} constructs simultaneous testing bounds with
+#'   type I error \code{1 - conf} by conducting some \eqn{\eta} level test at each point.
+#' @param bounds_params List of optional parameters for get_bounds_two_sided
 #'   (i.e. tol, max_it, method).
 #' @param conf Numerical. Confidence level of the bands.
 #'
@@ -50,7 +45,7 @@ stat_qq_band <- function(
 	dparams = list(),
 	difference = FALSE,
 	bandType = "pointwise",
-	bounds.params = NULL,
+	bounds_params = NULL,
 	conf = .95,
 	...
 ) {
@@ -104,7 +99,7 @@ stat_qq_band <- function(
 			dparams = dparams,
 			difference = difference,
 			bandType = bandType,
-			bounds.params = bounds.params,
+			bounds_params = bounds_params,
 			conf = conf,
 			discrete = distribution %in% discreteDist,
 			...
@@ -137,7 +132,7 @@ StatQqBand <- ggplot2::ggproto(
 						 dparams,
 						 difference,
 						 bandType,
-						 bounds.params,
+						 bounds_params,
 						 conf,
 						 discrete) {
 			# distributional functions
@@ -247,7 +242,7 @@ StatQqBand <- ggplot2::ggproto(
 			if (bandType == "equal_local_levels") {
 				
 				global.bounds <- do.call(get_bounds_two_sided,
-				                         c(list(alpha = 1 - conf, n = n), bounds.params))
+				                         c(list(alpha = 1 - conf, n = n), bounds_params))
 				lower <- do.call(qFunc, c(list(p = global.bounds$lower_bound), dparams))
 				upper <- do.call(qFunc, c(list(p = global.bounds$upper_bound), dparams))
 				

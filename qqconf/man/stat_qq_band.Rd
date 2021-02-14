@@ -13,7 +13,7 @@ geom_qq_band(mapping = NULL, data = NULL, stat = "qq_band",
 stat_qq_band(mapping = NULL, data = NULL, geom = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, distribution = "norm", dparams = list(),
-  difference = FALSE, bandType = "pointwise", bounds.params = NULL,
+  difference = FALSE, bandType = "pointwise", bounds_params = NULL,
   conf = 0.95, ...)
 }
 \arguments{
@@ -72,18 +72,13 @@ distributions is currently not supported, so you must provide the
 appropriate \code{dparams} in that case.}
 
 \item{difference}{Logical. Should the plot objects be differenceed? If \code{TRUE},
-the objects will be differenceed according to the reference Q-Q line. This
-procedure was described by Thode (2002), and may help reducing visual bias
-caused by the orthogonal distances from Q-Q points to the reference line.}
+the objects will be differenceed according to the reference Q-Q line.}
 
-\item{bandType}{Character. Either \code{"pointwise"}, \code{"boot"}, \code{"ks"} or
-\code{"ts"}. \code{"pointwise"} constructs pointwise confidence bands based
-on Normal confidence intervals. \code{"boot"} creates pointwise confidence
-bands based on a parametric bootstrap; parameters are estimated with MLEs.
-\code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
-test. Finally, \code{"ts"} constructs tail-sensitive confidence bands, as
-described by Aldor-Noiman et al. (2013) (also, see 'Note' for
-limitations).}
+\item{bandType}{Character. Either \code{"pointwise"}, \code{"ks"} or
+\code{"equal_local_levels"}. \code{"pointwise"} constructs pointwise confidence bands based
+on Normal confidence intervals. \code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
+test. Finally, \code{"equal_local_levels"} constructs simultaneous testing bounds with
+type I error \code{1 - conf} by conducting some \eqn{\eta} level test at each point.}
 
 \item{conf}{Numerical. Confidence level of the bands.}
 
@@ -94,7 +89,7 @@ to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
 
-\item{bounds.params}{List of optional parameters for get_bounds_two_sided
+\item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 }
 \description{

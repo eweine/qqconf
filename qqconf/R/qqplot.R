@@ -1,7 +1,7 @@
-##' QQ plot with global and pointwise testing bounds.
+##' QQ Plot with Simultaneous and Pointwise Testing Bounds.
 ##'
-##' Create a qq-plot with with a shaded global testing interval and,
-##' optionally, lines for point-wise intervals. The observed values are plotted
+##' Create a qq-plot with with a shaded simultaneous acceptance region and,
+##' optionally, lines for a point-wise region. The observed values are plotted
 ##' against their expected values had they come from the specified distribution.
 ##'
 ##' For $N$ independent tests that follow a specified distribution, the global
@@ -13,21 +13,23 @@
 ##' the pointwise bounds.
 ##' 
 ##' @param obs The observed data.
-##' @param dist The quantile distribution function, qunif by default.
-##' @param method Method for global testing bands. Must be either "ks" to apply a 
-##' Kolmogorov-Smirnov test, or "equal_local_levels", which applies an \eqn{\eta} level pointwise
-##' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}
+##' @param dist The quantile function for the specified distribution. Defaults to qnorm.
+##' Custom distributions are allowed so long as all parameters are supplied in dparams.
+##' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+##' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
+##' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
 ##' @param alpha Type I error of global test of if the data comes from the reference distribution.
 ##' @param difference Whether to plot the difference between the observed and
 ##'   expected values on the vertical axis.
 ##' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
-##' @param shade.col What color to use for the global confidence interval.
-##' @param add Whether to add points to an existing plot.
-##' @param dparams List of additional parameters for the quantile distribution
-##'   function (e.g. df=1). Will be estimated if not provided. For all distributions except normal,
-##'   the code uses MLE to estimate the parameters. For the normal distribution, we estimate the mean
+##' @param shade.col What color to use for the simultaneous acceptance region.
+##' @param add Whether to add points to an existing plot. 
+##' @param dparams List of additional parameters for the quantile function of the distribution
+##'   (e.g. df=1). Will be estimated if not provided. For the uniform distribution, U(0, 1) is assumed unless specified.
+##'   For the normal distribution, we estimate the mean
 ##'   as the median and the standard deviation as \eqn{S_{n}} from the paper by Rousseeuw and Croux 1993
-##'    "Alternatives to the Median Absolute Deviation".
+##'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+##'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions.
 ##' @param bounds.params List of optional parameters for get_bounds_two_sided
 ##'   (i.e. tol, max_it, method).
 ##' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
@@ -42,7 +44,7 @@
 ##' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds.params = list(method = "search"), pch=3)
 qq_conf_plot <- function(obs,
                          dist = qunif,
-                         method = c("equal_local_levels", "ks"),
+                         method = c("ell", "ks"),
                          alpha = 0.05,
                          difference = FALSE,
                          log10 = FALSE,
@@ -168,7 +170,7 @@ qq_conf_plot <- function(obs,
                              c(list(alpha = alpha, n = samp.size), bounds.params))
     # Here, have to figure out how to do this for the KS test
     # I don't think that this should be too hard, but I'm not completely sure
-    if (method == "equal_local_levels") {
+    if (method == "ell") {
       
       global.low <- do.call(dist, c(list(p = global.bounds$lower_bound), dparams))
       global.high <- do.call(dist, c(list(p = global.bounds$upper_bound), dparams))
