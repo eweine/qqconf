@@ -120,7 +120,8 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 
 #' Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region
 #'
-#' This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
+#' For a test of uniformity of i.i.d. observations on the unit interval, this function
+#'  This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
 #' F(X), and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
 #' Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
 #' Given the bounds for these intervals, this function calculates the significance level of the test where the

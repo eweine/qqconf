@@ -18,7 +18,8 @@ the ith component must be larger than the ith component of the \code{lower_bound
 Global Significance Level \eqn{\alpha}
 }
 \description{
-This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
+For a test of uniformity of i.i.d. observations on the unit interval, this function
+ This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
 F(X), and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
 Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
 Given the bounds for these intervals, this function calculates the significance level of the test where the

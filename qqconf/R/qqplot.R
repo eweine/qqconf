@@ -35,6 +35,8 @@
 ##' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
 ##' @param pw.col Color for the pointwise bounds line.
 ##' @param ... Additional parameters for the plot.
+##' 
+##' @export
 ##'
 ##' @examples
 ##' x <- rchisq(1000, 1)
