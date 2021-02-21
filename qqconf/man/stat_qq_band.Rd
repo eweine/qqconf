@@ -3,7 +3,7 @@
 \name{geom_qq_band}
 \alias{geom_qq_band}
 \alias{stat_qq_band}
-\title{Quantile-quantile confidence bands}
+\title{Quantile-quantile testing bands}
 \usage{
 geom_qq_band(mapping = NULL, data = NULL, stat = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
@@ -13,8 +13,8 @@ geom_qq_band(mapping = NULL, data = NULL, stat = "qq_band",
 stat_qq_band(mapping = NULL, data = NULL, geom = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, distribution = "norm", dparams = list(),
-  difference = FALSE, bandType = "pointwise", bounds_params = NULL,
-  conf = 0.95, ...)
+  difference = FALSE, method = "ell", bounds_params = NULL,
+  alpha = 0.05, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -56,31 +56,18 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 
-\item{distribution}{Character. Theoretical probability distribution function
-to use. Do not provide the full distribution function name (e.g.,
-\code{"dnorm"}). Instead, just provide its shortened name (e.g.,
-\code{"norm"}). If you wish to provide a custom distribution, you may do so
-by first creating the density, quantile, and random functions following the
-standard nomenclature from the \code{stats} package (i.e., for
-\code{"custom"}, create the \code{dcustom}, \code{pcustom},
-\code{qcustom}, and \code{rcustom} functions).}
+\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
+Custom distributions are allowed so long as all parameters are supplied in dparams.}
 
-\item{dparams}{List of additional parameters passed on to the previously
-chosen \code{distribution} function. If an empty list is provided (default)
-then the distributional parameters are estimated via MLE. MLE for custom
-distributions is currently not supported, so you must provide the
-appropriate \code{dparams} in that case.}
+\item{dparams}{List of additional parameters for the quantile function of the distribution
+(e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+"Alternatives to the Median Absolute Deviation". For all other distributions,
+the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+parameters of the distribution must be provided by the user.}
 
-\item{difference}{Logical. Should the plot objects be differenceed? If \code{TRUE},
-the objects will be differenceed according to the reference Q-Q line.}
-
-\item{bandType}{Character. Either \code{"pointwise"}, \code{"ks"} or
-\code{"equal_local_levels"}. \code{"pointwise"} constructs pointwise confidence bands based
-on Normal confidence intervals. \code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
-test. Finally, \code{"equal_local_levels"} constructs simultaneous testing bounds with
-type I error \code{1 - conf} by conducting some \eqn{\eta} level test at each point.}
-
-\item{conf}{Numerical. Confidence level of the bands.}
+\item{difference}{Whether to plot the difference between the observed and
+expected values on the vertical axis.}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
@@ -89,9 +76,24 @@ to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
 
+\item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
+Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.}
+
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
+
+\item{alpha}{Type I error of global test of if the data comes from the reference distribution.}
 }
 \description{
 Draws quantile-quantile confidence bands, with an additional difference option.
+}
+\details{
+If any of the points of the qq-plot fall outside the simultaneous acceptance region for the selected
+level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
+specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
+observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
+the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+the bounds under the null hypothesis, so the chance that the qq-plot has any points falling outside of the pointwise bounds
+is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
 }

@@ -6,19 +6,14 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_path
 #'
-#' @param distribution Character. Theoretical probability distribution function
-#'   to use. Do not provide the full distribution function name (e.g.,
-#'   \code{"dnorm"}). Instead, just provide its shortened name (e.g.,
-#'   \code{"norm"}). If you wish to provide a custom distribution, you may do so
-#'   by first creating the density, quantile, and random functions following the
-#'   standard nomenclature from the \code{stats} package (i.e., for
-#'   \code{"custom"}, create the \code{dcustom}, \code{pcustom},
-#'   \code{qcustom}, and \code{rcustom} functions).
-#' @param dparams List of additional parameters passed on to the previously
-#'   chosen \code{distribution} function. If an empty list is provided (default)
-#'   then the distributional parameters are estimated via MLE. MLE for custom
-#'   distributions is currently not supported, so you must provide the
-#'   appropriate \code{dparams} in that case.
+#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
+#' Custom distributions are allowed so long as all parameters are supplied in dparams.
+#' @param dparams List of additional parameters for the quantile function of the distribution
+#'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+#'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+#'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+#'   parameters of the distribution must be provided by the user.
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
 #'

@@ -1,36 +1,36 @@
-#' Quantile-quantile confidence bands
+#' Quantile-quantile testing bands
 #'
 #' Draws quantile-quantile confidence bands, with an additional difference option.
 #'
+#' If any of the points of the qq-plot fall outside the simultaneous acceptance region for the selected
+#' level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
+#' specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
+#' observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
+#' the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+#' the bounds under the null hypothesis, so the chance that the qq-plot has any points falling outside of the pointwise bounds
+#' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
 #'
 #' @include stat_qq_line.R
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_ribbon
 #'
-#' @param distribution Character. Theoretical probability distribution function
-#'   to use. Do not provide the full distribution function name (e.g.,
-#'   \code{"dnorm"}). Instead, just provide its shortened name (e.g.,
-#'   \code{"norm"}). If you wish to provide a custom distribution, you may do so
-#'   by first creating the density, quantile, and random functions following the
-#'   standard nomenclature from the \code{stats} package (i.e., for
-#'   \code{"custom"}, create the \code{dcustom}, \code{pcustom},
-#'   \code{qcustom}, and \code{rcustom} functions).
-#' @param dparams List of additional parameters passed on to the previously
-#'   chosen \code{distribution} function. If an empty list is provided (default)
-#'   then the distributional parameters are estimated via MLE. MLE for custom
-#'   distributions is currently not supported, so you must provide the
-#'   appropriate \code{dparams} in that case.
-#' @param difference Logical. Should the plot objects be differenceed? If \code{TRUE},
-#'   the objects will be differenceed according to the reference Q-Q line.
-#' @param bandType Character. Either \code{"pointwise"}, \code{"ks"} or
-#'   \code{"equal_local_levels"}. \code{"pointwise"} constructs pointwise confidence bands based
-#'   on Normal confidence intervals. \code{"ks"} constructs simultaneous confidence bands based on the Kolmogorov-Smirnov
-#'   test. Finally, \code{"equal_local_levels"} constructs simultaneous testing bounds with
-#'   type I error \code{1 - conf} by conducting some \eqn{\eta} level test at each point.
+#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
+#' Custom distributions are allowed so long as all parameters are supplied in dparams.
+#' @param dparams List of additional parameters for the quantile function of the distribution
+#'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+#'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+#'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+#'   parameters of the distribution must be provided by the user.
+#' @param difference Whether to plot the difference between the observed and
+#'   expected values on the vertical axis.
+#' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+#' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
+#' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
 #' @param bounds_params List of optional parameters for get_bounds_two_sided
 #'   (i.e. tol, max_it, method).
-#' @param conf Numerical. Confidence level of the bands.
+#' @param alpha Type I error of global test of if the data comes from the reference distribution.
 #'
 #' @export
 stat_qq_band <- function(
@@ -44,11 +44,13 @@ stat_qq_band <- function(
 	distribution = "norm",
 	dparams = list(),
 	difference = FALSE,
-	bandType = "pointwise",
+	method = "ell",
 	bounds_params = NULL,
-	conf = .95,
+	alpha = .05,
 	...
 ) {
+  
+  conf <- 1 - alpha
 	# error handling
 	if (!(distribution %in% c(
 		"beta",
@@ -74,11 +76,11 @@ stat_qq_band <- function(
 		)
 	}
 	if (conf < 0 | conf > 1) {
-		stop("Please provide a valid confidence level for the bands: ",
-				 "'conf' must be between 0 and 1.",
+		stop("Please provide a valid alpha value for the bands: ",
+				 "'alpha' must be between 0 and 1.",
 				 call. = FALSE)
 	}
-	bandType <- match.arg(bandType, c("pointwise", "ks", "equal_local_levels"))
+	method <- match.arg(method, c("pointwise", "ks", "ell"))
 
 	# vector with common discrete distributions
 	discreteDist <- c("binom", "geom", "nbinom", "pois")
@@ -98,7 +100,7 @@ stat_qq_band <- function(
 			distribution = distribution,
 			dparams = dparams,
 			difference = difference,
-			bandType = bandType,
+			method = method,
 			bounds_params = bounds_params,
 			conf = conf,
 			discrete = distribution %in% discreteDist,
@@ -131,7 +133,7 @@ StatQqBand <- ggplot2::ggproto(
 						 distribution,
 						 dparams,
 						 difference,
-						 bandType,
+						 method,
 						 bounds_params,
 						 conf,
 						 discrete) {
@@ -219,7 +221,7 @@ StatQqBand <- ggplot2::ggproto(
 			fittedValues <- (slope * theoretical) + intercept
 
 			# pointwise confidence bands based on normal confidence intervals
-			if (bandType == "pointwise") {
+			if (method == "pointwise") {
 				probs <- ppoints(n)
 				stdErr <- (slope / do.call(dFunc, c(list(x = theoretical), dparams))) * sqrt(probs * (1 - probs) / n)
 				zCrit <- qnorm(p = (1 - (1 - conf) / 2))
@@ -229,7 +231,7 @@ StatQqBand <- ggplot2::ggproto(
 			}
 
 			# using the DKW inequality for simultaneous bands
-			if (bandType == "ks") {
+			if (method == "ks") {
 				probs <- ppoints(n)
 				epsilon <- sqrt((1 / (2 * n)) * log(2/(1-conf)))
 				lp <- pmax(probs - epsilon, rep(0, n))
@@ -239,7 +241,7 @@ StatQqBand <- ggplot2::ggproto(
 			}
 
 			# tail-sensitive confidence bands
-			if (bandType == "equal_local_levels") {
+			if (method == "ell") {
 				
 				global.bounds <- do.call(get_bounds_two_sided,
 				                         c(list(alpha = 1 - conf, n = n), bounds_params))

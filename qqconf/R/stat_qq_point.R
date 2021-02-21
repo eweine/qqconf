@@ -6,19 +6,14 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #'
-#' @param distribution Character. Theoretical probability distribution function
-#'   to use. Do not provide the full distribution function name (e.g.,
-#'   \code{"dnorm"}). Instead, just provide its shortened name (e.g.,
-#'   \code{"norm"}). If you wish to provide a custom distribution, you may do so
-#'   by first creating the density, quantile, and random functions following the
-#'   standard nomenclature from the \code{stats} package (i.e., for
-#'   \code{"custom"}, create the \code{dcustom}, \code{pcustom},
-#'   \code{qcustom}, and \code{rcustom} functions).
-#' @param dparams List of additional parameters passed on to the previously
-#'   chosen \code{distribution} function. If an empty list is provided (default)
-#'   then the distributional parameters are estimated via MLE. MLE for custom
-#'   distributions is currently not supported, so you must provide the
-#'   appropriate \code{dparams} in that case.
+#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
+#' Custom distributions are allowed so long as all parameters are supplied in dparams.
+#' @param dparams List of additional parameters for the quantile function of the distribution
+#'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+#'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+#'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+#'   parameters of the distribution must be provided by the user.
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
 #'
@@ -58,22 +53,22 @@ stat_qq_point <- function(
 ) {
 	# error handling
 	if (!(distribution %in% c(
-		"beta",
-		"cauchy",
-		"chisq",
-		"exp",
-		"f",
-		"gamma",
-		"geom",
-		"lnorm",
-		"logis",
-		"norm",
-		"nbinom",
-		"pois",
-		"t",
-		"weibull")) &
+		"qbeta",
+		"qcauchy",
+		"qchisq",
+		"qexp",
+		"qf",
+		"qgamma",
+		"qgeom",
+		"qlnorm",
+		"qlogis",
+		"qnorm",
+		"qnbinom",
+		"qpois",
+		"qt",
+		"qweibull")) &
 		length(dparams) == 0 &
-		table(sapply(formals(eval(parse(text = paste0("q", distribution)))), typeof))["symbol"] > 1) {
+		table(sapply(formals(eval(parse(text = distribution))), typeof))["symbol"] > 1) {
 		stop(
 			"MLE is currently not supported for custom distributions.\n",
 			"Please provide all the custom distribution parameters to 'dparams'.",
@@ -122,8 +117,6 @@ StatQqPoint <- ggplot2::ggproto(
 													 distribution,
 													 dparams,
 													 difference) {
-		# distributional function
-		qFunc <- eval(parse(text = paste0("q", distribution)))
 
 		oidx <- order(data$sample)
 		smp <- data$sample[oidx]
@@ -138,20 +131,20 @@ StatQqPoint <- ggplot2::ggproto(
 			corresp <- function(distName) {
 				switch(
 					distName,
-					beta = "beta",
-					cauchy = "cauchy",
-					chisq = "chi-squared",
-					exp = "exponential",
-					f = "f",
-					gamma = "gamma",
-					geom = "geometric",
-					lnorm = "log-normal",
-					logis = "logistic",
-					norm = "normal",
-					nbinom = "negative binomial",
-					pois = "poisson",
-					t = dt,
-					weibull = "weibull",
+					qbeta = "beta",
+					qcauchy = "cauchy",
+					qchisq = "chi-squared",
+					qexp = "exponential",
+					qf = "f",
+					qgamma = "gamma",
+					qgeom = "geometric",
+					qlnorm = "log-normal",
+					qlogis = "logistic",
+					qnorm = "normal",
+					qnbinom = "negative binomial",
+					qpois = "poisson",
+					qt = dt,
+					qweibull = "weibull",
 					NULL
 				)
 			}
@@ -160,10 +153,10 @@ StatQqPoint <- ggplot2::ggproto(
 			initVal <- function(distName) {
 				switch(
 					distName,
-					beta = list(shape1 = 1, shape2 = 1),
-					chisq = list(df = 1),
-					f = list(df1 = 1, df2 = 2),
-					t = list(df = 1),
+					qbeta = list(shape1 = 1, shape2 = 1),
+					qchisq = list(df = 1),
+					qf = list(df1 = 1, df2 = 2),
+					qt = list(df = 1),
 					NULL
 				)
 			}
@@ -179,7 +172,7 @@ StatQqPoint <- ggplot2::ggproto(
 			})
 		}
 
-		theoretical <- do.call(qFunc, c(list(p = quantiles), dparams))
+		theoretical <- do.call(distribution, c(list(p = quantiles), dparams))
 
 		if (difference) {
 			slope <- 1

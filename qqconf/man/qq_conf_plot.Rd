@@ -4,7 +4,7 @@
 \alias{qq_conf_plot}
 \title{QQ Plot with Simultaneous and Pointwise Testing Bounds.}
 \usage{
-qq_conf_plot(obs, dist = qunif, method = c("ell", "ks"),
+qq_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
   alpha = 0.05, difference = FALSE, log10 = FALSE,
   shade.col = "gray", add = FALSE, dparams = NULL,
   bounds_params = NULL, pw.lty = 0, pw.col = "black", ...)
@@ -12,7 +12,7 @@ qq_conf_plot(obs, dist = qunif, method = c("ell", "ks"),
 \arguments{
 \item{obs}{The observed data.}
 
-\item{dist}{The quantile function for the specified distribution. Defaults to qnorm.
+\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
 Custom distributions are allowed so long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise

@@ -13,7 +13,7 @@
 #' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
 #' 
 #' @param obs The observed data.
-#' @param dist The quantile function for the specified distribution. Defaults to qnorm.
+#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
 #' Custom distributions are allowed so long as all parameters are supplied in dparams.
 #' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
 #' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
@@ -45,7 +45,7 @@
 #' y <- runif(893)
 #' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
 qq_conf_plot <- function(obs,
-                         dist = qunif,
+                         distribution = qnorm,
                          method = c("ell", "ks"),
                          alpha = 0.05,
                          difference = FALSE,
@@ -59,54 +59,54 @@ qq_conf_plot <- function(obs,
                          ...) {
   
   if(is.null(dparams)) {
-    # equivalence between base R and MASS::fitdistr distribution names
-    corresp <- function(distName) {
+    # equivalence between base R and MASS::fitdistributionr distributionribution names
+    corresp <- function(distributionName) {
       switch(
-        distName,
-        beta = "beta",
-        cauchy = "cauchy",
-        chisq = "chi-squared",
-        exp = "exponential",
-        f = "f",
-        gamma = "gamma",
-        geom = "geometric",
-        lnorm = "log-normal",
-        logis = "logistic",
-        norm = "normal",
-        nbinom = "negative binomial",
-        pois = "poisson",
-        t = "t",
-        weibull = "weibull",
+        distributionName,
+        qbeta = "beta",
+        qcauchy = "cauchy",
+        qchisq = "chi-squared",
+        qexp = "exponential",
+        qf = "f",
+        qgamma = "gamma",
+        qgeom = "geometric",
+        qlnorm = "log-normal",
+        qlogis = "logistic",
+        qnorm = "normal",
+        qnbinom = "negative binomial",
+        qpois = "poisson",
+        qt = "t",
+        qweibull = "weibull",
         NULL
       )
     }
     
-    # initial value for some distributions
-    initVal <- function(distName) {
+    # initial value for some distributionributions
+    initVal <- function(distributionName) {
       switch(
-        distName,
-        beta = list(shape1 = 1, shape2 = 1),
-        chisq = list(df = 1),
-        f = list(df1 = 1, df2 = 2),
-        t = list(df = 1),
+        distributionName,
+        qbeta = list(shape1 = 1, shape2 = 1),
+        qchisq = list(df = 1),
+        qf = list(df1 = 1, df2 = 2),
+        qt = list(df = 1),
         NULL
       )
     }
     
     suppressWarnings({
-      if(!is.null(corresp(distribution))) {
-        if(is.null(initVal(distribution))) {
-          if(corresp(distribution) == "normal") {
+      if(!is.null(corresp(distributionribution))) {
+        if(is.null(initVal(distributionribution))) {
+          if(corresp(distributionribution) == "normal") {
             
-            # Use special estimators for the normal distribution
+            # Use special estimators for the normal distributionribution
             dparams <- c()
             dparams['mean'] <- median(x = smp)
             dparams['sd'] <- robustbase::Sn(x = smp)
             
           }
-          dparams <- MASS::fitdistr(x = smp, densfun = corresp(distribution))$estimate
+          dparams <- MASS::fitdistributionr(x = smp, densfun = corresp(distributionribution))$estimate
         } else {
-          dparams <- MASS::fitdistr(x = smp, densfun = corresp(distribution), start = initVal(distribution))$estimate
+          dparams <- MASS::fitdistributionr(x = smp, densfun = corresp(distributionribution), start = initVal(distributionribution))$estimate
         }
       }
     })
@@ -143,9 +143,9 @@ qq_conf_plot <- function(obs,
   conf.int <- 1 - alpha
   conf <- c(alpha / 2, conf.int + alpha / 2)
   ## The observed and expected quantiles. Expected quantiles are based on the specified
-  ## distribution.
+  ## distributionribution.
   obs.pts <- sort(obs)
-  exp.pts <- do.call(dist, c(list(p=ppoints(samp.size, a=0)), dparams))
+  exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
     obs.pts <- -log10(obs.pts)
@@ -163,9 +163,9 @@ qq_conf_plot <- function(obs,
     bottom <- min(y.pts) #obs.pts[1]
     top <- max(y.pts) #obs.pts[samp.size]
     do.call(plot, c(list(x=c(left, right), y=c(bottom, top), type='n', xlab=xlab, ylab=ylab), dots))
-    pointwise.low <- do.call(dist,
+    pointwise.low <- do.call(distribution,
                              c(list(p=qbeta(conf[1], 1:samp.size, samp.size:1)), dparams))
-    pointwise.high <- do.call(dist,
+    pointwise.high <- do.call(distribution,
                               c(list(p=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
     
     global.bounds <- do.call(get_bounds_two_sided,
@@ -174,8 +174,8 @@ qq_conf_plot <- function(obs,
     # I don't think that this should be too hard, but I'm not completely sure
     if (method == "ell") {
       
-      global.low <- do.call(dist, c(list(p = global.bounds$lower_bound), dparams))
-      global.high <- do.call(dist, c(list(p = global.bounds$upper_bound), dparams))
+      global.low <- do.call(distribution, c(list(p = global.bounds$lower_bound), dparams))
+      global.high <- do.call(distribution, c(list(p = global.bounds$upper_bound), dparams))
       
     } else if (method == "ks") {
       
