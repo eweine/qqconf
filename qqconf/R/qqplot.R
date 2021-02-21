@@ -1,49 +1,49 @@
-##' QQ Plot with Simultaneous and Pointwise Testing Bounds.
-##'
-##' Create a qq-plot with with a shaded simultaneous acceptance region and,
-##' optionally, lines for a point-wise region. The observed values are plotted
-##' against their expected values had they come from the specified distribution.
-##'
-##' For $N$ independent tests that follow a specified distribution, the global
-##' confidence interval of size $C$ is the region such that the probability of
-##' all the points being in the region is $C$. The pointwise bounds are determined
-##' by taking the marginal probability that an individual point is within the bounds
-##' is $C$. If 'difference' is set to TRUE, the vertical axis plots the 
-##' observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
-##' the pointwise bounds.
-##' 
-##' @param obs The observed data.
-##' @param dist The quantile function for the specified distribution. Defaults to qnorm.
-##' Custom distributions are allowed so long as all parameters are supplied in dparams.
-##' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
-##' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
-##' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
-##' @param alpha Type I error of global test of if the data comes from the reference distribution.
-##' @param difference Whether to plot the difference between the observed and
-##'   expected values on the vertical axis.
-##' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
-##' @param shade.col What color to use for the simultaneous acceptance region.
-##' @param add Whether to add points to an existing plot. 
-##' @param dparams List of additional parameters for the quantile function of the distribution
-##'   (e.g. df=1). Will be estimated if not provided. For the uniform distribution, U(0, 1) is assumed unless specified.
-##'   For the normal distribution, we estimate the mean
-##'   as the median and the standard deviation as \eqn{S_{n}} from the paper by Rousseeuw and Croux 1993
-##'   "Alternatives to the Median Absolute Deviation". For all other distributions,
-##'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions.
-##' @param bounds.params List of optional parameters for get_bounds_two_sided
-##'   (i.e. tol, max_it, method).
-##' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
-##' @param pw.col Color for the pointwise bounds line.
-##' @param ... Additional parameters for the plot.
-##' 
-##' @export
-##'
-##' @examples
-##' x <- rchisq(1000, 1)
-##' qq_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
-##'
-##' y <- runif(893)
-##' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds.params = list(method = "search"), pch=3)
+#' QQ Plot with Simultaneous and Pointwise Testing Bounds.
+#'
+#' Create a qq-plot with with a shaded simultaneous acceptance region and,
+#' optionally, lines for a point-wise region. The observed values are plotted
+#' against their expected values had they come from the specified distribution.
+#' 
+#' If any of the points of the qq-plot fall outside the simultaneous acceptance region for the selected
+#' level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
+#' specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
+#' observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
+#' the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+#' the bounds under the null hypothesis, so the chance that the qq-plot has any points falling outside of the pointwise bounds
+#' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
+#' 
+#' @param obs The observed data.
+#' @param dist The quantile function for the specified distribution. Defaults to qnorm.
+#' Custom distributions are allowed so long as all parameters are supplied in dparams.
+#' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+#' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
+#' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
+#' @param alpha Type I error of global test of if the data comes from the reference distribution.
+#' @param difference Whether to plot the difference between the observed and
+#'   expected values on the vertical axis.
+#' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
+#' @param shade.col What color to use for the simultaneous acceptance region.
+#' @param add Whether to add points to an existing plot. 
+#' @param dparams List of additional parameters for the quantile function of the distribution
+#'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+#'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+#'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+#'   parameters of the distribution must be provided by the user.
+#' @param bounds_params List of optional parameters for get_bounds_two_sided
+#'   (i.e. tol, max_it, method).
+#' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
+#' @param pw.col Color for the pointwise bounds line.
+#' @param ... Additional parameters for the plot.
+#' 
+#' @export
+#'
+#' @examples
+#' x <- rchisq(1000, 1)
+#' qq_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
+#'
+#' y <- runif(893)
+#' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
 qq_conf_plot <- function(obs,
                          dist = qunif,
                          method = c("ell", "ks"),
@@ -53,7 +53,7 @@ qq_conf_plot <- function(obs,
                          shade.col = 'gray',
                          add = FALSE,
                          dparams = NULL,
-                         bounds.params = NULL,
+                         bounds_params = NULL,
                          pw.lty = 0,
                          pw.col = 'black',
                          ...) {
@@ -169,7 +169,7 @@ qq_conf_plot <- function(obs,
                               c(list(p=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
     
     global.bounds <- do.call(get_bounds_two_sided,
-                             c(list(alpha = alpha, n = samp.size), bounds.params))
+                             c(list(alpha = alpha, n = samp.size), bounds_params))
     # Here, have to figure out how to do this for the KS test
     # I don't think that this should be too hard, but I'm not completely sure
     if (method == "ell") {

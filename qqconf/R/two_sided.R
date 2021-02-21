@@ -120,13 +120,12 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 
 #' Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region
 #'
-#' For a test of uniformity of i.i.d. observations on the unit interval, this function
-#'  This function is meant to be used when \eqn{n} observations are drawm i.i.d. from some CDF on the unit interval
-#' F(X), and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
+#' For a test of uniformity of i.i.d. observations on the unit interval, this function will determine the significance
+#' level as a function of the rejection region. Suppose \eqn{n} observations are drawn i.i.d. from some CDF F(x) on the unit interval,
+#' and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
 #' Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
 #' Given the bounds for these intervals, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
-#' 
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
 #' for the ith order statistic. The values must be in ascending order.
@@ -137,7 +136,15 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' @return Global Significance Level \eqn{\alpha}
 #'
 #' @examples
+#' # For X1, X2 iid unif(0,1), calculate 1 - P(.1 < min(X1, X2) < .6 and .5 < max(X1, X2) < .9)
 #' get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
+#' 
+#' # Finds the global significance level corresponding to the local level eta
+#' n <- 100
+#' eta <- .05
+#' lb <- qbeta(eta / 2, c(1:n), c(n:1))
+#' ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
+#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
 #' 
 #' @importFrom rlang .data
 #'

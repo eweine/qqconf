@@ -7,7 +7,7 @@
 qq_conf_plot(obs, dist = qunif, method = c("ell", "ks"),
   alpha = 0.05, difference = FALSE, log10 = FALSE,
   shade.col = "gray", add = FALSE, dparams = NULL,
-  bounds.params = NULL, pw.lty = 0, pw.col = "black", ...)
+  bounds_params = NULL, pw.lty = 0, pw.col = "black", ...)
 }
 \arguments{
 \item{obs}{The observed data.}
@@ -31,13 +31,13 @@ expected values on the vertical axis.}
 \item{add}{Whether to add points to an existing plot.}
 
 \item{dparams}{List of additional parameters for the quantile function of the distribution
-(e.g. df=1). Will be estimated if not provided. For the uniform distribution, U(0, 1) is assumed unless specified.
-For the normal distribution, we estimate the mean
-as the median and the standard deviation as \eqn{S_{n}} from the paper by Rousseeuw and Croux 1993
+(e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 "Alternatives to the Median Absolute Deviation". For all other distributions,
-the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions.}
+the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
+parameters of the distribution must be provided by the user.}
 
-\item{bounds.params}{List of optional parameters for get_bounds_two_sided
+\item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 
 \item{pw.lty}{Line type for the pointwise error bounds. Set to non-zero for a line.}
@@ -52,18 +52,18 @@ optionally, lines for a point-wise region. The observed values are plotted
 against their expected values had they come from the specified distribution.
 }
 \details{
-For $N$ independent tests that follow a specified distribution, the global
-confidence interval of size $C$ is the region such that the probability of
-all the points being in the region is $C$. The pointwise bounds are determined
-by taking the marginal probability that an individual point is within the bounds
-is $C$. If 'difference' is set to TRUE, the vertical axis plots the 
+If any of the points of the qq-plot fall outside the simultaneous acceptance region for the selected
+level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
+specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
 observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
-the pointwise bounds.
+the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+the bounds under the null hypothesis, so the chance that the qq-plot has any points falling outside of the pointwise bounds
+is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
 }
 \examples{
 x <- rchisq(1000, 1)
 qq_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
 
 y <- runif(893)
-qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds.params = list(method = "search"), pch=3)
+qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
 }
