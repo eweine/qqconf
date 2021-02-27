@@ -1,12 +1,13 @@
-#' Quantile-quantile points
+#' Probability-probability points
 #'
-#' Draws quantile-quantile points, with an additional difference option.
+#' Draws probability-probability points.
 #'
+#' @import ggplot2
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #'
-#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
+#' @param distribution The quantile function for the specified distribution. Defaults to pnorm.
 #' Custom distributions are allowed so long as all parameters are supplied in dparams.
 #' @param dparams List of additional parameters for the quantile function of the distribution
 #'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
@@ -23,22 +24,28 @@
 #' set.seed(0)
 #' smp <- data.frame(norm = rnorm(100))
 #'
-#' # Normal Q-Q plot of simulated Normal data
+#' # Normal P-P plot of Normal data
 #' gg <- ggplot(data = smp, mapping = aes(sample = norm)) +
-#'  stat_qq_point() +
-#'  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")
+#'  stat_pp_point() +
+#'  labs(x = "Probability Points", y = "Cumulative Probability")
 #' gg
 #'
-#' # Exponential Q-Q plot of mean ozone levels (airquality dataset)
-#' di <- "exp"
-#' dp <- list(rate = 1)
+#' # Shifted Normal P-P plot of Normal data
+#' dp <- list(mean = 1.5)
+#' gg <- ggplot(data = smp, mapping = aes(sample = norm)) +
+#'  stat_pp_point(dparams = dp) +
+#'  labs(x = "Probability Points", y = "Cumulative Probability")
+#' gg
+#'
+#' # Normal P-P plot of mean ozone levels (airquality dataset)
+#' dp <- list(mean = 38, sd = 27)
 #' gg <- ggplot(data = airquality, mapping = aes(sample = Ozone)) +
-#'  stat_qq_point(distribution = di, dparams = dp) +
-#'  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")
+#' 	stat_pp_point(dparams = dp) +
+#'  labs(x = "Probability Points", y = "Cumulative Probability")
 #' gg
 #'
 #' @export
-stat_qq_point <- function(
+stat_pp_point <- function(
 	mapping = NULL,
 	data = NULL,
 	geom = "point",
@@ -46,27 +53,27 @@ stat_qq_point <- function(
 	na.rm = TRUE,
 	show.legend = NA,
 	inherit.aes = TRUE,
-	distribution = "qnorm",
+	distribution = "pnorm",
 	dparams = list(),
 	difference = FALSE,
 	...
 ) {
 	# error handling
 	if (!(distribution %in% c(
-		"qbeta",
-		"qcauchy",
-		"qchisq",
-		"qexp",
-		"qf",
-		"qgamma",
-		"qgeom",
-		"qlnorm",
-		"qlogis",
-		"qnorm",
-		"qnbinom",
-		"qpois",
-		"qt",
-		"qweibull")) &
+		"pbeta",
+		"pcauchy",
+		"pchisq",
+		"pexp",
+		"pf",
+		"pgamma",
+		"pgeom",
+		"plnorm",
+		"plogis",
+		"pnorm",
+		"pnbinom",
+		"ppois",
+		"pt",
+		"pweibull")) &
 		length(dparams) == 0 &
 		table(sapply(formals(eval(parse(text = distribution))), typeof))["symbol"] > 1) {
 		stop(
@@ -76,13 +83,11 @@ stat_qq_point <- function(
 		)
 	}
 
-
 	ggplot2::layer(
-		data = data,
 		mapping = mapping,
-		stat = StatQqPoint,
-		position = position,
+		stat = StatPpPoint,
 		geom = geom,
+		position = position,
 		show.legend = show.legend,
 		inherit.aes = inherit.aes,
 		params = list(
@@ -95,19 +100,16 @@ stat_qq_point <- function(
 	)
 }
 
-#' StatQqPoint
+#' StatPpPoint
 #'
 #' @keywords internal
 #' @usage NULL
 #' @export
-StatQqPoint <- ggplot2::ggproto(
-	`_class` = "StatQqPoint",
+StatPpPoint <- ggplot2::ggproto(
+	`_class` = "StatPpPoint",
 	`_inherit` = ggplot2::Stat,
 
-	default_aes = ggplot2::aes(
-		x = ..theoretical..,
-		y = ..sample..
-	),
+	default_aes = ggplot2::aes(x = ..theoretical.., y = ..sample..),
 
 	required_aes = c("sample"),
 
@@ -117,11 +119,12 @@ StatQqPoint <- ggplot2::ggproto(
 													 distribution,
 													 dparams,
 													 difference) {
+		# cumulative distributional function
+		pFunc <- distribution
 
-		oidx <- order(data$sample)
-		smp <- data$sample[oidx]
+		smp <- sort(data$sample)
 		n <- length(smp)
-		quantiles <- ppoints(n)
+		probs <- ppoints(n)
 
 		# automatically estimate parameters with MLE, only if no parameters are
 		# provided with dparams and there are at least one distributional parameter
@@ -131,20 +134,20 @@ StatQqPoint <- ggplot2::ggproto(
 			corresp <- function(distName) {
 				switch(
 					distName,
-					qbeta = "beta",
-					qcauchy = "cauchy",
-					qchisq = "chi-squared",
-					qexp = "exponential",
-					qf = "f",
-					qgamma = "gamma",
-					qgeom = "geometric",
-					qlnorm = "log-normal",
-					qlogis = "logistic",
-					qnorm = "normal",
-					qnbinom = "negative binomial",
-					qpois = "poisson",
-					qt = dt,
-					qweibull = "weibull",
+					beta = "beta",
+					cauchy = "cauchy",
+					chisq = "chi-squared",
+					exp = "exponential",
+					f = "f",
+					gamma = "gamma",
+					geom = "geometric",
+					lnorm = "log-normal",
+					logis = "logistic",
+					norm = "normal",
+					nbinom = "negative binomial",
+					pois = "poisson",
+					t = dt,
+					weibull = "weibull",
 					NULL
 				)
 			}
@@ -153,10 +156,10 @@ StatQqPoint <- ggplot2::ggproto(
 			initVal <- function(distName) {
 				switch(
 					distName,
-					qbeta = list(shape1 = 1, shape2 = 1),
-					qchisq = list(df = 1),
-					qf = list(df1 = 1, df2 = 2),
-					qt = list(df = 1),
+					beta = list(shape1 = 1, shape2 = 1),
+					chisq = list(df = 1),
+					f = list(df1 = 1, df2 = 2),
+					t = list(df = 1),
 					NULL
 				)
 			}
@@ -172,25 +175,18 @@ StatQqPoint <- ggplot2::ggproto(
 			})
 		}
 
-		theoretical <- do.call(distribution, c(list(p = quantiles), dparams))
+		# evaluate the cdf on the observed quantiles
+		y <- do.call(pFunc, c(list(q = smp), dparams))
 
 		if (difference) {
-			slope <- 1
-			intercept <- 0
+			# calculate new ys for the differenceed sample using the identity line
+			dY <- y - probs
 
-			# calculate new ys for the differenceed sample
-			dSmp <- NULL
-			for (i in 1:n) {
-				lSmp <- slope * theoretical[i] + intercept
-				dSmp[i] <- smp[i] - lSmp
-			}
-
-			smp <- dSmp
+			out <- data.frame(sample = dY, theoretical = probs)
+		} else {
+			out <- data.frame(sample = y, theoretical = probs)
 		}
-		
-		out <- data.frame(sample = smp, theoretical = theoretical)
 
 		out
 	}
 )
-

@@ -65,20 +65,20 @@ stat_qq_line <- function(
 ) {
 	# error handling
 	if (!(distribution %in% c(
-		"beta",
-		"cauchy",
-		"chisq",
-		"exp",
-		"f",
-		"gamma",
-		"geom",
-		"lnorm",
-		"logis",
-		"norm",
-		"nbinom",
-		"pois",
-		"t",
-		"weibull")) &
+		"pbeta",
+		"pcauchy",
+		"pchisq",
+		"pexp",
+		"pf",
+		"pgamma",
+		"pgeom",
+		"plnorm",
+		"plogis",
+		"pnorm",
+		"pnbinom",
+		"ppois",
+		"pt",
+		"pweibull")) &
 		length(dparams) == 0 &
 		table(sapply(formals(eval(parse(text = paste0("q", distribution)))), typeof))["symbol"] > 1) {
 		stop(

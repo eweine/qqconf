@@ -1,19 +1,19 @@
-#' QQ Plot with Simultaneous and Pointwise Testing Bounds.
+#' PP Plot with Simultaneous and Pointwise Testing Bounds.
 #'
-#' Create a qq-plot with with a shaded simultaneous acceptance region and,
+#' Create a pp-plot with with a shaded simultaneous acceptance region and,
 #' optionally, lines for a point-wise region. The observed values are plotted
 #' against their expected values had they come from the specified distribution.
 #' 
-#' If any of the points of the qq-plot fall outside the simultaneous acceptance region for the selected
+#' If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 #' level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
 #' specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
-#' observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
+#' observed distribution minus expected distribution. Set pw.lty to a non-zero line type to plot
 #' the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
-#' the bounds under the null hypothesis, so the chance that the qq-plot has any points falling outside of the pointwise bounds
+#' the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 #' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
 #' 
 #' @param obs The observed data.
-#' @param distribution The quantile function for the specified distribution. Defaults to qnorm.
+#' @param distribution The distribution function for the specified distribution. Defaults to pnorm.
 #' Custom distributions are allowed so long as all parameters are supplied in dparams.
 #' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
 #' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
@@ -24,7 +24,7 @@
 #' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
 #' @param shade.col What color to use for the simultaneous acceptance region.
 #' @param add Whether to add points to an existing plot. 
-#' @param dparams List of additional parameters for the quantile function of the distribution
+#' @param dparams List of additional parameters for the distribution function of the distribution
 #'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
 #'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions,
@@ -40,11 +40,11 @@
 #'
 #' @examples
 #' x <- rchisq(1000, 1)
-#' qq_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
+#' pp_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
 #'
 #' y <- runif(893)
-#' qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
-qq_conf_plot <- function(obs,
+#' pp_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
+pp_conf_plot <- function(obs,
                          distribution = qnorm,
                          method = c("ell", "ks"),
                          alpha = 0.05,
@@ -63,20 +63,20 @@ qq_conf_plot <- function(obs,
     corresp <- function(distributionName) {
       switch(
         distributionName,
-        qbeta = "beta",
-        qcauchy = "cauchy",
-        qchisq = "chi-squared",
-        qexp = "exponential",
-        qf = "f",
-        qgamma = "gamma",
-        qgeom = "geometric",
-        qlnorm = "log-normal",
-        qlogis = "logistic",
-        qnorm = "normal",
-        qnbinom = "negative binomial",
-        qpois = "poisson",
-        qt = "t",
-        qweibull = "weibull",
+        pbeta = "beta",
+        pcauchy = "cauchy",
+        pchisq = "chi-squared",
+        pexp = "exponential",
+        pf = "f",
+        pgamma = "gamma",
+        pgeom = "geometric",
+        plnorm = "log-normal",
+        plogis = "logistic",
+        pnorm = "normal",
+        pnbinom = "negative binomial",
+        ppois = "poisson",
+        pt = "t",
+        pweibull = "weibull",
         NULL
       )
     }
@@ -116,13 +116,13 @@ qq_conf_plot <- function(obs,
   method <- match.arg(method)
   if ( is.null(dots$ylab)) {
     if (difference && log10) {
-      ylab <- expression("-log"[10]*"(Observed quantiles) + log"[10]*"(Expected quantiles)")
+      ylab <- expression("-log"[10]*"(Observed distributions) + log"[10]*"(Expected distributions)")
     } else if(difference) {
-      ylab <- 'Obseved quantiles - Expected quantiles'
+      ylab <- 'Obseved distributions - Expected distributions'
     } else if (log10) {
-      ylab <- expression("-log"[10]*"(Observed quantiles)")
+      ylab <- expression("-log"[10]*"(Observed distributions)")
     } else {
-      ylab <- 'Observed quantiles'
+      ylab <- 'Observed distributions'
     }
   } else {
     ylab <- dots$ylab
@@ -130,9 +130,9 @@ qq_conf_plot <- function(obs,
   }
   if (is.null(dots$xlab)) {
     if (log10) {
-      xlab <- expression("-log"[10]*"(Expected quantiles)")
+      xlab <- expression("-log"[10]*"(Expected distributions)")
     } else {
-      xlab <- 'Expected quantiles'
+      xlab <- 'Expected distributions'
     }
   } else {
     xlab <- dots$xlab
@@ -142,8 +142,8 @@ qq_conf_plot <- function(obs,
   samp.size <- length(obs)
   conf.int <- 1 - alpha
   conf <- c(alpha / 2, conf.int + alpha / 2)
-  ## The observed and expected quantiles. Expected quantiles are based on the specified
-  ## distributionribution.
+  ## The observed and expected distributions. Expected distributions are based on the specified
+  ## distribution
   obs.pts <- sort(obs)
   exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
   if (log10 == TRUE) {
@@ -156,7 +156,7 @@ qq_conf_plot <- function(obs,
     y.pts <- obs.pts
   }
   
-  ## When not adding points to a qq-plot compute pointwise and global confidence bounds.
+  ## When not adding points to a pp-plot compute pointwise and global confidence bounds.
   if (!add) {
     left <- exp.pts[1]
     right <- exp.pts[samp.size]
@@ -187,7 +187,7 @@ qq_conf_plot <- function(obs,
       upper <- intercept + slope * do.call(qFunc, c(list(p = up), dparams))
       
     }
-
+    
     
     if (log10 == TRUE) {
       pointwise.low <- -log10(pointwise.low)
