@@ -75,7 +75,7 @@ stat_pp_band <- function(
 	inherit.aes = TRUE,
 	distribution = "pnorm",
 	dparams = list(),
-	method = "boot",
+	method = "ell",
 	alpha = .05,
 	difference = FALSE,
 	...

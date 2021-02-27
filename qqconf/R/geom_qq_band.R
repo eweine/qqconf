@@ -15,28 +15,28 @@ geom_qq_band <- function(
 	distribution = "norm",
 	dparams = list(),
 	difference = FALSE,
-	bandType = "pointwise",
-	conf = .95,
+	method = "ell",
+	alpha = .05
 	...
 ) {
 	# error handling
 	if (!(distribution %in% c(
-		"beta",
-		"cauchy",
-		"chisq",
-		"exp",
-		"f",
-		"gamma",
-		"geom",
-		"lnorm",
-		"logis",
-		"norm",
-		"nbinom",
-		"pois",
-		"t",
-		"weibull")) &
+		"qbeta",
+		"qcauchy",
+		"qchisq",
+		"qexp",
+		"qf",
+		"qgamma",
+		"qgeom",
+		"qlnorm",
+		"qlogis",
+		"qnorm",
+		"qnbinom",
+		"qpois",
+		"qt",
+		"qweibull")) &
 		length(dparams) == 0 &
-		table(sapply(formals(eval(parse(text = paste0("q", distribution)))), typeof))["symbol"] > 1) {
+		table(sapply(formals(eval(parse(text = distribution))), typeof))["symbol"] > 1) {
 		stop(
 			"MLE is currently not supported for custom distributions.\n",
 			"Please provide all the custom distribution parameters to 'dparams'.",
@@ -44,8 +44,10 @@ geom_qq_band <- function(
 		)
 	}
 
+  conf <- 1 - alpha
+  
 	if (conf < 0 | conf > 1) {
-		stop("Please provide a valid confidence level for the bands: ",
+		stop("Please provide a valid alpha level for the bands: ",
 				 "'conf' must be between 0 and 1.",
 				 call. = FALSE)
 	}
@@ -53,7 +55,7 @@ geom_qq_band <- function(
 	# vector with common discrete distributions
 	discreteDist <- c("binom", "geom", "nbinom", "pois")
 
-	bandType <- match.arg(bandType, c("pointwise", "boot", "ts", "ks"))
+	method <- match.arg(method, c("ell", "ks", "pointwise"))
 
 	ggplot2::layer(
 		data = data,
@@ -69,8 +71,8 @@ geom_qq_band <- function(
 			dparams = dparams,
 			difference = difference,
 			identity = identity,
-			bandType = bandType,
-			conf = conf,
+			method = method,
+			alpha = alpha,
 			discrete = distribution %in% discreteDist,
 			...
 		)
