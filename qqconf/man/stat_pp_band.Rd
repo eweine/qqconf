@@ -7,7 +7,7 @@
 stat_pp_band(mapping = NULL, data = NULL, geom = "ribbon",
   position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, distribution = "pnorm", dparams = list(),
-  method = "boot", alpha = 0.05, difference = FALSE, ...)
+  method = "ell", alpha = 0.05, difference = FALSE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

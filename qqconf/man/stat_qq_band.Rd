@@ -8,7 +8,7 @@
 geom_qq_band(mapping = NULL, data = NULL, stat = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, distribution = "norm", dparams = list(),
-  difference = FALSE, bandType = "pointwise", conf = 0.95, ...)
+  difference = FALSE, method = "ell", alpha = 0.05, ...)
 
 stat_qq_band(mapping = NULL, data = NULL, geom = "qq_band",
   position = "identity", na.rm = TRUE, show.legend = NA,
@@ -69,6 +69,12 @@ parameters of the distribution must be provided by the user.}
 \item{difference}{Whether to plot the difference between the observed and
 expected values on the vertical axis.}
 
+\item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
+Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.}
+
+\item{alpha}{Type I error of global test of if the data comes from the reference distribution.}
+
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{color = "red"} or \code{size = 3}. They may also be parameters
@@ -76,14 +82,8 @@ to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
 
-\item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
-test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
-Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.}
-
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
-
-\item{alpha}{Type I error of global test of if the data comes from the reference distribution.}
 }
 \description{
 Draws quantile-quantile confidence bands, with an additional difference option.

@@ -16,7 +16,7 @@ geom_qq_band <- function(
 	dparams = list(),
 	difference = FALSE,
 	method = "ell",
-	alpha = .05
+	alpha = .05,
 	...
 ) {
 	# error handling
