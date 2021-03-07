@@ -4,7 +4,7 @@
 \alias{pp_conf_plot}
 \title{PP Plot with Simultaneous and Pointwise Testing Bounds.}
 \usage{
-pp_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
+pp_conf_plot(obs, distribution = pnorm, method = c("ell", "ks"),
   alpha = 0.05, difference = FALSE, log10 = FALSE,
   shade.col = "gray", add = FALSE, dparams = NULL,
   bounds_params = NULL, pw.lty = 0, pw.col = "black", ...)
@@ -12,7 +12,7 @@ pp_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
 \arguments{
 \item{obs}{The observed data.}
 
-\item{distribution}{The distribution function for the specified distribution. Defaults to pnorm.
+\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
 Custom distributions are allowed so long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
@@ -24,13 +24,14 @@ Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommend
 \item{difference}{Whether to plot the difference between the observed and
 expected values on the vertical axis.}
 
-\item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values).}
+\item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
+positive distributions.}
 
 \item{shade.col}{What color to use for the simultaneous acceptance region.}
 
 \item{add}{Whether to add points to an existing plot.}
 
-\item{dparams}{List of additional parameters for the distribution function of the distribution
+\item{dparams}{List of additional parameters for the quantile function of the distribution
 (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
 For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 "Alternatives to the Median Absolute Deviation". For all other distributions,
@@ -55,7 +56,7 @@ against their expected values had they come from the specified distribution.
 If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
 specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
-observed distribution minus expected distribution. Set pw.lty to a non-zero line type to plot
+observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
 the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
 the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.

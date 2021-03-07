@@ -39,7 +39,7 @@
 #'  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")
 #' gg
 #'
-#' # differenceed Exponential Q-Q plot of mean ozone levels
+#' # differenced Exponential Q-Q plot of mean ozone levels
 #' di <- "exp"
 #' dp <- list(rate = 1)
 #' de <- TRUE

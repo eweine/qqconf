@@ -21,7 +21,8 @@
 #' @param alpha Type I error of global test of if the data comes from the reference distribution.
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
-#' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
+#' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
+#' positive distributions.
 #' @param shade.col What color to use for the simultaneous acceptance region.
 #' @param add Whether to add points to an existing plot. 
 #' @param dparams List of additional parameters for the quantile function of the distribution
@@ -58,8 +59,10 @@ qq_conf_plot <- function(obs,
                          pw.col = 'black',
                          ...) {
   
+  dist_name <- as.character(substitute(distribution))
+  
   if(is.null(dparams)) {
-    # equivalence between base R and MASS::fitdistributionr distributionribution names
+    # equivalence between base R and MASS::fitdistr distribution names
     corresp <- function(distributionName) {
       switch(
         distributionName,
@@ -81,7 +84,7 @@ qq_conf_plot <- function(obs,
       )
     }
     
-    # initial value for some distributionributions
+    # initial value for some distributions
     initVal <- function(distributionName) {
       switch(
         distributionName,
@@ -94,19 +97,19 @@ qq_conf_plot <- function(obs,
     }
     
     suppressWarnings({
-      if(!is.null(corresp(distributionribution))) {
-        if(is.null(initVal(distributionribution))) {
-          if(corresp(distributionribution) == "normal") {
+      if(!is.null(corresp(dist_name))) {
+        if(is.null(initVal(dist_name))) {
+          if(corresp(dist_name) == "normal") {
             
-            # Use special estimators for the normal distributionribution
+            # Use special estimators for the normal distribution
             dparams <- c()
-            dparams['mean'] <- median(x = smp)
-            dparams['sd'] <- robustbase::Sn(x = smp)
+            dparams['mean'] <- median(x = obs)
+            dparams['sd'] <- robustbase::Sn(x = obs)
             
           }
-          dparams <- MASS::fitdistributionr(x = smp, densfun = corresp(distributionribution))$estimate
+          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
         } else {
-          dparams <- MASS::fitdistributionr(x = smp, densfun = corresp(distributionribution), start = initVal(distributionribution))$estimate
+          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name), start = initVal(dist_name))$estimate
         }
       }
     })
@@ -143,11 +146,16 @@ qq_conf_plot <- function(obs,
   conf.int <- 1 - alpha
   conf <- c(alpha / 2, conf.int + alpha / 2)
   ## The observed and expected quantiles. Expected quantiles are based on the specified
-  ## distributionribution.
+  ## distribution
   obs.pts <- sort(obs)
   exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
+    if (any(obs.pts <= 0)) {
+      
+      stop("log10 scaling can only be used with strictly positive distributions.")
+      
+    }
     obs.pts <- -log10(obs.pts)
   }
   if (difference) {
@@ -183,8 +191,8 @@ qq_conf_plot <- function(obs,
       epsilon <- sqrt((1 / (2 * n)) * log(2 / (1 - conf.int)))
       lp <- pmax(probs - epsilon, rep(0, n))
       up <- pmin(probs + epsilon, rep(1, n))
-      lower <- intercept + slope * do.call(qFunc, c(list(p = lp), dparams))
-      upper <- intercept + slope * do.call(qFunc, c(list(p = up), dparams))
+      lower <- intercept + slope * do.call(distribution, c(list(p = lp), dparams))
+      upper <- intercept + slope * do.call(distribution, c(list(p = up), dparams))
       
     }
 

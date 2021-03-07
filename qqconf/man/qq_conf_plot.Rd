@@ -24,7 +24,8 @@ Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommend
 \item{difference}{Whether to plot the difference between the observed and
 expected values on the vertical axis.}
 
-\item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values).}
+\item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
+positive distributions.}
 
 \item{shade.col}{What color to use for the simultaneous acceptance region.}
 
