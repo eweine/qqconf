@@ -223,7 +223,17 @@ get_bounds_two_sided <- function(alpha,
 
   `%>%` <- magrittr::`%>%`
   n_param <- n
-  method <- match.arg(method)
+  if (n >= 10) {
+    
+    # Approximation only available for n < 10
+    method <- match.arg(method)
+    
+  } else {
+    
+    method <- "search"
+    
+  }
+  
   # Value used for testing if alpha is approximately equal to a set of pre-set values
   alpha_epsilon <- 10 ^ (-5)
 
