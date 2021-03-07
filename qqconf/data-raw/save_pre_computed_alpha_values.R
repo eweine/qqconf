@@ -1,3 +1,5 @@
 alpha_01_df <- readr::read_csv("~/downloads/alpha_01_500k.csv")
 alpha_05_df <- readr::read_csv("~/Documents/local_level_results.csv")
+df_100k <- data.frame(n=c(100000), local_level=c(.0004781731))
+alpha_05_df <- rbind(alpha_05_df, df_100k)
 usethis::use_data(alpha_05_df, alpha_01_df, internal = TRUE, overwrite = TRUE)

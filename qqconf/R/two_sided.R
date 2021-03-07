@@ -311,7 +311,7 @@ get_bounds_two_sided <- function(alpha,
         eta <- eta_df$local_level[1]
 
       } else if (
-        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 5 * (10 ^ 4)) || 
+        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) || 
           (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
 
         eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
