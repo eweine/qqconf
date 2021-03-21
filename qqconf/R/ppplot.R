@@ -172,13 +172,13 @@ pp_conf_plot <- function(obs,
     bottom <- min(y.pts) #obs.pts[1]
     top <- max(y.pts) #obs.pts[samp.size]
     do.call(plot, c(list(x=c(left, right), y=c(bottom, top), type='n', xlab=xlab, ylab=ylab), dots))
-    pointwise.low <- do.call(distribution,
-                             c(list(q=qbeta(conf[1], 1:samp.size, samp.size:1)), dparams))
-    pointwise.high <- do.call(distribution,
-                              c(list(q=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
+    #pointwise.low <- do.call(distribution,
+    #                         c(list(q=qbeta(conf[1], 1:samp.size, samp.size:1)), dparams))
+    #pointwise.high <- do.call(distribution,
+    #                          c(list(q=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
     
-    #pointwise.low <- conf[1]
-    #pointwise.high <- conf[2]
+    pointwise.low <- qbeta(conf[1], 1:samp.size, samp.size:1)
+    pointwise.high <- qbeta(conf[2], 1:samp.size, samp.size:1)
     
     global.bounds <- do.call(get_bounds_two_sided,
                              c(list(alpha = alpha, n = samp.size), bounds_params))
