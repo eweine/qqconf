@@ -193,12 +193,10 @@ pp_conf_plot <- function(obs,
       
     } else if (method == "ks") {
       
-      probs <- ppoints(n)
-      epsilon <- sqrt((1 / (2 * n)) * log(2 / (1 - conf.int)))
-      lp <- pmax(probs - epsilon, rep(0, n))
-      up <- pmin(probs + epsilon, rep(1, n))
-      lower <- intercept + slope * do.call(distribution, c(list(q = lp), dparams))
-      upper <- intercept + slope * do.call(distribution, c(list(q = up), dparams))
+      probs <- ppoints(samp.size)
+      epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
+      global.low <- pmax(probs - epsilon, rep(0, samp.size))
+      global.high <- pmin(probs + epsilon, rep(1, samp.size))
       
     }
     

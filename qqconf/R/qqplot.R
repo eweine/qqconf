@@ -187,12 +187,12 @@ qq_conf_plot <- function(obs,
       
     } else if (method == "ks") {
       
-      probs <- ppoints(n)
-      epsilon <- sqrt((1 / (2 * n)) * log(2 / (1 - conf.int)))
-      lp <- pmax(probs - epsilon, rep(0, n))
-      up <- pmin(probs + epsilon, rep(1, n))
-      lower <- intercept + slope * do.call(distribution, c(list(p = lp), dparams))
-      upper <- intercept + slope * do.call(distribution, c(list(p = up), dparams))
+      probs <- ppoints(samp.size)
+      epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
+      lp <- pmax(probs - epsilon, rep(0, samp.size))
+      up <- pmin(probs + epsilon, rep(1, samp.size))
+      global.low <- do.call(distribution, c(list(p = lp), dparams))
+      global.high <- do.call(distribution, c(list(p = up), dparams))
       
     }
 
@@ -210,8 +210,10 @@ qq_conf_plot <- function(obs,
       lines(exp.pts, pointwise.low - exp.pts, lty = pw.lty, col = pw.col, ...)
       lines(exp.pts, pointwise.high - exp.pts, lty = pw.lty, col = pw.col, ...)
     } else {
+      bottom <- min(y.pts) 
+      top <- max(y.pts)
       polygon(c(exp.pts, exp.pts[samp.size:1]),
-              c(global.low, global.high[samp.size:1]),
+              pmin(pmax(c(global.low, global.high[samp.size:1]), bottom), top),
               border=NA, col=shade.col)
       lines(exp.pts, pointwise.low, lty = pw.lty, col = pw.col, ...)
       lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
