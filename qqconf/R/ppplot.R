@@ -147,8 +147,9 @@ pp_conf_plot <- function(obs,
   conf <- c(alpha / 2, conf.int + alpha / 2)
   ## The observed and expected probabilities. Expected probabilities are based on the specified
   ## distribution
-  obs.pts <- sort(obs)
-  exp.pts <- do.call(distribution, c(list(q=ppoints(samp.size, a=0)), dparams))
+
+  obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
+  exp.pts <- ppoints(samp.size, a=0)
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
     if (any(obs.pts <= 0)) {
@@ -176,14 +177,19 @@ pp_conf_plot <- function(obs,
     pointwise.high <- do.call(distribution,
                               c(list(q=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
     
+    #pointwise.low <- conf[1]
+    #pointwise.high <- conf[2]
+    
     global.bounds <- do.call(get_bounds_two_sided,
                              c(list(alpha = alpha, n = samp.size), bounds_params))
     # Here, have to figure out how to do this for the KS test
     # I don't think that this should be too hard, but I'm not completely sure
     if (method == "ell") {
       
-      global.low <- do.call(distribution, c(list(q = global.bounds$lower_bound), dparams))
-      global.high <- do.call(distribution, c(list(q = global.bounds$upper_bound), dparams))
+      #global.low <- do.call(distribution, c(list(q = global.bounds$lower_bound), dparams))
+      #global.high <- do.call(distribution, c(list(q = global.bounds$upper_bound), dparams))
+      global.low <- global.bounds$lower_bound
+      global.high <- global.bounds$upper_bound
       
     } else if (method == "ks") {
       
