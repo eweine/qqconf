@@ -221,6 +221,15 @@ get_bounds_two_sided <- function(alpha,
                                 max_it = 100,
                                 method=c("best_available", "approximate", "search")) {
 
+  if (n == 1) {
+    
+    return(list(lower_bound = c(alpha / 2),
+                upper_bound = c(1 - alpha / 2),
+                x = c(.5),
+                local_level = alpha))
+    
+  }
+  
   `%>%` <- magrittr::`%>%`
   n_param <- n
   if (n >= 10) {
