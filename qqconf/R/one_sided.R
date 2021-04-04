@@ -132,7 +132,16 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #' @export
 get_bounds_one_sided <- function(alpha, n, tol = 1e-6, max_it = 100) {
   
-  eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
+  if (alpha > .99 || n < 7) {
+    
+    eta_high <- alpha
+    
+  } else {
+    
+    eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
+    
+  }
+  
   eta_low <- alpha / n
   eta_curr <- eta_low + (eta_high - eta_low) / 2
   n_it <- 0
