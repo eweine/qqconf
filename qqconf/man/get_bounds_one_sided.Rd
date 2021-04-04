@@ -4,7 +4,7 @@
 \alias{get_bounds_one_sided}
 \title{Calculates Local Bounds For One-Sided Test}
 \usage{
-get_bounds_one_sided(alpha, n, tol = 1e-08, max_it = 100)
+get_bounds_one_sided(alpha, n, tol = 1e-06, max_it = 100)
 }
 \arguments{
 \item{alpha}{Desired Type I Error rate of the complete test.}

@@ -51,61 +51,54 @@ get_level_from_bounds_one_sided <- function(bounds) {
     
   } else {
     
-    lgamma_vec <- rep(0, n)
+    lgamma_vec <- numeric(n + 1)
+    
     lgamma_vec[1] <- 0
-    for (i in seq(from = 2, to = n + 1, by = 1)) {
+    for (i in seq(2, n + 1)) {
       
       lgamma_vec[i] <- lgamma_vec[i - 1] + log(i - 1)
       
     }
     
-    c_0_1 <- (1 - bounds[2]) ^ n
-    c_1_1 <- n * (bounds[2] - bounds[1]) * ((1 - bounds[2]) ^ (n - 1))
-    c_prev <- c(c_0_1, c_1_1)
+    cc <- c((1 - bounds[2]) ^ n, exp(log(n) + log(bounds[2] - bounds[1]) + (n - 1) * log(1 - bounds[2])), 0)
+    cn <- cc
     
-    for (k in seq(from = 2, to = (n - 1), by = 1)) {
+    if (n > 2) for(k in c(2:(n-1))) {
       
-      c_curr <- rep(0, (k + 1)) 
-      c_curr[1] <- (1 - bounds[k + 1]) ^ n
+      cn[1] <- (1 - bounds[k + 1]) ^ n
       
-      for (j in seq(from = 1, to = (k - 1), by = 1)) {
+      for (j in c(1:(k-1))) {
         
-        c_curr[j + 1] <- exp(log(c_prev[j + 1]) + (n - j) * log(1 - bounds[k + 1])
-                             - (n - j) * log(1 - bounds[k]))
+        cn[j + 1] <- exp(log(cc[j + 1]) + (n - j) * log(1 - bounds[k + 1]) - (n - j) * log(1 - bounds[k]))
         
-        for (l in seq(from = 0, to = (j - 1), by = 1)) {
+        for(l in c(0:(j-1))) {
           
-          c_curr[j + 1] <- c_curr[j + 1] + c_prev[l + 1] *
-            (exp(lgamma_vec[n - l + 1]) / (exp(lgamma_vec[j - l + 1]) * exp(lgamma_vec[n - j + 1]))) *
-            ((bounds[k + 1] - bounds[k]) ^ (j - l)) * 
-            ((1 - bounds[k + 1]) ^ (n - j)) /
-            ((1 - bounds[k]) ^ (n - l))
+          cn[j + 1] <- cn[j + 1] + exp(log(cc[l + 1]) + (j - l) * log(bounds[k + 1] - bounds[k]) + 
+                          (n - j) * log(1 - bounds[k + 1]) - (n - l) * log(1 - bounds[k]) + lgamma_vec[n - l + 1] - lgamma_vec[j - l + 1] - lgamma_vec[n - j + 1])
           
-        }
-        
+        } 
+      
       }
       
-      c_curr[k+1]<- 0
-      
-      for(l in c(0:(k-1))) { 
+      cn[k + 1] <- 0
+      for(l in c(0:(k-1))) {
         
-        c_curr[k+1] <- c_curr[k+1] + 
-          exp(log(c_prev[l + 1]) + (k - l) * 
-                log(bounds[k + 1] - bounds[k]) + (n - k) * 
-                log(1 - bounds[k + 1]) - (n - l) * log(1 - bounds[k]) + 
-                lgamma_vec[n - l + 1] - lgamma_vec[k - l + 1] - lgamma_vec[n - k + 1])
+        cn[k + 1] <- cn[k + 1] + exp(log(cc[l + 1]) + (k - l) * log(bounds[k + 1] - bounds[k]) + (n - k) * log(1 - bounds[k + 1]) - (n - l) *
+                        log(1 - bounds[k]) + lgamma_vec[n - l + 1] - lgamma_vec[k - l + 1] - lgamma_vec[n - k + 1])
         
-      }
+      } 
       
-      c_prev <- c_curr
-      
+      cc <- cn
+      cn <- c(cn, 0)
     }
     
-    sum(c_prev)
-    
+    cn[n + 1] <- 0
+    return(1-sum(cc))
+
   }
   
 }
+
 
 
 #' Calculates Local Bounds For One-Sided Test
@@ -137,7 +130,7 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #'
 #'
 #' @export
-get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
+get_bounds_one_sided <- function(alpha, n, tol = 1e-6, max_it = 100) {
   
   eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
   eta_low <- alpha / n
@@ -149,7 +142,7 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
     n_it <- n_it + 1
     h_vals <- stats::qbeta(eta_curr, 1:n, n:1)
     
-    test_alpha <- 1 - get_level_from_bounds_one_sided(h_vals)
+    test_alpha <- get_level_from_bounds_one_sided(h_vals)
     
     if (abs(test_alpha - alpha) / alpha <= tol) break
     
