@@ -132,6 +132,24 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #' @export
 get_bounds_one_sided <- function(alpha, n, tol = 1e-6, max_it = 100) {
   
+  if (alpha >= 1 || alpha <= 0) {
+    
+    stop("alpha must be between 0 and 1 (exclusive).")
+    
+  }
+  
+  if (as.integer(n) != n) {
+    
+    stop("n must be an integer")
+    
+  }
+  
+  if (n < 1) {
+    
+    stop("n must be greater than 0")
+    
+  }
+  
   if (alpha > .99 || n < 7) {
     
     eta_high <- alpha

@@ -22,9 +22,9 @@ check_bounds_two_sided <- function(lower_bounds,
 
   }
 
-  if(any(upper_bounds > 1) || any(upper_bounds < 0)) {
+  if(any(upper_bounds >= 1) || any(upper_bounds <= 0)) {
 
-    stop("Not all upper bounds between 0 and 1")
+    stop("Not all upper bounds between 0 and 1 (exclusive)")
 
   }
 
@@ -221,6 +221,24 @@ get_bounds_two_sided <- function(alpha,
                                 max_it = 100,
                                 method=c("best_available", "approximate", "search")) {
 
+  if (alpha >= 1 || alpha <= 0) {
+    
+    stop("alpha must be between 0 and 1 (exclusive).")
+    
+  }
+  
+  if (as.integer(n) != n) {
+    
+    stop("n must be an integer")
+    
+  }
+  
+  if (n < 1) {
+    
+    stop("n must be greater than 0")
+    
+  }
+  
   if (n == 1) {
     
     return(list(lower_bound = c(alpha / 2),
