@@ -249,7 +249,16 @@ get_bounds_two_sided <- function(alpha,
   # Approximations are only available for alpha = .05 or alpha = .01
   if (method == "search") {
 
-    eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
+    if (n < 7 || alpha > .99) {
+      
+      eta_high <- alpha
+      
+    } else {
+      
+      eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
+      
+    }
+    
     eta_low <- alpha / n
     eta_curr <- eta_low + (eta_high - eta_low) / 2
     n_it <- 0
