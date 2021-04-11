@@ -2,17 +2,17 @@
 % Please edit documentation in R/one_sided.R
 \name{get_bounds_one_sided}
 \alias{get_bounds_one_sided}
-\title{Calculates Local Bounds For One-Sided Test}
+\title{Calculates Rejection Region of One-Sided Equal Local Levels Test}
 \usage{
 get_bounds_one_sided(alpha, n, tol = 1e-06, max_it = 100)
 }
 \arguments{
-\item{alpha}{Desired Type I Error rate of the complete test.}
+\item{alpha}{Desired global significance level of the test.}
 
 \item{n}{Size of the dataset.}
 
 \item{tol}{(Optional) Relative tolerance of the \eqn{\alpha} level of the
-simultaneous test. Defaults to 1e-8.}
+simultaneous test. Defaults to 1e-6.}
 
 \item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm
 used to find the bounds. Defaults to 100 which should be much larger than necessary
@@ -21,18 +21,28 @@ for a reasonable tolerance.}
 \value{
 A list with components
 \itemize{
-  \item bound - Numeric vector containing the bounds of the test of each order statistic.
-  \item x - Expectation of each order statistic. This is the x-axis for the bounds if used in a qq-plot.
-  \item local_level - Type I Error rate of each individual test on the order statistic. It is equal for all tests.
+  \item bound - Numeric vector of length n containing the lower bounds of the acceptance regions for the test of each order statistic.
+  \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+  The value is \code{c(1:n) / (n + 1)}.
+  \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
+  statistics and will be less than or equal to \eqn{\alpha}.
 }
 }
 \description{
-Given the size of the dataset and the desired Type I Error rate \eqn{\alpha},
-this calculates one-sided testing bounds for each order statistic.
-These bounds are created using "equal local levels," which means that
-each bound corresponds to a test that has a Type I Error rate of \eqn{\eta}
-on its corresponding order statistic. Note that this code may be very slow for
-values of n.
+The context is that n i.i.d. observations are assumed to be drawn
+from some distribution on the unit interval with c.d.f. F(x), and it is 
+desired to test the null hypothesis that F(x) = x for all x in (0,1), 
+referred to as the "global null hypothesis," against the alternative F(x) > x for at least one x in (0, 1).
+An "equal local levels" test is used, in which each of the n order statistics is
+tested for significant deviation from its null distribution by a 1-sided test 
+with significance level eta.  The global null hypothesis is rejected if at 
+least one of the order statistic tests is rejected at level eta, where eta is 
+chosen so that the significance level of the global test is alpha.  
+Given the size of the dataset n and the desired global significance level alpha, 
+this function calculates the local level eta and the acceptance/rejection regions for the test.
+The result is a set of lower bounds, one for each order statistic.  
+If at least one order statistic falls below the corresponding bound, 
+the global test is rejected. Note that the code may be slow for n > 500.
 }
 \examples{
 get_bounds_one_sided(alpha = .05, n = 10, tol = 1e-6, max_it = 50)
