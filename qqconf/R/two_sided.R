@@ -198,20 +198,25 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' for a reasonable tolerance.
 #' @param method (Optional) Parameter indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
-#' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact
-#' search when the approximation isn't highly accurate and the search method isn't prohibitively slow. Of note, 
-#' the approximate method is only usable for alpha values of .1, .05, and .01 (within 10 ^ (-5)).
+#' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
+#' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method 
+#' isn't prohibitively slow (occurs for small to moderate n with \eqn{\alpha} = .1). 
+#' Of note, the approximate method is only available for alpha values of .1, .05, and .01.
 #'
 #' @return A list with components
 #' \itemize{
-#'   \item lower_bound - Numeric vector containing the lower bounds of the test of each order statistic.
-#'   \item upper_bound - Numeric vector containing the upper bounds of the test of each order statistic.
-#'   \item x - Expectation of each order statistic. This is the x-axis for the bounds if used in a qq-plot.
-#'   \item local_level - Type I Error rate of each individual test on the order statistic. It is equal for all tests.
+#'   \item lower_bound - Numeric vector of length n containing the lower bounds 
+#'   for the acceptance regions of the test of each order statistic.
+#'   \item upper_bound - Numeric vector of length n containing the upper bounds 
+#'   for the acceptance regions of the test of each order statistic.
+#'   \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+#'   The value is \code{c(1:n) / (n + 1)}.
+#'   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
+#'   statistics and will be less than or equal to \eqn{\alpha}.
 #' }
 #'
 #' @examples
-#' get_bounds_two_sided(alpha = .05, n = 100, tol = 1e-6, max_it = 50)
+#' get_bounds_two_sided(alpha = .05, n = 100)
 #'
 #'
 #' @export
