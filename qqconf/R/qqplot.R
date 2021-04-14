@@ -196,6 +196,15 @@ qq_conf_plot <- function(obs,
       
     }
 
+    # code to extend region for visibility
+    global.low <- c(global.low[1], global.low, global.low[samp.size])
+    global.high <- c(global.high[1], global.high, global.high[samp.size])
+    pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
+    pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
+    c <- .5
+    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / (samp.size + 2))))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * do.call(distribution, c(list(p=c((samp.size + 1) / (samp.size + 2))))) + (1 - c) * exp.pts[samp.size]
+    exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
     
     if (log10 == TRUE) {
       pointwise.low <- -log10(pointwise.low)
@@ -204,16 +213,16 @@ qq_conf_plot <- function(obs,
       global.high <- -log10(global.high)
     }
     if (difference) {
-      polygon(c(exp.pts, exp.pts[samp.size:1]),
-              c(global.low - exp.pts, global.high[samp.size:1] - exp.pts[samp.size:1]),
+      polygon(c(exp.pts, rev(exp.pts)),
+              c(global.low - exp.pts, rev(global.high) - rev(exp.pts)),
               border=NA, col=shade.col)
       lines(exp.pts, pointwise.low - exp.pts, lty = pw.lty, col = pw.col, ...)
       lines(exp.pts, pointwise.high - exp.pts, lty = pw.lty, col = pw.col, ...)
     } else {
       bottom <- min(y.pts) 
       top <- max(y.pts)
-      polygon(c(exp.pts, exp.pts[samp.size:1]),
-              pmin(pmax(c(global.low, global.high[samp.size:1]), bottom), top),
+      polygon(c(exp.pts, rev(exp.pts)),
+              pmin(pmax(c(global.low, rev(global.high)), bottom), top),
               border=NA, col=shade.col)
       lines(exp.pts, pointwise.low, lty = pw.lty, col = pw.col, ...)
       lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
