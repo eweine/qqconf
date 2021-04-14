@@ -210,8 +210,8 @@ qq_conf_plot <- function(obs,
       lines(exp.pts, pointwise.low - exp.pts, lty = pw.lty, col = pw.col, ...)
       lines(exp.pts, pointwise.high - exp.pts, lty = pw.lty, col = pw.col, ...)
     } else {
-      bottom <- min(y.pts) 
-      top <- max(y.pts)
+      bottom <- -.Machine$double.xmax
+      top <- .Machine$double.xmax
       polygon(c(exp.pts, exp.pts[samp.size:1]),
               pmin(pmax(c(global.low, global.high[samp.size:1]), bottom), top),
               border=NA, col=shade.col)
