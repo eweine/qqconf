@@ -202,8 +202,8 @@ qq_conf_plot <- function(obs,
     pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
     pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
     c <- .5
-    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / (samp.size + 2))))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * do.call(distribution, c(list(p=c((samp.size + 1) / (samp.size + 2))))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[samp.size]
     exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
     
     if (log10 == TRUE) {
@@ -228,7 +228,7 @@ qq_conf_plot <- function(obs,
       lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
     }
   }
-  points(exp.pts[1:samp.size], y.pts, ...)
+  points(exp.pts[2:(samp.size + 1)], y.pts, ...)
   if (difference) {
     abline(h = 0, ...)
   } else {
