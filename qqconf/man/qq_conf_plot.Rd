@@ -7,7 +7,8 @@
 qq_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
   alpha = 0.05, difference = FALSE, log10 = FALSE,
   shade.col = "gray", add = FALSE, dparams = NULL,
-  bounds_params = NULL, pw.lty = 0, pw.col = "black", ...)
+  bounds_params = NULL, pw.lty = 0, pw.col = "black",
+  samples_func = points, samples_col = "black", ...)
 }
 \arguments{
 \item{obs}{The observed data.}
@@ -45,7 +46,11 @@ parameters of the distribution must be provided by the user.}
 
 \item{pw.col}{Color for the pointwise bounds line.}
 
+\item{samples_func}{Function used to plot sample points on the graph.}
+
 \item{...}{Additional parameters for the plot.}
+
+\item{sample_col}{Color of the samples}
 }
 \description{
 Create a qq-plot with with a shaded simultaneous acceptance region and,

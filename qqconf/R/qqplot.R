@@ -35,6 +35,8 @@
 #'   (i.e. tol, max_it, method).
 #' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
 #' @param pw.col Color for the pointwise bounds line.
+#' @param samples_func Function used to plot sample points on the graph.
+#' @param sample_col Color of the samples
 #' @param ... Additional parameters for the plot.
 #' 
 #' @export
@@ -57,6 +59,8 @@ qq_conf_plot <- function(obs,
                          bounds_params = NULL,
                          pw.lty = 0,
                          pw.col = 'black',
+                         samples_func = points,
+                         samples_col = 'black',
                          ...) {
   
   dist_name <- as.character(substitute(distribution))
@@ -228,7 +232,7 @@ qq_conf_plot <- function(obs,
       lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
     }
   }
-  points(exp.pts[2:(samp.size + 1)], y.pts, ...)
+  do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts, col = samples_col), ...))
   if (difference) {
     abline(h = 0, ...)
   } else {
