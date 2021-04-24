@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{9}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -20,6 +20,13 @@ Almeida A, Loy A, Hofmann H (2017).
 \newblock \emph{qqplotr: Quantile-Quantile Plot Extensions for 'ggplot2'}.
 \newblock R package version 0.0.3 initially funded by Google Summer of Code
   2017, \urlprefix\url{https://github.com/aloy/qqplotr}.
+
+\bibitem[{Berk and Jones(1979)}]{berk1979goodness}
+Berk RH, Jones DH (1979).
+\newblock \enquote{Goodness-of-fit test statistics that dominate the Kolmogorov
+  statistics.}
+\newblock \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und verwandte
+  Gebiete}, \textbf{47}(1), 47--59.
 
 \bibitem[{Gontscharuk and Finner(2017)}]{gontscharuk2017asymptotics}
 Gontscharuk V, Finner H (2017).

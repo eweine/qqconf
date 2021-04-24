@@ -10,6 +10,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{eqparbox}
+\usepackage{hyperref}
 %% new custom commands
 \newcommand{\class}[1]{`\code{#1}'}
 \newcommand{\fct}[1]{\code{#1()}}
@@ -78,14 +79,18 @@ library("MASS")
 \maketitle
 
 \section{Introduction}
-Quantile-Quantile plots (QQplots) are a common statistical tool used to judge if a sample comes from a specified distribution \citep{wilk_gnanadesikan_1968}. Despite their ubiquity, they are often difficult to interpret because it is challenging to determine if the magnitude of the deviation from the specified distribution is large enough to indicate a lack of fit as opposed to sampling variance. To make this determination, it is useful to put testing bands on a QQplot.
+Quantile-Quantile plots (QQplots) are a common statistical tool used to judge if a sample comes from a specified distribution \citep{wilk_gnanadesikan_1968}. Despite their ubiquity, they are often difficult to interpret because it is challenging to determine if the magnitude of the deviation from the specified distribution is large enough to indicate a lack of fit as opposed to sampling variability. To make this determination, it is useful to put testing bands on a QQplot.
 \newline
 \newline
-A number of methods have been created towards this end. First, some available software, like the \proglang{R} package \pkg{qqplotr}, puts pointwise testing bands onto QQplots, which conduct $\alpha$ level tests on each order statistic \citep{qqplotr}. This method is clearly insufficient, as it ignores the multiple testing problem and thus provides no guarantee on the Type I error rate of testing the global null hypothesis that all of the data come from the specified distribution. Second, the Komolgorov-Smirnov (KS) test, a part of the \pkg{stats} package in \proglang{R}, is a common method for creating joint bands \citep{kolmogoroff1941confidence, smirnov1944approximate}. While this method ensures the correct Type I error by using the distribution of the KS statistic, this test suffers from very low power under a variety of reasonable alternatives \citep{aldor2013power}. In the same work, Aldor-Noiman et al. introduced a much more powerful test (under most alternatives) called the Tail Sensitive (TS) test. This test uses simulation to conduct an $\eta$ level test on each order statistic such that the overall test has an $\alpha$ level Type I error. This test has a variety of desirable properties, but because it requires simulation it is extremely slow in large datasets. It is also available in the package \pkg{qqplotr}.
+A number of methods have been created towards this end. Naively, one could put pointwise testing bands onto QQplots, which conduct $\alpha$ level tests on each order statistic of the sample. This method is clearly insufficient, as it ignores the multiple testing problem and thus provides no guarantee on the Type I error rate of testing the global null hypothesis that all of the data come from the specified null distribution. To appropriately deal with this multiple testing problem, the Komolgorov-Smirnov (KS) statistic is commonly used to create joint testing bands \citep{kolmogoroff1941confidence, smirnov1944approximate}. While this method ensures the correct Type I error by using the distribution of the KS statistic to create joint testing bands, this test suffers from very low power under a variety of reasonable alternatives since it has low sensitivity to deviation in the tails of the null distribution \citep{aldor2013power}. A more promising approach, originally introduced by Berk and Jones and later developed by Gontscharuk et al., conducts a test with Type I error rate $\eta$ on each order statistic of the sample such that the Type I error rate of the global test is some desired level $\alpha$ \citep{berk1979goodness, gontscharuk2016goodness}. Because this test, which will be referred to as equal local levels (ELL), conducts an $\eta$ level test on each order statistic, it is agnostic to any alternative distribution. This makes ELL a sensible choice for a standard test to use in creating testing bands on QQplots, as it does not bias the user towards deviations of the sample in any particular part of the null distribution.
 \newline
 \newline
-In what follows, we present a method that yields the same results as the TS test but does so substantially faster because of an efficient recursive calculation. We then demonstrate this test on a few multiple testing scenarios including Type I error calibration and genetic studies.
+Currently, there is no available software that allows a user to quickly create plausible and robust testing bands for QQplots on real data. While the base-\proglang{R} package \pkg{stats} provides functionality for creating a QQplot to compare a sample against the normal distribution, it doesn't give the user the ability to create QQplots for other distributions or to put testing bands on those plots. The package \pkg{qqplotr} provides a number of helpful additions to the base-\proglang{R} functionality, including the ability to create QQplots for a variety of reference distributions and a robust method for testing bands on the normal distribution \citep{qqplotr}. However, this package does not provide adequate testing bands for non-normal reference distributions and is not able to efficiently create testing bands for large sample sizes.
+\newline
+\newline
+In what follows, we introduce the \proglang{R} package \pkg{qqconf}. With the aid of a novel recursive calculation developed below, \pkg{qqconf} can quickly provide ELL testing bands for comparing even very large samples to any reference distribution with a CDF implemented. In addition to these testing bands, \pkg{qqconf} provides a variety of plotting functionalities that allow the user to easily visualize where any deviation of the sample from the null distribution may occur. In section \hyperref[sec:methods]{2}, we introduce the methods required for the efficient recursive calculation mentioned above. In section \hyperref[sec:methods]{3}, we discuss the behavior of ELL bands in large sample sizes and an approximation to these bands that makes them very easy to calculate for even very large samples ($n > 5 \cdot 10^{6}$). In section \hyperref[sec:examples]{4}, we introduce \pkg{qqconf} and demonstrate its functionality on a few multiple testing scenarios including including Type I error calibration and genetic studies. Finally, we conclude in section \hyperref[sec:discussion]{5} with a discussion of limitations the of ELL and \pkg{qqconf} as well as further directions for creating testing bands on QQplots.
 \section{Methods}
+\label{sec:methods}
 
 \subsection{Local Levels For Global Null Hypothesis Testing}
 
@@ -402,6 +407,7 @@ Empirically, it seems that our algorithm has computational complexity $O(n^{2})$
 \textbf{end}
 \end{algorithm}
 \section{Local Level Approximations in Large Samples}
+\label{sec:approx}
 For sufficiently large values of the number of tests $n$, it can be expedient to apply an accurate asymptotic approximation of the local level $\eta$ corresponding to global level $\alpha$ in place of exact computation. Previously, Gontscharuk and Finner showed that the asymptotic local level for global level $\alpha$ and number of tests $n$ is
 %
 \begin{equation*}
@@ -427,6 +433,7 @@ This approximation begins anti-conservative for small values of $n$, becomes ver
 \newline
 In addition to implementing algorithms 1 and 2, which, in principle, can be applied for any $n$ and $\alpha$, our package offers a faster approximate approach specifically for $\alpha = .01 \textrm{ and } .05$. For smaller values of $n$, up to $100,000$, we have pre-calculated values of $\eta$ on a dense grid of values of $n$. If the user inputs a value of $n$ less than or equal to $100,000$, we either return back the pre-computed value of $\eta$ if $n$ happens to be a grid point, or we use linear interpolation if the value of $n$ is between grid points, which leads to a highly accurate approximation. If the user inputs a value of $n$ greater than $100,000$, we use the asymptotic approximation given in (3), but with $c_{\alpha} = 1.591 \textrm{ and } 1.3$ for $\alpha = .01 \textrm{ and } .05$, respectively. We found that $c_{\alpha} = 1.591$ led to much better performance for $\alpha = .01$ for large values of $n$, as can be seen in Figure 2. Our package also implements the approximation given in equation (3) for $\alpha = .1$ with $c_{\alpha} = 1.1$, but we did not pre-compute any grid for these values due to limited computational resources.
 \section{Examples}
+\label{sec:examples}
 As noted above, the algorithm presented is suitable for the case when all of the parameters of $F_{0}$ are known, and all $X_{1}, ..., X_{n}$ are independent. While these assumptions may seem restrictive, the methods above are still useful in a variety of scenarios.
 \newline
 \newline
@@ -538,13 +545,14 @@ Figure 3 shows the resulting QQplots for scenarios 1 (in blue) and 2 (in red), w
 
 <<chisq_qq, fig=TRUE, include=FALSE>>=
 library(qqconf)
+n <- 1000
 bounds <- get_bounds_two_sided(alpha = .05, n = 1000)
 
 # Plot 3: Q-Q plot of P-values from Chi-Squared Test
 # for Independence in a 2 x 2 Table
 
 plot(
-  bounds$x, 
+  c(1:n) / (n + 1), 
   sort(pvals_scenario_2), 
   type = "l", 
   col = "red", 
@@ -552,19 +560,16 @@ plot(
   ylab = "Observed P-value"
 )
 
-# Add the 45-degree line to the plot
-lines(bounds$x, bounds$x)
-
-# Add the lower bound line for the level .05 
-# simultaneous testing bands from equal local levels.
-lines(bounds$x, bounds$lower_bound)
-
-# Add the upper bound line for the level .05 
-# simultaneous testing bands from equal local levels.
-lines(bounds$x, bounds$upper_bound)
-
 # Add the Q-Q plot for scenario 1.
-lines(bounds$x, sort(pvals_scenario_1), col = "blue")
+lines(c(1:n) / (n + 1), sort(pvals_scenario_1), col = "blue")
+
+qq_conf_plot(
+  obs = pvals_scenario_2,
+  distribution = qunif,
+  method = "ell",
+  alpha = .05, 
+  add = TRUE
+)
 
 legend(
   x = .02, 
@@ -649,6 +654,7 @@ Typically, when testing this global null, we apply some test to each of $n$ SNPs
 If a very specific distribution for $H_{A}$ is suspected, then it makes sense to use a test that has high power under this alternative, which may not be our local levels test. However, in the general case when little is known about the alternative distribution, using local levels is desirable because it is agnostic to alternative distributions. Moreover, since small p-values are often of great interest in GWAS because they can indicate the main biological drivers of a trait, the local levels test is far superior to the KS test due to its tail sensitivity.
 %Here is where the biological example goes with the code. I want to have the graphs that I make from this and then I also want
 \section{Discussion}
+\label{sec:methods}
 The local levels test using an exact recursive calculation allows for the creation of relatively fast and alternative-agnostic simultaneous testing bands for QQplots. Of course, our method is limited by the assumptions that (1) all of the tests are independent and that (2) all of the parameters of the null distribution are known. Currently, we are not aware of methods to handle the dependent case that allow for bands on QQplots. To handle the second issue, Aldor-Noiman has adapted their method such that it will yield exact results when some parameters of the null distribution are unknown. However, if the dataset is very large, Aldor-Noiman's method is prohibitively slow. In this case, we suggest that our method be used because it is much faster, and with a sufficiently large dataset the uncertainty in the parameters will become negligible under standard regularity conditions. Methods to handle parameter uncertainty with an exact calculation have been discussed in the context of the normal distribution \citep{rosenkrantz2000confidence}, but a general method towards this end has not been developed, and would be an important next step.
 \newline
 \newline
