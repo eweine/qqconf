@@ -151,16 +151,26 @@ qq_conf_plot <- function(obs,
   conf <- c(alpha / 2, conf.int + alpha / 2)
   ## The observed and expected quantiles. Expected quantiles are based on the specified
   ## distribution
+  # constant for visual expansion of confidence regions
+  c <- .5
   obs.pts <- sort(obs)
   exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
+    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=c(1 / (samp.size * 1.25)))))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / (samp.size * 1.25)))))) + (1 - c) * exp.pts[samp.size]
     if (any(obs.pts <= 0)) {
       
       stop("log10 scaling can only be used with strictly positive distributions.")
       
     }
     obs.pts <- -log10(obs.pts)
+  }
+  else {
+    
+    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[samp.size]
+    
   }
   if (difference) {
     y.pts <- obs.pts - exp.pts
@@ -199,16 +209,6 @@ qq_conf_plot <- function(obs,
       global.high <- do.call(distribution, c(list(p = up), dparams))
       
     }
-
-    # code to extend region for visibility
-    global.low <- c(global.low[1], global.low, global.low[samp.size])
-    global.high <- c(global.high[1], global.high, global.high[samp.size])
-    pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
-    pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
-    c <- .5
-    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / (samp.size * 1.25))))) + (1 - c) * exp.pts[samp.size]
-    exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
     
     if (log10 == TRUE) {
       pointwise.low <- -log10(pointwise.low)
@@ -216,6 +216,14 @@ qq_conf_plot <- function(obs,
       global.low <- -log10(global.low)
       global.high <- -log10(global.high)
     }
+    
+    # code to extend region for visibility
+    global.low <- c(global.low[1], global.low, global.low[samp.size])
+    global.high <- c(global.high[1], global.high, global.high[samp.size])
+    pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
+    pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
+    exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+    
     if (difference) {
       polygon(c(exp.pts, rev(exp.pts)),
               c(global.low - exp.pts, rev(global.high) - rev(exp.pts)),
@@ -233,6 +241,7 @@ qq_conf_plot <- function(obs,
     }
   }
   do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts, col = samples_col), ...))
+  #do.call(samples_func, c(list(x = exp.pts, y = y.pts, col = samples_col), ...))
   if (difference) {
     abline(h = 0, ...)
   } else {

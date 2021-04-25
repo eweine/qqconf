@@ -549,26 +549,19 @@ R> bounds <- get_bounds_two_sided(alpha = .05, n = 1000)
 R> # Plot 3: Q-Q plot of P-values from Chi-Squared Test
 R> # for Independence in a 2 x 2 Table
 R> 
-R> plot(
-+    c(1:n) / (n + 1), 
-+    sort(pvals_scenario_2), 
-+    type = "l", 
-+    col = "red", 
-+    xlab = "Expected Uniform Quantile",
-+    ylab = "Observed P-value"
-+  )
-R> # Add the Q-Q plot for scenario 1.
-R> lines(c(1:n) / (n + 1), sort(pvals_scenario_1), col = "blue")
+R> 
 R> qq_conf_plot(
 +    obs = pvals_scenario_2,
 +    distribution = qunif,
 +    method = "ell",
-+    alpha = .05, 
-+    add = TRUE
++    alpha = .05,
++    samples_func = lines,
++    samples_col = "red"
 +  )
+R> # Add the Q-Q plot for scenario 1.
+R> lines(c(1:n) / (n + 1), sort(pvals_scenario_1), col = "blue")
 R> legend(
-+    x = .02, 
-+    y = .95, 
++    "topleft", 
 +    legend = c("s=20","s=200"), 
 +    col = c("red","blue"), 
 +    lty = 1
@@ -589,29 +582,21 @@ Figure 4 shows the same plots where the axes are transformed to be on the $-\log
 \begin{Sinput}
 R> # Plot 4: Q-Q plot, on the -log10 Scale, of P-values 
 R> # from Chi-Squared Test for Independence in a 2 x 2 Table
-R> 
-R> plot(
-+    -log10(bounds$x), 
-+    -log10(sort(pvals_scenario_2)),
-+    type = "l",
-+    col = "red",
-+    xlab = "-log10(Expected Uniform Quantile)",
-+    ylab = "-log10(Observed P-value)"
+R> n <- 1000
+R> qq_conf_plot(
++    obs = pvals_scenario_2,
++    distribution = qunif,
++    method = "ell",
++    alpha = .05,
++    samples_func = lines,
++    samples_col = "red",
++    log10 = TRUE
 +  )
-R> # Add the 45-degree line to the plot
-R> lines(-log10(bounds$x), -log10(bounds$x))
-R> # Add the lower bound line for the level .05 
-R> # simultaneous testing bands from equal local levels.
-R> lines(-log10(bounds$x), -log10(bounds$lower_bound))
-R> # Add the upper bound line for the level .05 
-R> # simultaneous testing bands from equal local levels.
-R> lines(-log10(bounds$x), -log10(bounds$upper_bound))
-R> # Add the Q-Q plot for scenario 1, with axes on the -log10 scale.
-R> lines(-log10(bounds$x), -log10(sort(pvals_scenario_1)), col = "blue")
+R> # Add the Q-Q plot for scenario 1.
+R> lines(-log10(c(1:n) / (n + 1)), -log10(sort(pvals_scenario_1)), col = "blue")
 R> legend(
-+    x = .2, 
-+    y = 3, 
-+    legend = c("s=20", "s=200"), 
++    "topleft",
++    legend = c("s=20","s=200"), 
 +    col = c("red","blue"), 
 +    lty = 1
 +  )
