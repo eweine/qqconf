@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  25 APR 2021 11:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  25 APR 2021 19:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -876,27 +876,27 @@ LaTeX Warning: Label `sec:methods' multiply defined.
 )
 \openout1 = `manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 73.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 72.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 72.
  (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 73.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -932,7 +932,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box49
-Package hyperref Info: Link coloring ON on input line 73.
+Package hyperref Info: Link coloring ON on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -942,9 +942,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count148
 )
-LaTeX Info: Redefining \ref on input line 73.
-LaTeX Info: Redefining \pageref on input line 73.
-LaTeX Info: Redefining \nameref on input line 73.
+LaTeX Info: Redefining \ref on input line 72.
+LaTeX Info: Redefining \pageref on input line 72.
+LaTeX Info: Redefining \nameref on input line 72.
 
 (./manuscript.out) (./manuscript.out)
 \@outlinefile=\write5
@@ -953,62 +953,62 @@ LaTeX Info: Redefining \nameref on input line 73.
 <jsslogo.jpg, id=43, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
-Package pdftex.def Info: jsslogo.jpg  used on input line 73.
+Package pdftex.def Info: jsslogo.jpg  used on input line 72.
 (pdftex.def)             Requested size: 89.80768pt x 65.43607pt.
-LaTeX Font Info:    Try loading font information for T1+pzc on input line 73.
+LaTeX Font Info:    Try loading font information for T1+pzc on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/t1pzc.fd
 File: t1pzc.fd 2001/06/04 font definitions for T1/pzc.
 )
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <28> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 73.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 72.
 
 
-Package xcolor Warning: Incompatible color definition on input line 73.
+Package xcolor Warning: Incompatible color definition on input line 72.
 
 
-Overfull \hbox (11.15063pt too wide) in paragraph at lines 73--73
+Overfull \hbox (11.15063pt too wide) in paragraph at lines 72--72
 []  [] 
  []
 
-LaTeX Font Info:    Try loading font information for T1+lmss on input line 73.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 72.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 73.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 73.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 73.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 72.
 
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 73.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 72.
 
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 73.
+(Font)              <10.95> on input line 72.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 73.
+(Font)              <8> on input line 72.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 73.
-LaTeX Font Info:    Try loading font information for U+msa on input line 73.
+(Font)              <6> on input line 72.
+LaTeX Font Info:    Try loading font information for U+msa on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 73.
+LaTeX Font Info:    Try loading font information for U+msb on input line 72.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1049,46 +1049,64 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ABD: EveryShipout initializing macros
 
-Package xcolor Warning: Incompatible color definition on input line 78.
+Package xcolor Warning: Incompatible color definition on input line 77.
 
 
-Package xcolor Warning: Incompatible color definition on input line 78.
+Package xcolor Warning: Incompatible color definition on input line 77.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 81.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 84.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 84.
+Package xcolor Warning: Incompatible color definition on input line 80.
+
+
+Package xcolor Warning: Incompatible color definition on input line 80.
+
+
+Package xcolor Warning: Incompatible color definition on input line 80.
+
+
+Package xcolor Warning: Incompatible color definition on input line 80.
+
+
+Package xcolor Warning: Incompatible color definition on input line 80.
+
+
+Package xcolor Warning: Incompatible color definition on input line 83.
+
+
+Package xcolor Warning: Incompatible color definition on input line 83.
 
 
 Package xcolor Warning: Incompatible color definition on input line 87.
@@ -1104,17 +1122,17 @@ LaTeX Warning: Hyper reference `sec:discussion' on page 1 undefined on input li
 ne 87.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--88
+Underfull \hbox (badness 10000) in paragraph at lines 77--88
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--88
+Underfull \hbox (badness 10000) in paragraph at lines 77--88
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--88
+Underfull \hbox (badness 10000) in paragraph at lines 77--88
 
  []
 
@@ -1122,26 +1140,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 78--88
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./jsslo
 go.jpg>]
-
-Package xcolor Warning: Incompatible color definition on input line 105.
-
-
-Package xcolor Warning: Incompatible color definition on input line 105.
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 2 []
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
 
- []
+Package xcolor Warning: Incompatible color definition on input line 105.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
-
- []
+Package xcolor Warning: Incompatible color definition on input line 105.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 127--146
@@ -1158,12 +1166,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 127--146
 
  []
 
-LaTeX Font Info:    Try loading font information for U+dsrom on input line 172.
 
-(/usr/local/texlive/2018/texmf-dist/tex/latex/doublestroke/Udsrom.fd
-File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
-)
-Underfull \hbox (badness 10000) in paragraph at lines 166--174
+Underfull \hbox (badness 10000) in paragraph at lines 127--146
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 127--146
 
  []
 
@@ -1173,6 +1182,15 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
+LaTeX Font Info:    Try loading font information for U+dsrom on input line 172.
+
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/doublestroke/Udsrom.fd
+File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
+)
+Underfull \hbox (badness 10000) in paragraph at lines 166--174
+
+ []
+
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 236.
 
@@ -1279,12 +1297,12 @@ Package xcolor Warning: Incompatible color definition on input line 413.
 
 Package xcolor Warning: Incompatible color definition on input line 413.
 
-<images/c_alpha_1_6.png, id=157, 509.905pt x 415.5525pt>
+<images/c_alpha_1_6.png, id=168, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_6.png Graphic file (type png)
 <use images/c_alpha_1_6.png>
 Package pdftex.def Info: images/c_alpha_1_6.png  used on input line 422.
 (pdftex.def)             Requested size: 333.46758pt x 271.77356pt.
-<images/c_alpha_1_591.png, id=159, 509.905pt x 415.5525pt>
+<images/c_alpha_1_591.png, id=170, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_591.png Graphic file (type png)
 <use images/c_alpha_1_591.png>
 Package pdftex.def Info: images/c_alpha_1_591.png  used on input line 423.
@@ -1405,7 +1423,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-<manuscript-chisq_qq.pdf, id=203, 433.62pt x 433.62pt>
+<manuscript-chisq_qq.pdf, id=212, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq.pdf>
 Package pdftex.def Info: manuscript-chisq_qq.pdf  used on input line 574.
@@ -1427,7 +1445,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
                                                   \fi \fi 
 l.590 +    alpha = .05,
                         <./manuscript-chisq_qq.pdf>]
-<manuscript-chisq_qq_log.pdf, id=219, 433.62pt x 433.62pt>
+<manuscript-chisq_qq_log.pdf, id=228, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq_log.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq_log.pdf>
 Package pdftex.def Info: manuscript-chisq_qq_log.pdf  used on input line 608.
@@ -1488,9 +1506,14 @@ Package xcolor Warning: Incompatible color definition on input line 38.
 Package xcolor Warning: Incompatible color definition on input line 39.
 
 
-Package xcolor Warning: Incompatible color definition on input line 70.
+Package xcolor Warning: Incompatible color definition on input line 77.
 
-)
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 17
+ []
+
+[17])
 
 Package xcolor Warning: Incompatible color definition on input line 644.
 
@@ -1529,11 +1552,6 @@ Package xcolor Warning: Incompatible color definition on input line 644.
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-[] \T1/lmr/m/n/10.95 17
- []
-
-[17]
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 18 []
  []
 
@@ -1555,13 +1573,13 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 644.
  ) 
 Here is how much of TeX's memory you used:
- 18652 strings out of 492649
- 339450 string characters out of 6129622
- 415969 words of memory out of 5000000
- 22031 multiletter control sequences out of 15000+600000
+ 18657 strings out of 492649
+ 339622 string characters out of 6129622
+ 416970 words of memory out of 5000000
+ 22035 multiletter control sequences out of 15000+600000
  109139 words of font info for 78 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,18n,54p,1702b,667s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,18n,54p,2035b,667s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/t
 exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/
@@ -1590,10 +1608,10 @@ ype1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
 /lm/lmtt10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtto1
 0.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
 
-Output written on manuscript.pdf (18 pages, 582230 bytes).
+Output written on manuscript.pdf (18 pages, 582744 bytes).
 PDF statistics:
- 370 PDF objects out of 1000 (max. 8388607)
- 312 compressed objects within 4 object streams
- 88 named destinations out of 1000 (max. 500000)
+ 379 PDF objects out of 1000 (max. 8388607)
+ 321 compressed objects within 4 object streams
+ 89 named destinations out of 1000 (max. 500000)
  110 words of extra memory for PDF output out of 10000 (max. 10000000)
 
