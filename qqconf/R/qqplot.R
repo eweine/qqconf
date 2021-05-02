@@ -157,8 +157,8 @@ qq_conf_plot <- function(obs,
   exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2)))))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2)))))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
     if (any(obs.pts <= 0)) {
       
       stop("log10 scaling can only be used with strictly positive distributions.")
@@ -168,8 +168,8 @@ qq_conf_plot <- function(obs,
   }
   else {
     
-    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[samp.size]
     
   }
   if (difference) {
@@ -240,7 +240,7 @@ qq_conf_plot <- function(obs,
       lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
     }
   }
-  do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts, col = samples_col), ...))
+  do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts, col = samples_col)))
   if (difference) {
     abline(h = 0, ...)
   } else {

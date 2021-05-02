@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  25 APR 2021 19:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  2 MAY 2021 13:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1109,30 +1109,36 @@ Package xcolor Warning: Incompatible color definition on input line 83.
 Package xcolor Warning: Incompatible color definition on input line 83.
 
 
-Package xcolor Warning: Incompatible color definition on input line 87.
+Package xcolor Warning: Incompatible color definition on input line 83.
 
 
-Package xcolor Warning: Incompatible color definition on input line 87.
+Package xcolor Warning: Incompatible color definition on input line 83.
 
 
-Package xcolor Warning: Incompatible color definition on input line 87.
+Package xcolor Warning: Incompatible color definition on input line 86.
+
+
+Package xcolor Warning: Incompatible color definition on input line 86.
+
+
+Package xcolor Warning: Incompatible color definition on input line 86.
 
 
 LaTeX Warning: Hyper reference `sec:discussion' on page 1 undefined on input li
-ne 87.
+ne 86.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 77--88
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 77--88
+Underfull \hbox (badness 10000) in paragraph at lines 77--87
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 77--88
+Underfull \hbox (badness 10000) in paragraph at lines 77--87
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--87
 
  []
 
@@ -1146,33 +1152,33 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 105.
+Package xcolor Warning: Incompatible color definition on input line 104.
 
 
-Package xcolor Warning: Incompatible color definition on input line 105.
+Package xcolor Warning: Incompatible color definition on input line 104.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
+Underfull \hbox (badness 10000) in paragraph at lines 126--145
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
+Underfull \hbox (badness 10000) in paragraph at lines 126--145
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
+Underfull \hbox (badness 10000) in paragraph at lines 126--145
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--146
+Underfull \hbox (badness 10000) in paragraph at lines 126--145
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 126--145
 
  []
 
@@ -1182,17 +1188,17 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
-LaTeX Font Info:    Try loading font information for U+dsrom on input line 172.
+LaTeX Font Info:    Try loading font information for U+dsrom on input line 171.
 
  (/usr/local/texlive/2018/texmf-dist/tex/latex/doublestroke/Udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 )
-Underfull \hbox (badness 10000) in paragraph at lines 166--174
+Underfull \hbox (badness 10000) in paragraph at lines 165--173
 
  []
 
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 236.
+put line 235.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
@@ -1203,10 +1209,10 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.271 N
+l.270 N
        ow, we derive the algorithm. \textbf{Initialization:} (Lines 2 throug...
 ]
-Overfull \hbox (9.88666pt too wide) detected at line 292
+Overfull \hbox (9.88666pt too wide) detected at line 291
 []
  []
 
@@ -1216,37 +1222,37 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 292--300
+Underfull \hbox (badness 10000) in paragraph at lines 291--299
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--331
+Underfull \hbox (badness 10000) in paragraph at lines 308--330
 
  []
 
@@ -1256,32 +1262,32 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 334--347
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 334--347
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 334--347
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 
  []
 
 
-Overfull \hbox (2.17319pt too wide) detected at line 370
+Overfull \hbox (2.17319pt too wide) detected at line 369
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 376--404
+Underfull \hbox (badness 10000) in paragraph at lines 375--403
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 376--404
+Underfull \hbox (badness 10000) in paragraph at lines 375--403
 
  []
 
@@ -1292,23 +1298,23 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 
 [7]
 
-Package xcolor Warning: Incompatible color definition on input line 413.
+Package xcolor Warning: Incompatible color definition on input line 412.
 
 
-Package xcolor Warning: Incompatible color definition on input line 413.
+Package xcolor Warning: Incompatible color definition on input line 412.
 
 <images/c_alpha_1_6.png, id=168, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_6.png Graphic file (type png)
 <use images/c_alpha_1_6.png>
-Package pdftex.def Info: images/c_alpha_1_6.png  used on input line 422.
+Package pdftex.def Info: images/c_alpha_1_6.png  used on input line 421.
 (pdftex.def)             Requested size: 333.46758pt x 271.77356pt.
 <images/c_alpha_1_591.png, id=170, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_591.png Graphic file (type png)
 <use images/c_alpha_1_591.png>
-Package pdftex.def Info: images/c_alpha_1_591.png  used on input line 423.
+Package pdftex.def Info: images/c_alpha_1_591.png  used on input line 422.
 (pdftex.def)             Requested size: 333.46758pt x 271.77356pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 417--431
+Underfull \hbox (badness 10000) in paragraph at lines 416--430
 
  []
 
@@ -1318,52 +1324,52 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 433--437
+Underfull \hbox (badness 10000) in paragraph at lines 432--436
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--471
+Underfull \hbox (badness 10000) in paragraph at lines 442--470
 
  []
 
@@ -1382,28 +1388,28 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.471 
+l.470 
        <./images/c_alpha_1_6.png> <./images/c_alpha_1_591.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 472.
+(hyperref)                removing `math shift' on input line 471.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 472.
+(hyperref)                removing `math shift' on input line 471.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 472.
+(hyperref)                removing `math shift' on input line 471.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 472.
+(hyperref)                removing `math shift' on input line 471.
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 472.
+(Font)              <12> on input line 471.
 
-Underfull \hbox (badness 10000) in paragraph at lines 473--474
+Underfull \hbox (badness 10000) in paragraph at lines 472--473
 
  []
 
@@ -1413,7 +1419,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [11]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 478.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 477.
 
  (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -1426,7 +1432,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 <manuscript-chisq_qq.pdf, id=212, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq.pdf>
-Package pdftex.def Info: manuscript-chisq_qq.pdf  used on input line 574.
+Package pdftex.def Info: manuscript-chisq_qq.pdf  used on input line 573.
 (pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1443,12 +1449,12 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.590 +    alpha = .05,
+l.589 +    alpha = .05,
                         <./manuscript-chisq_qq.pdf>]
 <manuscript-chisq_qq_log.pdf, id=228, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq_log.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq_log.pdf>
-Package pdftex.def Info: manuscript-chisq_qq_log.pdf  used on input line 608.
+Package pdftex.def Info: manuscript-chisq_qq_log.pdf  used on input line 607.
 (pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1460,30 +1466,30 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.614 
+l.613 
        <./manuscript-chisq_qq_log.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 617--622
+Underfull \hbox (badness 10000) in paragraph at lines 616--621
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 624--634
+Underfull \hbox (badness 10000) in paragraph at lines 623--633
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 624--634
+Underfull \hbox (badness 10000) in paragraph at lines 623--633
 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 636.
+Package xcolor Warning: Incompatible color definition on input line 635.
 
 
-Package xcolor Warning: Incompatible color definition on input line 636.
+Package xcolor Warning: Incompatible color definition on input line 635.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 636--640
+Underfull \hbox (badness 10000) in paragraph at lines 635--639
 
  []
 
@@ -1515,40 +1521,40 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 [17])
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 644--644
+Underfull \hbox (badness 10000) in paragraph at lines 643--643
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 644--644
+Underfull \hbox (badness 10000) in paragraph at lines 643--643
 
  []
 
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 644.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 643.
 
-Package xcolor Warning: Incompatible color definition on input line 644.
-
-
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 643.
+
+
+Package xcolor Warning: Incompatible color definition on input line 643.
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1556,11 +1562,11 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [18]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 644.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 644.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 643.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 643.
  (./manuscript.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 644.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 644.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 643.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 643.
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
 (rerunfilecheck)             Checksum: 8D6EFC9BB71939C58BA907BDC40A48F5;1072.
 
@@ -1570,7 +1576,7 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 644.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 643.
  ) 
 Here is how much of TeX's memory you used:
  18657 strings out of 492649
@@ -1579,7 +1585,7 @@ Here is how much of TeX's memory you used:
  22035 multiletter control sequences out of 15000+600000
  109139 words of font info for 78 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,18n,54p,2035b,667s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,18n,54p,2006b,667s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/t
 exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/
@@ -1608,7 +1614,7 @@ ype1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
 /lm/lmtt10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtto1
 0.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
 
-Output written on manuscript.pdf (18 pages, 582744 bytes).
+Output written on manuscript.pdf (18 pages, 582908 bytes).
 PDF statistics:
  379 PDF objects out of 1000 (max. 8388607)
  321 compressed objects within 4 object streams
