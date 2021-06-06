@@ -5,10 +5,11 @@
 \title{QQ Plot with Simultaneous and Pointwise Testing Bounds.}
 \usage{
 qq_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
-  alpha = 0.05, difference = FALSE, log10 = FALSE,
-  shade.col = "gray", add = FALSE, dparams = NULL,
-  bounds_params = NULL, pw.lty = 0, pw.col = "black",
-  samples_func = points, samples_col = "black", ...)
+  alpha = 0.05, difference = FALSE, log10 = FALSE, add = FALSE,
+  dparams = list(), bounds_params = list(), line_params = list(),
+  plot_pointwise = FALSE, pointwise_params = list(),
+  samples_plot_type = c("points", "line"), samples_params = list(),
+  polygon_params = list(border = NA, col = "gray"), ...)
 }
 \arguments{
 \item{obs}{The observed data.}
@@ -28,8 +29,6 @@ expected values on the vertical axis.}
 \item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
 positive distributions.}
 
-\item{shade.col}{What color to use for the simultaneous acceptance region.}
-
 \item{add}{Whether to add points to an existing plot.}
 
 \item{dparams}{List of additional parameters for the quantile function of the distribution
@@ -42,15 +41,22 @@ parameters of the distribution must be provided by the user.}
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 
-\item{pw.lty}{Line type for the pointwise error bounds. Set to non-zero for a line.}
+\item{line_params}{Parameters passed to the abline function to modify the line that indicates a perfect fit of the
+reference distribution.}
 
-\item{pw.col}{Color for the pointwise bounds line.}
+\item{plot_pointwise}{Boolean indiciating if pointwise bounds should be added to the plot}
 
-\item{samples_func}{Function used to plot sample points on the graph.}
+\item{pointwise_params}{Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
+set to TRUE.}
+
+\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
+By default the border is set to NA and the shade color is grey.}
 
 \item{...}{Additional parameters for the plot.}
 
-\item{sample_col}{Color of the samples}
+\item{samples_func}{Function used to plot sample points on the graph.}
+
+\item{sample_params}{Parameters to be passed to the samples function to plot quantiles.}
 }
 \description{
 Create a qq-plot with with a shaded simultaneous acceptance region and,
