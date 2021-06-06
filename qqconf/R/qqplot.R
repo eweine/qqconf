@@ -23,7 +23,6 @@
 #'   expected values on the vertical axis.
 #' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
 #' positive distributions.
-#' @param shade.col What color to use for the simultaneous acceptance region.
 #' @param add Whether to add points to an existing plot. 
 #' @param dparams List of additional parameters for the quantile function of the distribution
 #'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
@@ -33,10 +32,15 @@
 #'   parameters of the distribution must be provided by the user.
 #' @param bounds_params List of optional parameters for get_bounds_two_sided
 #'   (i.e. tol, max_it, method).
-#' @param pw.lty Line type for the pointwise error bounds. Set to non-zero for a line.
-#' @param pw.col Color for the pointwise bounds line.
+#' @param line_params Parameters passed to the abline function to modify the line that indicates a perfect fit of the
+#'   reference distribution.
+#' @param plot_pointwise Boolean indiciating if pointwise bounds should be added to the plot
+#' @param pointwise_params Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
+#'   set to TRUE.
 #' @param samples_func Function used to plot sample points on the graph.
-#' @param sample_col Color of the samples
+#' @param sample_params Parameters to be passed to the samples function to plot quantiles.
+#' @param polygon_params Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
+#'   By default the border is set to NA and the shade color is grey.
 #' @param ... Additional parameters for the plot.
 #' 
 #' @export
@@ -53,15 +57,27 @@ qq_conf_plot <- function(obs,
                          alpha = 0.05,
                          difference = FALSE,
                          log10 = FALSE,
-                         shade.col = 'gray',
                          add = FALSE,
-                         dparams = NULL,
-                         bounds_params = NULL,
-                         pw.lty = 0,
-                         pw.col = 'black',
-                         samples_func = points,
-                         samples_col = 'black',
+                         dparams = list(),
+                         bounds_params = list(),
+                         line_params = list(),
+                         plot_pointwise = FALSE,
+                         pointwise_params = list(),
+                         samples_plot_type = c("points", "line"),
+                         samples_params = list(),
+                         polygon_params = list(border = NA, col = 'gray'),
                          ...) {
+  
+  samples_plot_type <- match.arg(samples_plot_type)
+  if (samples_plot_type == "points") {
+    
+    samples_func <- points
+    
+  } else {
+    
+    samples_func <- lines
+    
+  }
   
   dist_name <- as.character(substitute(distribution))
   
@@ -225,26 +241,42 @@ qq_conf_plot <- function(obs,
     exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
     
     if (difference) {
-      polygon(c(exp.pts, rev(exp.pts)),
-              c(global.low - exp.pts, rev(global.high) - rev(exp.pts)),
-              border=NA, col=shade.col)
-      lines(exp.pts, pointwise.low - exp.pts, lty = pw.lty, col = pw.col, ...)
-      lines(exp.pts, pointwise.high - exp.pts, lty = pw.lty, col = pw.col, ...)
+      do.call(
+        polygon, 
+        c(list(x = c(exp.pts, rev(exp.pts)),
+               y = c(global.low - exp.pts, rev(global.high) - rev(exp.pts))),
+          polygon_params)
+        )
+      if (plot_pointwise) {
+        
+        do.call(lines, c(list(x = exp.pts, y = pointwise.low - exp.pts), pointwise_params))
+        do.call(lines, c(list(x = exp.pts, y = pointwise.high - exp.pts), pointwise_params))
+        
+      }
+
     } else {
       bottom <- -.Machine$double.xmax
       top <- .Machine$double.xmax
-      polygon(c(exp.pts, rev(exp.pts)),
-              pmin(pmax(c(global.low, rev(global.high)), bottom), top),
-              border=NA, col=shade.col)
-      lines(exp.pts, pointwise.low, lty = pw.lty, col = pw.col, ...)
-      lines(exp.pts, pointwise.high, lty = pw.lty, col = pw.col, ...)
+      do.call(
+        polygon,
+        c(list(x = c(exp.pts, rev(exp.pts)),
+               y = pmin(pmax(c(global.low, rev(global.high)), bottom), top)), 
+          polygon_params)
+        )
+      if (plot_pointwise) {
+        
+        do.call(lines, c(list(x = exp.pts, y = pointwise.low), pointwise_params))
+        do.call(lines, c(list(x = exp.pts, y = pointwise.high), pointwise_params))
+        
+      }
+
     }
   }
-  do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts, col = samples_col)))
+  do.call(samples_func, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts), samples_params))
   if (difference) {
-    abline(h = 0, ...)
+    do.call(abline, c(list(h = 0), line_params))
   } else {
-    abline(0, 1, ...)
+    do.call(abline, c(list(a = 0, b = 1), line_params))
   }
   
 }
