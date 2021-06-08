@@ -240,13 +240,27 @@ qq_conf_plot <- function(obs,
     pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
     exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
     
+    if ("ylim" %in% names(dots)) {
+      
+      bottom <- dots$ylim[1] - 1000
+      top <- dots$ylim[2] + 1000
+      
+    } else {
+      
+      global.low_temp <- global.low[is.finite(global.low)]
+      global.high_temp <- global.high[is.finite(global.high)]
+      bottom <- min(global.low_temp) - 1000
+      top <- max(global.high_temp) + 1000
+      
+    }
+    
     if (difference) {
       do.call(
         polygon, 
         c(list(x = c(exp.pts, rev(exp.pts)),
-               y = c(global.low - exp.pts, rev(global.high) - rev(exp.pts))),
+               y = pmin(pmax(c(global.low - exp.pts, rev(global.high) - rev(exp.pts)), bottom), top)),
           polygon_params)
-        )
+      )
       if (plot_pointwise) {
         
         do.call(lines, c(list(x = exp.pts, y = pointwise.low - exp.pts), pointwise_params))
@@ -255,8 +269,7 @@ qq_conf_plot <- function(obs,
       }
 
     } else {
-      bottom <- -.Machine$double.xmax
-      top <- .Machine$double.xmax
+
       do.call(
         polygon,
         c(list(x = c(exp.pts, rev(exp.pts)),
