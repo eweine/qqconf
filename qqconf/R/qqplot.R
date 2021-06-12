@@ -81,7 +81,7 @@ qq_conf_plot <- function(obs,
   
   dist_name <- as.character(substitute(distribution))
   
-  if(is.null(dparams)) {
+  if(length(dparams) == 0) {
     # equivalence between base R and MASS::fitdistr distribution names
     corresp <- function(distributionName) {
       switch(
@@ -126,8 +126,12 @@ qq_conf_plot <- function(obs,
             dparams['mean'] <- median(x = obs)
             dparams['sd'] <- robustbase::Sn(x = obs)
             
+          } else {
+            
+            dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
+            
           }
-          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
+          
         } else {
           dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name), start = initVal(dist_name))$estimate
         }
@@ -183,7 +187,7 @@ qq_conf_plot <- function(obs,
     obs.pts <- -log10(obs.pts)
   }
   else {
-    
+      
     low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[1]
     high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[samp.size]
     
