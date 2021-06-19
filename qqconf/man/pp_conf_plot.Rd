@@ -5,14 +5,16 @@
 \title{PP Plot with Simultaneous and Pointwise Testing Bounds.}
 \usage{
 pp_conf_plot(obs, distribution = pnorm, method = c("ell", "ks"),
-  alpha = 0.05, difference = FALSE, log10 = FALSE,
-  shade.col = "gray", add = FALSE, dparams = NULL,
-  bounds_params = NULL, pw.lty = 0, pw.col = "black", ...)
+  alpha = 0.05, difference = FALSE, log10 = FALSE, add = FALSE,
+  dparams = list(), bounds_params = list(), line_params = list(),
+  plot_pointwise = FALSE, pointwise_params = list(),
+  samples_plot_type = c("points", "line"), samples_params = list(),
+  polygon_params = list(border = NA, col = "gray"), ...)
 }
 \arguments{
 \item{obs}{The observed data.}
 
-\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
+\item{distribution}{The probability function for the specified distribution. Defaults to qnorm.
 Custom distributions are allowed so long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
@@ -27,11 +29,9 @@ expected values on the vertical axis.}
 \item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
 positive distributions.}
 
-\item{shade.col}{What color to use for the simultaneous acceptance region.}
-
 \item{add}{Whether to add points to an existing plot.}
 
-\item{dparams}{List of additional parameters for the quantile function of the distribution
+\item{dparams}{List of additional parameters for the probability function of the distribution
 (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
 For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 "Alternatives to the Median Absolute Deviation". For all other distributions,
@@ -41,11 +41,22 @@ parameters of the distribution must be provided by the user.}
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 
-\item{pw.lty}{Line type for the pointwise error bounds. Set to non-zero for a line.}
+\item{line_params}{Parameters passed to the abline function to modify the line that indicates a perfect fit of the
+reference distribution.}
 
-\item{pw.col}{Color for the pointwise bounds line.}
+\item{plot_pointwise}{Boolean indiciating if pointwise bounds should be added to the plot}
+
+\item{pointwise_params}{Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
+set to TRUE.}
+
+\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
+By default the border is set to NA and the shade color is grey.}
 
 \item{...}{Additional parameters for the plot.}
+
+\item{samples_func}{Function used to plot sample points on the graph.}
+
+\item{sample_params}{Parameters to be passed to the samples function to plot probabilities.}
 }
 \description{
 Create a pp-plot with with a shaded simultaneous acceptance region and,
@@ -56,14 +67,14 @@ against their expected values had they come from the specified distribution.
 If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
 specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
-observed quantile minus expected quantile. Set pw.lty to a non-zero line type to plot
+observed probability minus expected probability. Set pw.lty to a non-zero line type to plot
 the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
 the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
 }
 \examples{
 x <- rchisq(1000, 1)
-pp_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
+pp_conf_plot(x, pchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
 
 y <- runif(893)
 pp_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
