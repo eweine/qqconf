@@ -173,8 +173,8 @@ pp_conf_plot <- function(obs,
   ## distribution
   # constant for visual expansion of confidence regions
   c <- .5 
-  obs.pts <- sort(obs)
-  exp.pts <- do.call(distribution, c(list(q=ppoints(samp.size, a=0)), dparams))
+  obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
+  exp.pts <- ppoints(samp.size, a=0)
   if (log10 == TRUE) {
     exp.pts <- -log10(exp.pts)
     low_exp_pt <- c * -log10(do.call(distribution, c(list(q=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
@@ -188,9 +188,9 @@ pp_conf_plot <- function(obs,
   }
   else {
     
-    low_exp_pt <- c * do.call(distribution, c(list(q=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * do.call(distribution, c(list(q=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[samp.size]
-    
+    low_exp_pt <- c * (1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * (1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+
   }
   if (difference) {
     y.pts <- obs.pts - exp.pts
@@ -205,10 +205,9 @@ pp_conf_plot <- function(obs,
     bottom <- min(y.pts) #obs.pts[1]
     top <- max(y.pts) #obs.pts[samp.size]
     do.call(plot, c(list(x=c(left, right), y=c(bottom, top), type='n', xlab=xlab, ylab=ylab), dots))
-    pointwise.low <- do.call(distribution,
-                             c(list(q=qbeta(conf[1], 1:samp.size, samp.size:1)), dparams))
-    pointwise.high <- do.call(distribution,
-                              c(list(q=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
+    
+    pointwise.low <- qbeta(conf[1], 1:samp.size, samp.size:1)
+    pointwise.high <- qbeta(conf[2], 1:samp.size, samp.size:1)
     
     global.bounds <- do.call(get_bounds_two_sided,
                              c(list(alpha = alpha, n = samp.size), bounds_params))
@@ -216,17 +215,22 @@ pp_conf_plot <- function(obs,
     # I don't think that this should be too hard, but I'm not completely sure
     if (method == "ell") {
       
-      global.low <- do.call(distribution, c(list(q = global.bounds$lower_bound), dparams))
-      global.high <- do.call(distribution, c(list(q = global.bounds$upper_bound), dparams))
+      global.low <- global.bounds$lower_bound
+      global.high <- global.bounds$upper_bound
       
     } else if (method == "ks") {
       
+      #probs <- ppoints(samp.size)
+      #epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
+      #lp <- pmax(probs - epsilon, rep(0, samp.size))
+      #up <- pmin(probs + epsilon, rep(1, samp.size))
+      #global.low <- do.call(distribution, c(list(q = lp), dparams))
+      #global.high <- do.call(distribution, c(list(q = up), dparams))
+      
       probs <- ppoints(samp.size)
       epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
-      lp <- pmax(probs - epsilon, rep(0, samp.size))
-      up <- pmin(probs + epsilon, rep(1, samp.size))
-      global.low <- do.call(distribution, c(list(q = lp), dparams))
-      global.high <- do.call(distribution, c(list(q = up), dparams))
+      global.low <- pmax(probs - epsilon, rep(0, samp.size))
+      global.high <- pmin(probs + epsilon, rep(1, samp.size))
       
     }
     
