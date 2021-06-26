@@ -50,14 +50,14 @@ reference distribution.}
 \item{pointwise_params}{Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
 set to TRUE.}
 
+\item{samples_plot_type}{Either "points" to plot samples as points or "line" to plot samples as a line.}
+
+\item{samples_params}{Parameters to be passed to the samples function to plot quantiles.}
+
 \item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
 By default the border is set to NA and the shade color is grey.}
 
 \item{...}{Additional parameters for the plot.}
-
-\item{samples_func}{Function used to plot sample points on the graph.}
-
-\item{sample_params}{Parameters to be passed to the samples function to plot quantiles.}
 }
 \description{
 Create a qq-plot with with a shaded simultaneous acceptance region and,

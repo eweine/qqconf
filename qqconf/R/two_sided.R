@@ -141,10 +141,12 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' 
 #' # Finds the global significance level corresponding to the local level eta.
 #' # Suppose we reject the null hypothesis that X1, ..., Xn are iid unif(0, 1) if and only if at least
-#' # one of the order statistics X(i) is significantly different from its null distribution based on a level-eta
+#' # one of the order statistics X(i) is significantly different from 
+#' # its null distribution based on a level-eta
 #' # two-sided test, i.e. we reject if and only if X(i) is outside the interval 
 #' # (qbeta(eta/2, i, n - i + 1), qbeta(1 - eta/2, i, n - i + 1)) for at least one i. 
-#' # The lines of code below calculate the global significance level of the test (which is necessarily larger than eta if n > 1).
+#' # The lines of code below calculate the global significance level of
+#' # the test (which is necessarily larger than eta if n > 1).
 #' n <- 100
 #' eta <- .05
 #' lb <- qbeta(eta / 2, c(1:n), c(n:1))

@@ -23,15 +23,8 @@ Imports:
     MASS (>= 7.3-50),
     robustbase (>= 0.93-4)
 Collate: 
-    'geom_qq_band.R'
     'one_sided.R'
     'ppplot.R'
     'qqconf-package.R'
     'qqplot.R'
-    'stat_pp_band.R'
-    'stat_pp_line.R'
-    'stat_pp_point.R'
-    'stat_qq_line.R'
-    'stat_qq_band.R'
-    'stat_qq_point.R'
     'two_sided.R'

@@ -38,8 +38,8 @@
 #' @param plot_pointwise Boolean indiciating if pointwise bounds should be added to the plot
 #' @param pointwise_params Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
 #'   set to TRUE.
-#' @param samples_func Function used to plot sample points on the graph.
-#' @param sample_params Parameters to be passed to the samples function to plot probabilities.
+#' @param samples_plot_type Either "points" to plot samples as points or "line" to plot samples as a line.
+#' @param samples_params Parameters to be passed to the samples function to plot quantiles.
 #' @param polygon_params Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
 #'   By default the border is set to NA and the shade color is grey.
 #' @param ... Additional parameters for the plot.
