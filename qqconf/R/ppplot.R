@@ -15,7 +15,7 @@
 #' @param obs The observed data.
 #' @param distribution The probability function for the specified distribution. Defaults to qnorm.
 #' Custom distributions are allowed so long as all parameters are supplied in dparams.
-#' @param method Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+#' @param method Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
 #' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
 #' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
 #' @param alpha Type I error of global test of if the data comes from the reference distribution.
@@ -24,10 +24,11 @@
 #' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
 #' positive distributions.
 #' @param add Whether to add points to an existing plot. 
-#' @param dparams List of additional parameters for the probability function of the distribution
-#'   (e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+#' @param dparams List of additional parameters for the quantile function of the distribution
+#'   (e.g. df=1). For the uniform distribution, the default parameters are max = 1 and min = 0.
+#'   For other distributions parameters will be estimated if not provided and an appropriate estimation procedure exists.
 #'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
-#'   "Alternatives to the Median Absolute Deviation". For all other distributions,
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
 #' @param bounds_params List of optional parameters for get_bounds_two_sided
@@ -46,11 +47,41 @@
 #' @export
 #'
 #' @examples
-#' x <- rchisq(1000, 1)
-#' pp_conf_plot(x, pchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
-#'
-#' y <- runif(893)
-#' pp_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
+#' set.seed(0)
+#' smp <- rnorm(100)
+#' 
+#' # Plot PP plot against normal distribution with mean and variance estimated
+#' pp_conf_plot(
+#'   obs=smp, 
+#'   distribution = punif
+#' )
+#' 
+#' # Make same plot on log10 scale to highlight small p-values
+#' pp_conf_plot(
+#'   obs=smp, 
+#'   distribution = punif,
+#'   log10 = TRUE
+#' )
+#' 
+#' # Make same plot with difference between observed and expected values on the y-axis 
+#' pp_conf_plot(
+#'   obs=smp, 
+#'   distribution = punif,
+#'   difference = TRUE
+#' )
+#' 
+#' # Make same plot with samples plotted as a blue line and mean line plotted as a red line
+#' pp_conf_plot(
+#'   obs=smp, 
+#'   distribution = punif,
+#'   plot_pointwise = TRUE,
+#'   method = "ell",
+#'   samples_plot_type = "line",
+#'   samples_params = list(col="blue"),
+#'   line_params = list(col="red")
+#' )
+#' 
+
 pp_conf_plot <- function(obs,
                          distribution = pnorm,
                          method = c("ell", "ks"),
