@@ -210,11 +210,6 @@ pp_conf_plot <- function(obs,
     exp.pts <- -log10(exp.pts)
     low_exp_pt <- c * -log10(do.call(distribution, c(list(q=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
     high_exp_pt <- c * -log10(do.call(distribution, c(list(q=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
-    if (any(obs.pts <= 0)) {
-      
-      stop("log10 scaling can only be used with strictly positive distributions.")
-      
-    }
     obs.pts <- -log10(obs.pts)
   }
   else {
