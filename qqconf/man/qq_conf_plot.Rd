@@ -17,7 +17,7 @@ qq_conf_plot(obs, distribution = qnorm, method = c("ell", "ks"),
 \item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
 Custom distributions are allowed so long as all parameters are supplied in dparams.}
 
-\item{method}{Method for simultaneous testing bands. Must be either "ell", which applies a level \eqn{\eta} pointwise
+\item{method}{Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
 test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
 Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.}
 
@@ -32,9 +32,10 @@ positive distributions.}
 \item{add}{Whether to add points to an existing plot.}
 
 \item{dparams}{List of additional parameters for the quantile function of the distribution
-(e.g. df=1). Will be estimated if not provided and an appropriate estimation procedure exists.
+(e.g. df=1). For the uniform distribution, the default parameters are max = 1 and min = 0.
+For other distributions parameters will be estimated if not provided and an appropriate estimation procedure exists.
 For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
-"Alternatives to the Median Absolute Deviation". For all other distributions,
+"Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 parameters of the distribution must be provided by the user.}
 
@@ -73,9 +74,38 @@ the bounds under the null hypothesis, so the chance that the qq-plot has any poi
 is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
 }
 \examples{
-x <- rchisq(1000, 1)
-qq_conf_plot(x, qchisq, dparams=list(df=1), pw.lty=3) # Plots x against a 1-df chisquare
+set.seed(0)
+smp <- runif(100)
 
-y <- runif(893)
-qq_conf_plot(y, difference = TRUE, log10 = TRUE, bounds_params = list(method = "search"), pch=3)
+# Plot QQ plot against uniform(0, 1) distribution
+qq_conf_plot(
+  obs=smp, 
+  distribution = qunif
+)
+
+# Make same plot on log10 scale to highlight small p-values
+qq_conf_plot(
+  obs=smp, 
+  distribution = qunif,
+  log10 = TRUE
+)
+
+# Make same plot with difference between observed and expected values on the y-axis 
+qq_conf_plot(
+  obs=smp, 
+  distribution = qunif,
+  difference = TRUE
+)
+
+# Make same plot with samples plotted as a blue line and mean line plotted as a red line
+qq_conf_plot(
+  obs=smp, 
+  distribution = qunif,
+  plot_pointwise = TRUE,
+  method = "ell",
+  samples_plot_type = "line",
+  samples_params = list(col="blue"),
+  line_params = list(col="red")
+)
+
 }
