@@ -7,9 +7,9 @@
 pp_conf_plot(obs, distribution = pnorm, method = c("ell", "ks"),
   alpha = 0.05, difference = FALSE, log10 = FALSE, add = FALSE,
   dparams = list(), bounds_params = list(), line_params = list(),
-  plot_pointwise = FALSE, pointwise_params = list(),
-  samples_plot_type = c("points", "line"), samples_params = list(),
-  polygon_params = list(border = NA, col = "gray"), ...)
+  plot_pointwise = FALSE, pointwise_lines_params = list(),
+  points_params = list(), polygon_params = list(border = NA, col =
+  "gray"), ...)
 }
 \arguments{
 \item{obs}{The observed data.}
@@ -21,7 +21,7 @@ Custom distributions are allowed so long as all parameters are supplied in dpara
 test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
 Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.}
 
-\item{alpha}{Type I error of global test of if the data comes from the reference distribution.}
+\item{alpha}{Type I error of global test of whether the data come from the reference distribution.}
 
 \item{difference}{Whether to plot the difference between the observed and
 expected values on the vertical axis.}
@@ -42,22 +42,20 @@ parameters of the distribution must be provided by the user.}
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 
-\item{line_params}{Parameters passed to the abline function to modify the line that indicates a perfect fit of the
+\item{line_params}{Parameters passed to the line function to modify the line that indicates a perfect fit of the
 reference distribution.}
 
 \item{plot_pointwise}{Boolean indiciating if pointwise bounds should be added to the plot}
 
-\item{pointwise_params}{Parameters passed to the lines function that modifies pointwise bounds if plot_pointwise is
+\item{pointwise_lines_params}{Parameters passed to the \code{lines} function that modifies pointwise bounds if plot_pointwise is
 set to TRUE.}
 
-\item{samples_plot_type}{Either "points" to plot samples as points or "line" to plot samples as a line.}
+\item{points_params}{Parameters to be passed to the \code{points} function to plot the data.}
 
-\item{samples_params}{Parameters to be passed to the samples function to plot quantiles.}
+\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
+By default \code{border} is set to NA and \code{col} is set to grey.}
 
-\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaenous confidence bounds.
-By default the border is set to NA and the shade color is grey.}
-
-\item{...}{Additional parameters for the plot.}
+\item{...}{Additional parameters passed to the plot function.}
 }
 \description{
 Create a pp-plot with with a shaded simultaneous acceptance region and,
@@ -67,9 +65,8 @@ against their expected values had they come from the specified distribution.
 \details{
 If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
-specified distribution. If 'difference' is set to TRUE, the vertical axis plots the 
-observed probability minus expected probability. Set pw.lty to a non-zero line type to plot
-the pointwise bounds. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+specified distribution. If \code{difference} is set to TRUE, the vertical axis plots the 
+observed quantile minus expected quantile. If pointwise bands are used, then on average, alpha * n of the points will fall outside
 the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
 }
@@ -83,7 +80,7 @@ pp_conf_plot(
   distribution = punif
 )
 
-# Make same plot on log10 scale to highlight small p-values
+# Make same plot on -log10 scale to highlight small p-values
 pp_conf_plot(
   obs=smp, 
   distribution = punif,
@@ -97,14 +94,13 @@ pp_conf_plot(
   difference = TRUE
 )
 
-# Make same plot with samples plotted as a blue line and mean line plotted as a red line
+# Make same plot with samples plotted as a blue line and expected value line plotted as a red line
 pp_conf_plot(
   obs=smp, 
   distribution = punif,
   plot_pointwise = TRUE,
   method = "ell",
-  samples_plot_type = "line",
-  samples_params = list(col="blue"),
+  points_params = list(col="blue", type="l"),
   line_params = list(col="red")
 )
 

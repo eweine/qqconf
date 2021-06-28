@@ -32,7 +32,7 @@
 #'   parameters of the distribution must be provided by the user.
 #' @param bounds_params List of optional parameters for get_bounds_two_sided
 #'   (i.e. tol, max_it, method).
-#' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
+#' @param line_params Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
 #' @param plot_pointwise Boolean indiciating if pointwise bounds should be added to the plot
 #' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds if plot_pointwise is
@@ -40,7 +40,7 @@
 #' @param points_params Parameters to be passed to the \code{points} function to plot the data.
 #' @param polygon_params Parmeters to be passed to the polygon function to construct simultaneous confidence region.
 #'   By default \code{border} is set to NA and \code{col} is set to grey.
-#' @param ... Additional parameters for the plot.
+#' @param ... Additional parameters passed to the plot function.
 #' 
 #' @importFrom stats median pnorm ppoints qbeta qnorm
 #' @importFrom graphics abline lines plot points polygon

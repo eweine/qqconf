@@ -42,7 +42,7 @@ parameters of the distribution must be provided by the user.}
 \item{bounds_params}{List of optional parameters for get_bounds_two_sided
 (i.e. tol, max_it, method).}
 
-\item{line_params}{Parameters passed to the line function to modify the line that indicates a perfect fit of the
+\item{line_params}{Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 reference distribution.}
 
 \item{plot_pointwise}{Boolean indiciating if pointwise bounds should be added to the plot}
@@ -55,7 +55,7 @@ set to TRUE.}
 \item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
 By default \code{border} is set to NA and \code{col} is set to grey.}
 
-\item{...}{Additional parameters for the plot.}
+\item{...}{Additional parameters passed to the plot function.}
 }
 \description{
 Create a qq-plot with with a shaded simultaneous acceptance region and,
