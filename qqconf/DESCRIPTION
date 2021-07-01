@@ -6,14 +6,12 @@ Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
     person("Abney", "Mark", email = "abney@uchicago.edu", role = "aut"))
-Description: This package creates one-sided and two-sided simultaneoustesting bands 
-    for the order statistics of independent uniform(0, 1) random variables using the method of "local levels." 
-    This is useful for creating confidence bands on qqplots.
+Description: Provides functionality for creating Quantile-Quantile (QQ) plots with simultaneous testing bands to asses
+    significance of sample deviation from a reference distribution.
 License: GPL-3 | file LICENSE
 Depends: 
     R (>= 3.0.0)
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
     dplyr (>= 1.0.0),
