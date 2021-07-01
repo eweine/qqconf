@@ -1,0 +1,93 @@
+---
+title: "qqconf: An R Package for Putting Testing Bands on QQ Plots"
+author: 
+  - Eric Weine^[University of Chicago, ericweine15@gmail.com]
+  - Mary Sara McPeek^[University of Chicago, mcpeek@uchicago.edu]
+  - Mark Abney^[University of Chicago, abney@uchicago.edu]
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `qqconf` package extends `base` graphics capabilities to put simultaneous testing bands on a Quantile-Quantile (QQ) or Probability-Probability (PP) plot. We support QQ plots for any distribution with a Cumulative Distribution Function (CDF) implemented in R. For the creation of simultaneous testing bands, we support the Kolmogorov-Smirnov (KS) method as well as what we refer to as the Equal Local Levels (ELL) method, which conducts an $\eta$ level test on each order statistic of the sample supplied such that the global testing bands have some desired $\alpha$ Type I error rate. For more information on the computation and properties of ELL, please see our paper [insert citation here]. 
+
+## Installation
+
+Our package is available on CRAN and can be installed simply by running
+
+``` {r eval = F} 
+install.packages("qqconf")
+```
+
+## Usage
+
+The package contains two main functions for creating plots, `qq_conf_plot` and `pp_conf_plot` to create QQ plots and PP plots, respectively. These two functions have identical interfaces, with the exception that `qq_conf_plot` requires the input of a quantile function (e.g. `qnorm`) and `pp_conf_plot` requires the input of a distribution function (e.g. `pnorm`). Thus, in this vignette we only demonstrate usage of `qq_conf_plot` for concision.
+
+### QQ plots
+
+First, we load in `qqconf`
+
+```{r message = F}
+require(qqconf)
+```
+
+Then, we generate data from a standard normal distribution:
+
+```{r}
+set.seed(0)
+sample <- rnorm(n = 100, mean = 0, sd = 1)
+```
+
+Now, if we did not know the distribution that our sample came from and instead wanted to test if it was sampled i.i.d from a $N(0, 1)$ distribution, we could create a QQ plot to compare the quantiles of the sample to the theoretical quantiles of a $N(0, 1)$ distribution.
+
+To do this, we call `qq_conf_plot` as follows:
+
+```{r fig.align = "center", fig.width = 7, fig.height = 5}
+qq_conf_plot(
+  obs = sample, 
+  distribution = qnorm,
+  dparams = list(mean = 0, sd = 1)
+)
+```
+
+By default, this function creates a QQ plot with ELL testing bounds calculated witha Type I error rate of .05. Note here that `dparams` is not a required parameter. If we were to call `qq_conf_plot` without specifying `dparams`, then our code would estimate the mean and variance of the sample assuming it comes from a normal distribution. More generally, for any continuous distribution that is neither normal nor uniform, we use maximum liklihood estimation to estimate all parameters of the distribution. For uniform distribution, we do not support parameter estimation but instead default to $U(0, 1)$ and allow the user to specify a custom `max` and `min`. For the normal distribution, because it is so commonly used as the reference distribution in QQ plots, we experimented with different methods of parameter estimation and found that estimating the mean of the distribution as the median of the sample and the standard deviation as $S_{n}$ as proposed by Rousseeuw and Croux (1993) had well calibrated Type I error rates. When we used the MLEs for the normal distribution, we found that the testing bounds produced were conservative. Note that the testing bounds produced for other distributions with parameters estimated via MLE will also likely be conservative.
+
+Parameter estimation aside, we have now created a QQ plot that compares our sample to $N(0, 1). While this plot is informative, there are a number of potential modifications we may want to make to this plot for ease of viewing. First, because the top and the bottom of the confidence bands are cut off in this plot, we may want to expand the y-axis limits. We do this as follows:
+
+```{r fig.align = "center", fig.width = 7, fig.height = 5}
+qq_conf_plot(
+  obs = sample, 
+  distribution = qnorm,
+  dparams = list(mean = 0, sd = 1),
+  ylim = c(-4, 4)
+)
+```
+
+In fact, because `qq_conf_plot` takes `...` as an argument, any other parameter normally passed to the `plot` function in `base` can be passed to `qq_conf_plot`. If, for instance, we wanted to modify the axis labels, we could write:
+
+```{r fig.align = "center", fig.width = 7, fig.height = 5}
+qq_conf_plot(
+  obs = sample, 
+  distribution = qnorm,
+  dparams = list(mean = 0, sd = 1),
+  ylim = c(-4, 4),
+  xlab = "More Informative Title"
+)
+```
+
+
+## References
+
+* [Rousseeuw, Peter J., and Christophe Croux. "Alternatives to the median absolute deviation." Journal of the American Statistical association 88.424 (1993): 1273-1283.]
+
+
