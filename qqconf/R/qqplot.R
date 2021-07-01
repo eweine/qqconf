@@ -24,7 +24,9 @@
 #' positive distributions.
 #' @param add Whether to add points to an existing plot. 
 #' @param dparams List of additional parameters for the quantile function of the distribution
-#'   (e.g. df=1). For the uniform distribution, the default parameters are max = 1 and min = 0.
+#'   (e.g. df=1). Note that if any parameters of the distribution are specified, all other unspecified parameters of the distribution
+#'   will take on their default values. For the uniform distribution, parameter estimation is not supported, and
+#'   the default parameters are max = 1 and min = 0.
 #'   For other distributions parameters will be estimated if not provided and an appropriate estimation procedure exists.
 #'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
@@ -200,7 +202,7 @@ qq_conf_plot <- function(obs,
     high_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
     if (any(obs.pts <= 0)) {
       
-      stop("log10 scaling can only be used with strictly positive distributions.")
+      stop("log10 scaling can only be used with strictly positive distributions. Consider using pp_conf_plot.")
       
     }
     obs.pts <- -log10(obs.pts)
