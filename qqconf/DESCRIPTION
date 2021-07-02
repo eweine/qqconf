@@ -6,8 +6,8 @@ Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
     person("Abney", "Mark", email = "abney@uchicago.edu", role = "aut"))
-Description: Provides functionality for creating Quantile-Quantile (QQ) plots with simultaneous testing bands to asses
-    significance of sample deviation from a reference distribution.
+Description: Provides functionality for creating Quantile-Quantile (QQ) and Probability-Probability (PP) plots with simultaneous 
+    testing bands to asses significance of sample deviation from a reference distribution.
 License: GPL-3 | file LICENSE
 Depends: 
     R (>= 3.0.0)
