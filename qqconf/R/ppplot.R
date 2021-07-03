@@ -203,8 +203,10 @@ pp_conf_plot <- function(obs,
   }
   else {
     
-    low_exp_pt <- c * (1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * (1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    #low_exp_pt <- c * (1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
+    #high_exp_pt <- c * (1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- 0
+    high_exp_pt <- 1
 
   }
   if (difference) {
@@ -256,13 +258,6 @@ pp_conf_plot <- function(obs,
       global.high <- -log10(global.high)
     }
     
-    # code to extend region for visibility
-    global.low <- c(global.low[1], global.low, global.low[samp.size])
-    global.high <- c(global.high[1], global.high, global.high[samp.size])
-    pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
-    pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
-    exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
-    
     if ("ylim" %in% names(dots)) {
       
       bottom <- dots$ylim[1] - 1000
@@ -278,20 +273,38 @@ pp_conf_plot <- function(obs,
     }
     
     if (difference) {
+      
+      global_low_diff <- global.low - exp.pts
+      global_high_diff <- global.high - exp.pts
+      pointwise_low_diff <- pointwise.low - exp.pts
+      pointwise_high_diff <- pointwise.high - exp.pts
+      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      global_low_diff <- c(global_low_diff[1], global_low_diff, global_low_diff[samp.size])
+      global_high_diff <- c(global_high_diff[1], global_high_diff, global_high_diff[samp.size])
+      pointwise_low_diff <- c(pointwise_low_diff[1], pointwise_low_diff, pointwise_low_diff[samp.size])
+      pointwise_high_diff <- c(pointwise_high_diff[1], pointwise_high_diff, pointwise_high_diff[samp.size])
+      
       do.call(
         polygon, 
         c(list(x = c(exp.pts, rev(exp.pts)),
-               y = pmin(pmax(c(global.low - exp.pts, rev(global.high) - rev(exp.pts)), bottom), top)),
+               y = pmin(pmax(c(global_low_diff, rev(global_high_diff)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
         
-        do.call(lines, c(list(x = exp.pts, y = pointwise.low - exp.pts), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = pointwise.high - exp.pts), pointwise_lines_params))
+        
+        do.call(lines, c(list(x = exp.pts, y = pointwise_low_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp.pts, y = pointwise_high_diff), pointwise_lines_params))
         
       }
       
     } else {
+      
+      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      global.low <- c(global.low[1], global.low, global.low[samp.size])
+      global.high <- c(global.high[1], global.high, global.high[samp.size])
+      pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
+      pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
       
       do.call(
         polygon,
