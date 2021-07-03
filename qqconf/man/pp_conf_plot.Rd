@@ -90,7 +90,7 @@ smp <- rnorm(100)
 # Plot PP plot against normal distribution with mean and variance estimated
 pp_conf_plot(
   obs=smp, 
-  distribution = punif
+  distribution = pnorm
 )
 
 # Make same plot on -log10 scale to highlight small p-values
