@@ -554,8 +554,7 @@ R> qq_conf_plot(
 +    distribution = qunif,
 +    method = "ell",
 +    alpha = .05,
-+    samples_func = lines,
-+    samples_col = "red"
++    points_params = list(col="red", type="l")
 +  )
 R> # Add the Q-Q plot for scenario 1.
 R> lines(c(1:n) / (n + 1), sort(pvals_scenario_1), col = "blue")
@@ -587,8 +586,7 @@ R> qq_conf_plot(
 +    distribution = qunif,
 +    method = "ell",
 +    alpha = .05,
-+    samples_func = lines,
-+    samples_col = "red",
++    points_params = list(col="red", type="l"),
 +    log10 = TRUE
 +  )
 R> # Add the Q-Q plot for scenario 1.
@@ -668,8 +666,7 @@ Clearly there's some indication of deviation in this plot, but it can be hard to
 R> library(qqconf)
 R> qq_conf_plot(
 +    obs = reg$residuals,
-+    samples_func = lines,
-+    samples_col = "red"
++    points_params = list(col="red")
 +  )
 \end{Sinput}
 \end{Schunk}

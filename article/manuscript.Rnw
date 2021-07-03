@@ -556,8 +556,7 @@ qq_conf_plot(
   distribution = qunif,
   method = "ell",
   alpha = .05,
-  samples_func = lines,
-  samples_col = "red"
+  points_params = list(col="red", type="l")
 )
 
 # Add the Q-Q plot for scenario 1.
@@ -590,8 +589,7 @@ qq_conf_plot(
   distribution = qunif,
   method = "ell",
   alpha = .05,
-  samples_func = lines,
-  samples_col = "red",
+  points_params = list(col="red", type="l"),
   log10 = TRUE
 )
 
@@ -664,8 +662,7 @@ Clearly there's some indication of deviation in this plot, but it can be hard to
 library(qqconf)
 qq_conf_plot(
   obs = reg$residuals,
-  samples_func = lines,
-  samples_col = "red"
+  points_params = list(col="red")
 )
 @
 %

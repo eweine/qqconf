@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  2 MAY 2021 13:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 JUL 2021 11:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -869,11 +869,7 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 \mybox=\box46
 \mysim=\box47
 
-(./manuscript.aux
-
-LaTeX Warning: Label `sec:methods' multiply defined.
-
-)
+(./manuscript.aux)
 \openout1 = `manuscript.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 72.
@@ -897,8 +893,7 @@ LaTeX Font Info:    ... okay on input line 72.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 72.
 LaTeX Font Info:    ... okay on input line 72.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 72.
-
-(/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -950,7 +945,7 @@ LaTeX Info: Redefining \nameref on input line 72.
 \@outlinefile=\write5
 \openout5 = `manuscript.out'.
 
-<jsslogo.jpg, id=43, 540.0175pt x 393.47pt>
+<jsslogo.jpg, id=47, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
 Package pdftex.def Info: jsslogo.jpg  used on input line 72.
@@ -1103,10 +1098,10 @@ Package xcolor Warning: Incompatible color definition on input line 80.
 Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 83.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 83.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
 Package xcolor Warning: Incompatible color definition on input line 83.
@@ -1124,8 +1119,7 @@ Package xcolor Warning: Incompatible color definition on input line 86.
 Package xcolor Warning: Incompatible color definition on input line 86.
 
 
-LaTeX Warning: Hyper reference `sec:discussion' on page 1 undefined on input li
-ne 86.
+Package xcolor Warning: Incompatible color definition on input line 86.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 77--87
@@ -1303,12 +1297,12 @@ Package xcolor Warning: Incompatible color definition on input line 412.
 
 Package xcolor Warning: Incompatible color definition on input line 412.
 
-<images/c_alpha_1_6.png, id=168, 509.905pt x 415.5525pt>
+<images/c_alpha_1_6.png, id=174, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_6.png Graphic file (type png)
 <use images/c_alpha_1_6.png>
 Package pdftex.def Info: images/c_alpha_1_6.png  used on input line 421.
 (pdftex.def)             Requested size: 333.46758pt x 271.77356pt.
-<images/c_alpha_1_591.png, id=170, 509.905pt x 415.5525pt>
+<images/c_alpha_1_591.png, id=176, 509.905pt x 415.5525pt>
 File: images/c_alpha_1_591.png Graphic file (type png)
 <use images/c_alpha_1_591.png>
 Package pdftex.def Info: images/c_alpha_1_591.png  used on input line 422.
@@ -1429,10 +1423,10 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-<manuscript-chisq_qq.pdf, id=212, 433.62pt x 433.62pt>
+<manuscript-chisq_qq.pdf, id=218, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq.pdf>
-Package pdftex.def Info: manuscript-chisq_qq.pdf  used on input line 573.
+Package pdftex.def Info: manuscript-chisq_qq.pdf  used on input line 572.
 (pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1449,12 +1443,12 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.589 +    alpha = .05,
-                        <./manuscript-chisq_qq.pdf>]
-<manuscript-chisq_qq_log.pdf, id=228, 433.62pt x 433.62pt>
+l.589 ...oints_params = list(col="red", type="l"),
+                                                   <./manuscript-chisq_qq.pdf>]
+<manuscript-chisq_qq_log.pdf, id=234, 433.62pt x 433.62pt>
 File: manuscript-chisq_qq_log.pdf Graphic file (type pdf)
 <use manuscript-chisq_qq_log.pdf>
-Package pdftex.def Info: manuscript-chisq_qq_log.pdf  used on input line 607.
+Package pdftex.def Info: manuscript-chisq_qq_log.pdf  used on input line 605.
 (pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1466,42 +1460,75 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.613 
+l.611 
        <./manuscript-chisq_qq_log.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 616--621
+Underfull \hbox (badness 10000) in paragraph at lines 624--631
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 623--633
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 623--633
-
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 635.
-
-
-Package xcolor Warning: Incompatible color definition on input line 635.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 635--639
-
- []
-
+<manuscript-base_qqplot.pdf, id=245, 433.62pt x 433.62pt>
+File: manuscript-base_qqplot.pdf Graphic file (type pdf)
+<use manuscript-base_qqplot.pdf>
+Package pdftex.def Info: manuscript-base_qqplot.pdf  used on input line 657.
+(pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 16 []
  []
 
-[16] (./manuscript.bbl
+[16]
+<manuscript-qqconf_qqplot.pdf, id=256, 433.62pt x 433.62pt>
+File: manuscript-qqconf_qqplot.pdf Graphic file (type pdf)
+<use manuscript-qqconf_qqplot.pdf>
+Package pdftex.def Info: manuscript-qqconf_qqplot.pdf  used on input line 673.
+(pdftex.def)             Requested size: 333.46758pt x 333.48482pt.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 17
+ []
+
+[17 <./manuscript-base_qqplot.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 680--685
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 687--697
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 687--697
+
+ []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 18 []
+ []
+
+[18 <./manuscript-qqconf_qqplot.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 699.
+
+
+Package xcolor Warning: Incompatible color definition on input line 699.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 699--703
+
+ []
+
+(./manuscript.bbl
 
 Package xcolor Warning: Incompatible color definition on input line 22.
 
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 19
+ []
+
+[19]
 
 Package xcolor Warning: Incompatible color definition on input line 37.
 
@@ -1514,110 +1541,104 @@ Package xcolor Warning: Incompatible color definition on input line 39.
 
 Package xcolor Warning: Incompatible color definition on input line 77.
 
+)
 
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-[] \T1/lmr/m/n/10.95 17
- []
-
-[17])
-
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 643--643
+Underfull \hbox (badness 10000) in paragraph at lines 707--707
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 643--643
+Underfull \hbox (badness 10000) in paragraph at lines 707--707
 
  []
 
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 643.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 707.
 
-Package xcolor Warning: Incompatible color definition on input line 643.
-
-
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 707.
+
+
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-\T1/lmr/m/n/10.95 18 []
+\T1/lmr/m/n/10.95 20 []
  []
 
-[18]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 643.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 643.
+[20]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 21
+ []
+
+[21]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 707.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 707.
  (./manuscript.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 643.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 643.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 707.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 707.
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
-(rerunfilecheck)             Checksum: 8D6EFC9BB71939C58BA907BDC40A48F5;1072.
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 643.
+(rerunfilecheck)             Checksum: 1D57D14A6A7ADFF5F9128F716F0134F5;1226.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 707.
  ) 
 Here is how much of TeX's memory you used:
- 18657 strings out of 492649
- 339622 string characters out of 6129622
- 416970 words of memory out of 5000000
- 22035 multiletter control sequences out of 15000+600000
- 109139 words of font info for 78 fonts, out of 8000000 for 9000
+ 18690 strings out of 492649
+ 340355 string characters out of 6129622
+ 416954 words of memory out of 5000000
+ 22053 multiletter control sequences out of 15000+600000
+ 119941 words of font info for 87 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,18n,54p,2006b,667s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
-texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/t
-exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/
-fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/
+texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
+18/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/texmf-dist/
+fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/
 dvips/lm/lm-mathex.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base
 /8r.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/doublestroke/dsr
 om10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmb10.pfb></
 usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmbo10.pfb></usr/local/
 texlive/2018/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/20
 18/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2018/texmf-d
-ist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/
-type1/public/lm/lmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
-ic/lm/lmmi6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi8
-.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/
-local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texli
-ve/2018/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2018/texm
-f-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2018/texmf-dist/fonts
-/type1/public/lm/lmr9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publi
-c/lm/lmri10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri1
-2.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmro10.pfb></us
-r/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/te
-xlive/2018/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2018/texmf-d
-ist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
-ype1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
-/lm/lmtt10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtto1
-0.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-
-Output written on manuscript.pdf (18 pages, 582908 bytes).
+ist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
+ype1/public/lm/lmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publi
+c/lm/lmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi6
+.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/
+local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/tex
+live/2018/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2018/t
+exmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2018/texmf-dist/f
+onts/type1/public/lm/lmr6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/p
+ublic/lm/lmr8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr
+9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri10.pfb></us
+r/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2018
+/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2018/texmf-dis
+t/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/
+type1/public/lm/lmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
+ic/lm/lmsy6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy8
+.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr
+/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtto10.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
+Output written on manuscript.pdf (21 pages, 632933 bytes).
 PDF statistics:
- 379 PDF objects out of 1000 (max. 8388607)
- 321 compressed objects within 4 object streams
- 89 named destinations out of 1000 (max. 500000)
- 110 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 424 PDF objects out of 1000 (max. 8388607)
+ 357 compressed objects within 4 object streams
+ 95 named destinations out of 1000 (max. 500000)
+ 128 words of extra memory for PDF output out of 10000 (max. 10000000)
 
