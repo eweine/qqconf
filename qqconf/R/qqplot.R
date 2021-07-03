@@ -311,6 +311,14 @@ qq_conf_plot <- function(obs,
     }
   }
   do.call(points, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts), points_params))
-  do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(min(y.pts), max(y.pts))), line_params))
+  if (difference) {
+    
+    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(0, 0)), line_params))
+    
+  } else{
+    
+    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(min(exp.pts), max(exp.pts))), line_params))
+    
+  }
   
 }

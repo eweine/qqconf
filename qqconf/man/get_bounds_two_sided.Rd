@@ -4,8 +4,13 @@
 \alias{get_bounds_two_sided}
 \title{Calculates Rejection Region of Two-Sided Equal Local Levels Test.}
 \usage{
-get_bounds_two_sided(alpha, n, tol = 1e-08, max_it = 100,
-  method = c("best_available", "approximate", "search"))
+get_bounds_two_sided(
+  alpha,
+  n,
+  tol = 1e-08,
+  max_it = 100,
+  method = c("best_available", "approximate", "search")
+)
 }
 \arguments{
 \item{alpha}{Desired global significance level of the test.}

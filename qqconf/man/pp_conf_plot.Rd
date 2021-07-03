@@ -4,12 +4,23 @@
 \alias{pp_conf_plot}
 \title{PP Plot with Simultaneous and Pointwise Testing Bounds.}
 \usage{
-pp_conf_plot(obs, distribution = pnorm, method = c("ell", "ks"),
-  alpha = 0.05, difference = FALSE, log10 = FALSE, add = FALSE,
-  dparams = list(), bounds_params = list(), line_params = list(),
-  plot_pointwise = FALSE, pointwise_lines_params = list(),
-  points_params = list(), polygon_params = list(border = NA, col =
-  "gray"), ...)
+pp_conf_plot(
+  obs,
+  distribution = pnorm,
+  method = c("ell", "ks"),
+  alpha = 0.05,
+  difference = FALSE,
+  log10 = FALSE,
+  add = FALSE,
+  dparams = list(),
+  bounds_params = list(),
+  line_params = list(),
+  plot_pointwise = FALSE,
+  pointwise_lines_params = list(),
+  points_params = list(),
+  polygon_params = list(border = NA, col = "gray"),
+  ...
+)
 }
 \arguments{
 \item{obs}{The observed data.}
