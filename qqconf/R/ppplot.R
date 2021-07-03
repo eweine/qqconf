@@ -194,10 +194,12 @@ pp_conf_plot <- function(obs,
   obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
   exp.pts <- ppoints(samp.size, a=0)
   if (log10 == TRUE) {
+    
     exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(do.call(distribution, c(list(q=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(do.call(distribution, c(list(q=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
     obs.pts <- -log10(obs.pts)
+    
   }
   else {
     
