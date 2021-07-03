@@ -59,21 +59,21 @@
 #' # Make same plot on -log10 scale to highlight small p-values
 #' pp_conf_plot(
 #'   obs=smp, 
-#'   distribution = punif,
+#'   distribution = pnorm,
 #'   log10 = TRUE
 #' )
 #' 
 #' # Make same plot with difference between observed and expected values on the y-axis 
 #' pp_conf_plot(
 #'   obs=smp, 
-#'   distribution = punif,
+#'   distribution = pnorm,
 #'   difference = TRUE
 #' )
 #' 
 #' # Make same plot with samples plotted as a blue line and expected value line plotted as a red line
 #' pp_conf_plot(
 #'   obs=smp, 
-#'   distribution = punif,
+#'   distribution = pnorm,
 #'   plot_pointwise = TRUE,
 #'   method = "ell",
 #'   points_params = list(col="blue", type="l"),
