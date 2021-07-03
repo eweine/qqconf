@@ -226,21 +226,13 @@ pp_conf_plot <- function(obs,
     
     global.bounds <- do.call(get_bounds_two_sided,
                              c(list(alpha = alpha, n = samp.size), bounds_params))
-    # Here, have to figure out how to do this for the KS test
-    # I don't think that this should be too hard, but I'm not completely sure
+
     if (method == "ell") {
       
       global.low <- global.bounds$lower_bound
       global.high <- global.bounds$upper_bound
       
     } else if (method == "ks") {
-      
-      #probs <- ppoints(samp.size)
-      #epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
-      #lp <- pmax(probs - epsilon, rep(0, samp.size))
-      #up <- pmin(probs + epsilon, rep(1, samp.size))
-      #global.low <- do.call(distribution, c(list(q = lp), dparams))
-      #global.high <- do.call(distribution, c(list(q = up), dparams))
       
       probs <- ppoints(samp.size)
       epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
