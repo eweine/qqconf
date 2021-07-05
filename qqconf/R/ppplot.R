@@ -7,37 +7,37 @@
 #' If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 #' level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
 #' specified distribution. If \code{difference} is set to TRUE, the vertical axis plots the 
-#' observed quantile minus expected quantile. If pointwise bands are used, then on average, alpha * n of the points will fall outside
+#' observed quantile minus expected quantile. If pointwise bounds are used, then on average, alpha * n of the points will fall outside
 #' the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 #' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
 #' 
 #' @param obs The observed data.
 #' @param distribution The probability function for the specified distribution. Defaults to qnorm.
-#' Custom distributions are allowed so long as all parameters are supplied in dparams.
+#' Custom distributions are allowed as long as all parameters are supplied in dparams.
 #' @param method Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
-#' test to each order statistic such that the Type I error of the global test is \eqn{\alpha}, or "ks" to apply a 
-#' Kolmogorov-Smirnov test. For \eqn{\alpha} = .01, .05, and .1, "ell" is recommended.
+#' test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a 
+#' Kolmogorov-Smirnov test. For \code{alpha} = .01, .05, and .1, "ell" is recommended.
 #' @param alpha Type I error of global test of whether the data come from the reference distribution.
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
-#' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
-#' positive distributions.
+#' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). 
 #' @param add Whether to add points to an existing plot. 
 #' @param dparams List of additional parameters for the quantile function of the distribution
-#'   (e.g. df=1). Note that if any parameters of the distribution are specified, all other unspecified parameters of the distribution
-#'   will take on their default values. For the uniform distribution, parameter estimation is not supported, and
+#'   (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
+#'   on the unspecified parameters, and instead they will take on the default values set by the distribution function. 
+#'   For the uniform distribution, parameter estimation is not performed, and
 #'   the default parameters are max = 1 and min = 0.
-#'   For other distributions parameters will be estimated if not provided and an appropriate estimation procedure exists.
+#'   For other distributions parameters will be estimated if not provided.
 #'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
 #' @param bounds_params List of optional parameters for get_bounds_two_sided
-#'   (i.e. tol, max_it, method).
+#'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
-#' @param plot_pointwise Boolean indiciating if pointwise bounds should be added to the plot
-#' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds if plot_pointwise is
+#' @param plot_pointwise Boolean indiciating whether pointwise bounds should be added to the plot
+#' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 #'   set to TRUE.
 #' @param points_params Parameters to be passed to the \code{points} function to plot the data.
 #' @param polygon_params Parmeters to be passed to the polygon function to construct simultaneous confidence region.
@@ -56,11 +56,13 @@
 #'   distribution = pnorm
 #' )
 #' 
-#' # Make same plot on -log10 scale to highlight small p-values
+#' # Make same plot on -log10 scale to highlight small p-values,
+#' # with radius of plot circles also reduced by .5
 #' pp_conf_plot(
 #'   obs=smp, 
 #'   distribution = pnorm,
-#'   log10 = TRUE
+#'   log10 = TRUE,
+#'   points_params = list(cex = .5)
 #' )
 #' 
 #' # Make same plot with difference between observed and expected values on the y-axis 
@@ -70,7 +72,8 @@
 #'   difference = TRUE
 #' )
 #' 
-#' # Make same plot with samples plotted as a blue line and expected value line plotted as a red line
+#' # Make same plot with samples plotted as a blue line, expected value line plotted as a red line,
+#' # and pointwise bounds plotted as black lines
 #' pp_conf_plot(
 #'   obs=smp, 
 #'   distribution = pnorm,
