@@ -21,6 +21,12 @@
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
 #' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values). 
+#' @param right_tail This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
+#' the x-axis is -log10(1 - Expected Probability) and the y-axis is -log10(1 - Observed Probability).
+#' When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is 
+#' -log10(Observed Probability). The parameter should be set to \code{TRUE} to make
+#' observations in the right tail of the distribution easier to see, and set to false to make the 
+#' observations in the left tail of the distribution easier to see.
 #' @param add Whether to add points to an existing plot. 
 #' @param dparams List of additional parameters for the quantile function of the distribution
 #'   (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
@@ -90,6 +96,7 @@ pp_conf_plot <- function(obs,
                          alpha = 0.05,
                          difference = FALSE,
                          log10 = FALSE,
+                         right_tail = FALSE,
                          add = FALSE,
                          dparams = list(),
                          bounds_params = list(),
@@ -162,11 +169,15 @@ pp_conf_plot <- function(obs,
   
   dots <- list(...)
   method <- match.arg(method)
-  if ( is.null(dots$ylab)) {
-    if (difference && log10) {
+  if (is.null(dots$ylab)) {
+    if (difference && log10 && right_tail) {
+      ylab <- expression("-log"[10]*"(1 - Observed probabilities) + log"[10]*"(1 - Expected probabilities)")
+    } else if (difference && log10) {
       ylab <- expression("-log"[10]*"(Observed probabilities) + log"[10]*"(Expected probabilities)")
     } else if(difference) {
       ylab <- 'Obseved probabilities - Expected probabilities'
+    } else if (log10 && right_tail) {
+      ylab <- expression("-log"[10]*"(1 - Observed probabilities)")
     } else if (log10) {
       ylab <- expression("-log"[10]*"(Observed probabilities)")
     } else {
@@ -177,7 +188,9 @@ pp_conf_plot <- function(obs,
     dots <- within(dots, rm(ylab))
   }
   if (is.null(dots$xlab)) {
-    if (log10) {
+    if (log10 && right_tail) {
+      xlab <- expression("-log"[10]*"(1 - Expected probabilities)")
+    } else if (log10) {
       xlab <- expression("-log"[10]*"(Expected probabilities)")
     } else {
       xlab <- 'Expected probabilities'
@@ -196,7 +209,15 @@ pp_conf_plot <- function(obs,
   c <- .5 
   obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
   exp.pts <- ppoints(samp.size, a=0)
-  if (log10 == TRUE) {
+  if (log10 == TRUE && right_tail == TRUE) {
+    
+    exp.pts <- -log10(1 - exp.pts)
+    low_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10((1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    obs.pts <- -log10(1 - obs.pts)
+    
+  }
+  else if (log10 == TRUE) {
     
     exp.pts <- -log10(exp.pts)
     low_exp_pt <- c * -log10(1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
@@ -244,7 +265,12 @@ pp_conf_plot <- function(obs,
       
     }
     
-    if (log10 == TRUE) {
+    if (log10 == TRUE && right_tail == TRUE) {
+      pointwise.low <- -log10(1 - pointwise.low)
+      pointwise.high <- -log10(1 - pointwise.high)
+      global.low <- -log10(1 - global.low)
+      global.high <- -log10(1 - global.high)
+    } else if (log10 == TRUE) {
       pointwise.low <- -log10(pointwise.low)
       pointwise.high <- -log10(pointwise.high)
       global.low <- -log10(global.low)

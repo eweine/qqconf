@@ -11,6 +11,7 @@ pp_conf_plot(
   alpha = 0.05,
   difference = FALSE,
   log10 = FALSE,
+  right_tail = FALSE,
   add = FALSE,
   dparams = list(),
   bounds_params = list(),
@@ -38,6 +39,13 @@ Kolmogorov-Smirnov test. For \code{alpha} = .01, .05, and .1, "ell" is recommend
 expected values on the vertical axis.}
 
 \item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values).}
+
+\item{right_tail}{This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
+the x-axis is -log10(1 - Expected Probability) and the y-axis is -log10(1 - Observed Probability).
+When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is 
+-log10(Observed Probability). The parameter should be set to \code{TRUE} to make
+observations in the right tail of the distribution easier to see, and set to false to make the 
+observations in the left tail of the distribution easier to see.}
 
 \item{add}{Whether to add points to an existing plot.}
 
