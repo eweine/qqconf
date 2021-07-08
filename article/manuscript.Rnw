@@ -715,7 +715,8 @@ Typically, when testing this global null, we apply some test to each of $n$ SNPs
 \newline
 If a very specific distribution for $H_{A}$ is suspected, then it makes sense to use a test that has high power under this alternative, which may not be our local levels test. However, in the general case when little is known about the alternative distribution, using local levels is desirable because it is agnostic to the space of alternative distributions. Moreover, since small p-values are often of great interest in GWAS because they can indicate the main biological drivers of a trait, the local levels test is far superior to the KS test due to its comparative tail sensitivity.
 \subsubsection{Appliction of Equal Local Levels to Creutzfeld-Jakob Disease}
-We downloaded the p-values from a GWAS of Creutzfeld-Jakob disease in a sample of XXX cases and YYY controls. The GWAS found strong genetic associations on chromosomes A and B. Here, we remove those chromosomes from the results in order to display the p-values from tests that are not obviously from a non-uniform distribution. To more clearly allow for display of the individual p-values, we downsample the number of tests to 10,000 by extracting approximately equally spaced genetic markers.
+We downloaded the p-values from a GWAS of Creutzfeld-Jakob disease in a sample of 4110 cases and 13,569 controls \citep{jones2020identification}. Test of association between risk for the disease and genetic variants was done at 6,314,492 SNPs. Major genetic risk loci were found on chromosomes 1 and 20. Here, we remove those chromosomes from the results in order to display the p-values from tests that are not obviously from a non-uniform distribution. For display purposes, we subsample the remaining SNPs to 10,000 approximately evenly spaced SNPs. Subsampling helps ensure that correlations between SNPs that are located
+near each other is minimized.
 <<load_data>>=
 cjd_df <- read.table("data/cjd_sample.txt", header = TRUE)
 @
@@ -788,6 +789,8 @@ qq_conf_plot(
 \end{center}
 \caption{QQ Plot With y-axis as -$\textrm{log}_{10}$(Observed Quantile) + $\textrm{log}_{10}$(Expected Quantile) for CJD GWAS p-values}
 \end{figure}
+
+From the QQ plots, we can see that there is an excess of small p-values, indicating that the test statistics do not follow the expected null distribution.
 
 \section{Discussion}
 \label{sec:discussion}
