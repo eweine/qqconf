@@ -65,7 +65,7 @@
 #' qq_conf_plot(
 #'   obs=smp, 
 #'   distribution = qunif,
-#'   points_params = list(cex = .5)
+#'   points_params = list(cex = .5),
 #'   log10 = TRUE
 #' )
 #' 
