@@ -11,11 +11,9 @@
 // Parameter bound_id indicates if bound is upper or lower 
 void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *out) {
 
-  Rprintf("log(1) = %d\n", log(1));
   int n = *num_points;
   double *b_vec_prev;
   double *lgamma_arr;
-  Rprintf("log(1) = %d\n", log(1));
   // Pre-compute vector of lgamma values to avoid repeat computation
   lgamma_arr = (double *) malloc((n + 2) * sizeof(double));
   lgamma_arr[0] = 0;
@@ -25,8 +23,6 @@ void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *
     lgamma_arr[i] = lgamma_arr[i - 1] + log(i - 1);
     
   }
-  
-  Rprintf("log(1) = %d\n", log(1));
   
   b_vec_prev = (double *) malloc((n + 1) * sizeof(double));
   b_vec_prev[0] = pow((1 - b_vec[0]), n);
@@ -68,7 +64,7 @@ void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *
 
         b_vec_next[j] = b_vec_next[j] + exp(log(b_vec_prev[l]) + (j - l) * log(b_vec[k] -
           b_vec[k - 1]) + (n - j) * log(1 - b_vec[k]) - (n - l) * log(1 - b_vec[k - 1]) +
-          lgamma_arr[n - l + 1] - lgamma_arr[j - l + 1] - lgamma_arr[n - j + 1]);
+          lgamma(n - l + 1) - lgamma(j - l + 1) - lgamma(n - j + 1));
 
       }
 
@@ -79,7 +75,6 @@ void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *
 
   }
 
-  Rprintf("log(1) = %d\n", log(1));
   *out = b_vec_prev[n];
   free(b_vec_prev);
   free(b_vec_next);

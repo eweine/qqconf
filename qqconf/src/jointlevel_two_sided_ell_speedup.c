@@ -13,34 +13,18 @@
 // Uses speedup for equal local levels case 
 void jointlevel_twosided_ell_speedup(double *b_vec, int *bound_id, int *num_points, double *out) {
 
-  Rprintf("log(1) = %d\n", log(1));
   int n = *num_points;
   double *b_vec_prev;
   double *lgamma_arr;
-  Rprintf("log(1) = %d\n", log(1));
   // Pre-compute vector of lgamma values to avoid repeat computation
   lgamma_arr = (double *) malloc((n + 2) * sizeof(double));
-  Rprintf("log(1) = %d\n", log(1));
   lgamma_arr[0] = 0;
   lgamma_arr[1] = 0;
-  Rprintf("log(1) = %d\n", log(1));
   for(int i = 2; i <= (n + 1); i = i + 1) {
 
-      Rprintf("computing lgamma at step %i\n", i);
-      Rprintf("lgamma_arr[i - 1] = %d\n", lgamma_arr[i - 1]);
-      Rprintf("log(i - 1) = %d\n", log(i - 1));
       lgamma_arr[i] = lgamma_arr[i - 1] + log(i - 1);
 
   }
-  Rprintf("log(1) = %d\n", log(1));
-  
-  Rprintf("lgamma_arr = [");
-  for(int i = 0; i <= (n + 1); i = i + 1) {
-    
-    Rprintf("%d, ", lgamma_arr[i]);
-    
-  }
-  Rprintf("]\n");
 
   b_vec_prev = (double *) malloc((n + 1) * sizeof(double));
   b_vec_prev[0] = pow((1 - b_vec[0]), n);
@@ -85,15 +69,6 @@ void jointlevel_twosided_ell_speedup(double *b_vec, int *bound_id, int *num_poin
       }
 
     }
-    
-    Rprintf("k = %i\n", k);
-    Rprintf("b_vec_next = [", k);
-    for(int j = j_lower; j <= j_upper; j = j + 1) {
-      
-      Rprintf("%d, ", b_vec_next[j]);
-      
-    }
-    Rprintf("]\n");
 
     // Only copy over what is necessary
     if(k < n) memcpy(b_vec_prev + j_lower, b_vec_next + j_lower, (j_upper - j_lower + 1) * sizeof(double));
@@ -104,8 +79,8 @@ void jointlevel_twosided_ell_speedup(double *b_vec, int *bound_id, int *num_poin
 
   for(int l = l_lower; l <= l_upper; l = l + 1) {
 
-    *out = *out + b_vec_prev[l] * b_vec_next[n - l] * exp(lgamma_arr[l + 1] + 
-      lgamma_arr[n - l + 1] - lgamma_arr[n + 1] - l * log(b_vec[n - 1]) - 
+    *out = *out + exp(log(b_vec_prev[l]) + log(b_vec_next[n - l]) + lgamma(l + 1) + 
+      lgamma(n - l + 1) - lgamma(n + 1) - l * log(b_vec[n - 1]) - 
       (n - l) * log(1 - b_vec[n - 1]));
 
   }
