@@ -155,7 +155,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' 
 #' @importFrom rlang .data
 #'
-#' @useDynLib qqconf jointlevel_twosided
+#' @useDynLib qqconf
 #'
 #' @export
 get_level_from_bounds_two_sided <- function(lower_bounds,
@@ -170,9 +170,28 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   bound_id <- h_g_df$h_or_g
   out <- 0.0
   # Below, a C routine is called for speed.
-  res <- .C("jointlevel_twosided", b_vec = as.double(b_vec),
-            bound_id = as.integer(bound_id), num_points = as.integer(n),
-            out = as.double(out))
+  is_ell <- FALSE
+  bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
+  bounds_delta_tol <- n * (10 ^ -5)
+  if (sum(abs(bounds_delta)) < bounds_delta_tol) {
+    
+    is_ell <- TRUE
+    
+  }
+  if (is_ell) {
+    
+    res <- .C("jointlevel_twosided_ell_speedup", b_vec = as.double(b_vec),
+              bound_id = as.integer(bound_id), num_points = as.integer(n),
+              out = as.double(out))
+    
+  } else {
+    
+    res <- .C("jointlevel_twosided", b_vec = as.double(b_vec),
+              bound_id = as.integer(bound_id), num_points = as.integer(n),
+              out = as.double(out))
+    
+  }
+
   return(1 - res$out)
 
 }
