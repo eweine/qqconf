@@ -64,7 +64,7 @@ void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *
 
         b_vec_next[j] = b_vec_next[j] + exp(log(b_vec_prev[l]) + (j - l) * log(b_vec[k] -
           b_vec[k - 1]) + (n - j) * log(1 - b_vec[k]) - (n - l) * log(1 - b_vec[k - 1]) +
-          lgamma(n - l + 1) - lgamma(j - l + 1) - lgamma(n - j + 1));
+          lgamma_arr[n - l + 1] - lgamma_arr[j - l + 1] - lgamma_arr[n - j + 1]);
 
       }
 

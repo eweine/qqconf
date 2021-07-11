@@ -64,7 +64,7 @@ void jointlevel_twosided_ell_speedup(double *b_vec, int *bound_id, int *num_poin
 
         b_vec_next[j] = b_vec_next[j] + exp(log(b_vec_prev[l]) + (j - l) * log(b_vec[k] -
           b_vec[k - 1]) + (n - j) * log(1 - b_vec[k]) - (n - l) * log(1 - b_vec[k - 1]) +
-          lgamma(n - l + 1) - lgamma(j - l + 1) - lgamma(n - j + 1));
+          lgamma_arr[n - l + 1] - lgamma_arr[j - l + 1] - lgamma_arr[n - j + 1]);
 
       }
 
@@ -79,8 +79,8 @@ void jointlevel_twosided_ell_speedup(double *b_vec, int *bound_id, int *num_poin
 
   for(int l = l_lower; l <= l_upper; l = l + 1) {
 
-    *out = *out + exp(log(b_vec_prev[l]) + log(b_vec_next[n - l]) + lgamma(l + 1) + 
-      lgamma(n - l + 1) - lgamma(n + 1) - l * log(b_vec[n - 1]) - 
+    *out = *out + exp(log(b_vec_prev[l]) + log(b_vec_next[n - l]) + lgamma_arr[l + 1] + 
+      lgamma_arr[n - l + 1] - lgamma_arr[n + 1] - l * log(b_vec[n - 1]) - 
       (n - l) * log(1 - b_vec[n - 1]));
 
   }
