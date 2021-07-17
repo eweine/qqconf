@@ -21,8 +21,8 @@ for a reasonable tolerance.}
 \value{
 A list with components
 \itemize{
-  \item bound - Numeric vector of length n containing the lower bounds of the acceptance regions for the test of each order statistic.
-  \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+  \item bound - Numeric vector of length \code{n} containing the lower bounds of the acceptance regions for the test of each order statistic.
+  \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
   The value is \code{c(1:n) / (n + 1)}.
   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
   statistics and will be less than \code{alpha} for all \code{n} > 1.
