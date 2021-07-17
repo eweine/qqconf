@@ -16,9 +16,9 @@
 check_bounds_two_sided <- function(lower_bounds,
                                    upper_bounds) {
 
-  if(any(lower_bounds > 1) || any(lower_bounds < 0)) {
+  if(any(lower_bounds >= 1) || any(lower_bounds <= 0)) {
 
-    stop("Not all lower bounds between 0 and 1")
+    stop("Not all lower bounds between 0 and 1 (exclusive)")
 
   }
 
@@ -39,6 +39,24 @@ check_bounds_two_sided <- function(lower_bounds,
     stop("The length of the bounds differ")
 
   }
+  
+  if(any(duplicated(c(lower_bounds, upper_bounds)))) {
+    
+    stop("Not all values in the union of the upper_bounds and the lower_bounds are distinct")
+    
+  }
+  
+  if(is.unsorted(lower_bounds)) {
+    
+    stop("Lower bounds are not sorted")
+    
+  }
+  
+  if(is.unsorted(upper_bounds)) {
+    
+    stop("Upper bounds are not sorted")
+    
+  }
 
 }
 
@@ -49,7 +67,8 @@ check_bounds_two_sided <- function(lower_bounds,
 #' the Type I Error Rate \eqn{\alpha} using simulations.
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic. The values must be in ascending order.
+#' for the ith order statistic. The components must be distinct values in (0, 1) that 
+#' are in ascending order.
 #' @param upper_bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The values must be in ascending order and
 #' the ith component must be larger than the ith component of the lower bounds.
@@ -128,10 +147,11 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
-#' for the ith order statistic. The values must be in ascending order.
+#' for the ith order statistic. The components must be distinct values in (0, 1) that are in ascending order.
 #' @param upper_bounds Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
-#' for the acceptance interval for the ith order statistic. The values must be in ascending order and
-#' the ith component must be larger than the ith component of the \code{lower_bounds} vector.
+#' for the acceptance interval for the ith order statistic. The values must be in ascending order,
+#' the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
+#' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct. 
 #'
 #' @return Global Significance Level \eqn{\alpha}
 #'
@@ -170,12 +190,12 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   bound_id <- h_g_df$h_or_g
   out <- 0.0
   # Below, a C routine is called for speed.
-  is_ell <- FALSE
+  is_ell <- TRUE
   bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
-  bounds_delta_tol <- n * (10 ^ -5)
-  if (sum(abs(bounds_delta)) < bounds_delta_tol) {
+  bounds_delta_tol <- (10 ^ -8)
+  if (any(abs(bounds_delta) > bounds_delta_tol)) {
     
-    is_ell <- TRUE
+    is_ell <- FALSE
     
   }
   if (is_ell) {
@@ -205,7 +225,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' referred to as the "global null hypothesis," against a two-sided alternative.
 #' An "equal local levels" test is used, in which each of the n order statistics is
 #' tested for significant deviation from its null distribution by a 2-sided test 
-#' with significance level eta.  The global null hypothesis is rejected if at 
+#' with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
 #' least one of the order statistic tests is rejected at level eta, where eta is 
 #' chosen so that the significance level of the global test is alpha.  
 #' Given the size of the dataset n and the desired global significance level alpha, 
@@ -227,7 +247,8 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 #' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method 
 #' isn't prohibitively slow (occurs for small to moderate n with \eqn{\alpha} = .1). 
-#' Of note, the approximate method is only available for alpha values of .1, .05, and .01.
+#' Of note, the approximate method is only available for alpha values of .1, .05, and .01. In the case of alpha = .05 or .01, the
+#' approximation is highly accurate for all values of \code{n} up to at least \code{10^6}.
 #'
 #' @return A list with components
 #' \itemize{
@@ -238,7 +259,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #'   \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
 #'   The value is \code{c(1:n) / (n + 1)}.
 #'   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
-#'   statistics and will be less than or equal to \eqn{\alpha}.
+#'   statistics and will be less than \code{\alpha} for all \code{n} > 1.
 #' }
 #'
 #' @examples

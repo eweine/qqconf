@@ -29,7 +29,8 @@ accurate approximation, "approximate", or if the calculations should be done usi
 binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method 
 isn't prohibitively slow (occurs for small to moderate n with \eqn{\alpha} = .1). 
-Of note, the approximate method is only available for alpha values of .1, .05, and .01.}
+Of note, the approximate method is only available for alpha values of .1, .05, and .01. In the case of alpha = .05 or .01, the
+approximation is highly accurate for all values of \code{n} up to at least \code{10^6}.}
 }
 \value{
 A list with components
@@ -41,7 +42,7 @@ A list with components
   \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
   The value is \code{c(1:n) / (n + 1)}.
   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
-  statistics and will be less than or equal to \eqn{\alpha}.
+  statistics and will be less than \code{\alpha} for all \code{n} > 1.
 }
 }
 \description{
@@ -51,7 +52,7 @@ desired to test the null hypothesis that F(x) = x for all x in (0,1),
 referred to as the "global null hypothesis," against a two-sided alternative.
 An "equal local levels" test is used, in which each of the n order statistics is
 tested for significant deviation from its null distribution by a 2-sided test 
-with significance level eta.  The global null hypothesis is rejected if at 
+with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
 least one of the order statistic tests is rejected at level eta, where eta is 
 chosen so that the significance level of the global test is alpha.  
 Given the size of the dataset n and the desired global significance level alpha, 

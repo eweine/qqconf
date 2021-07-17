@@ -8,7 +8,8 @@ monte_carlo_two_sided(lower_bounds, upper_bounds, num_sims = 1e+06)
 }
 \arguments{
 \item{lower_bounds}{Numeric vector where the ith component is the lower bound
-for the ith order statistic. The values must be in ascending order.}
+for the ith order statistic. The components must be distinct values in (0, 1) that 
+are in ascending order.}
 
 \item{upper_bounds}{Numeric vector where the ith component is the lower bound
 for the ith order statistic. The values must be in ascending order and

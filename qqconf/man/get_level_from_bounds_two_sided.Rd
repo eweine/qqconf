@@ -8,11 +8,12 @@ get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
 }
 \arguments{
 \item{lower_bounds}{Numeric vector where the ith component is the lower bound for the acceptance interval
-for the ith order statistic. The values must be in ascending order.}
+for the ith order statistic. The components must be distinct values in (0, 1) that are in ascending order.}
 
 \item{upper_bounds}{Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
-for the acceptance interval for the ith order statistic. The values must be in ascending order and
-the ith component must be larger than the ith component of the \code{lower_bounds} vector.}
+for the acceptance interval for the ith order statistic. The values must be in ascending order,
+the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
+and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.}
 }
 \value{
 Global Significance Level \eqn{\alpha}

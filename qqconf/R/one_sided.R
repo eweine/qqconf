@@ -10,27 +10,49 @@
 #'
 check_bounds_one_sided <- function(upper_bounds) {
   
-  if(any(upper_bounds > 1) || any(upper_bounds < 0)) {
+  if(any(upper_bounds >= 1) || any(upper_bounds <= 0)) {
     
-    stop("Not all bounds between 0 and 1")
+    stop("Not all bounds between 0 and 1 (exclusive)")
+    
+  }
+  
+  if(is.unsorted(upper_bounds)) {
+    
+    stop("Bounds are not sorted")
+    
+  }
+  
+  if(any(duplicated(upper_bounds))) {
+    
+    stop("Not all values of the bounds are distinct")
     
   }
   
 }
 
 
-#' Calculates Type I Error Rate From One-Sided Bounds
+#' Calculates Global Significance Level From Simultaneous One-Sided Bounds for Rejection Region
 #'
-#' Given bounds for a one sided test on uniform order statistics, this computes
-#' the Type I Error Rate \eqn{\alpha} using a binary search. The function also
-#' allows for an approximate computation for speed with some relative tolerance.
+#' For a one-sided test of uniformity of i.i.d. observations on the unit interval, 
+#' this function will determine the significance level as a function of the rejection region. 
+#' Suppose \eqn{n} observations are drawn i.i.d. from some CDF F(x) on the unit interval,
+#' and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against 
+#' the one-sided alternative F(x) > x. Suppose the acceptance region for the test is 
+#' described by a set of lower bounds, one for each order statistic.
+#' Given the lower bounds, this function calculates the significance level of the test where the
+#' null hypothesis is rejected if at least one of the order statistics 
+#' falls below its corresponding lower bound.
 #'
 #' @param bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic. The values must be in ascending order.
+#' for the ith order statistic. The components must be distinct values 
+#' in (0, 1) that are in ascending order.
 #'
-#' @return Type I Error Rate \eqn{\alpha}
+#' @return Global significance level
 #'
 #' @examples
+#' # For X1, X2, X3 i.i.d. unif(0, 1), 
+#' # calculate 1 - P(X(1) > .1 and X(2) > .5 and X(3) > .8),
+#' # where X(1), X(2), and X(3) are the order statistics.
 #' get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
 #'
 #' @export
@@ -108,8 +130,8 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #' desired to test the null hypothesis that F(x) = x for all x in (0,1), 
 #' referred to as the "global null hypothesis," against the alternative F(x) > x for at least one x in (0, 1).
 #' An "equal local levels" test is used, in which each of the n order statistics is
-#' tested for significant deviation from its null distribution by a 1-sided test 
-#' with significance level eta.  The global null hypothesis is rejected if at 
+#' tested for significant deviation from its null distribution by a one-sided test 
+#' with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
 #' least one of the order statistic tests is rejected at level eta, where eta is 
 #' chosen so that the significance level of the global test is alpha.  
 #' Given the size of the dataset n and the desired global significance level alpha, 
@@ -134,11 +156,11 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #'   \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
 #'   The value is \code{c(1:n) / (n + 1)}.
 #'   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
-#'   statistics and will be less than or equal to \eqn{\alpha}.
+#'   statistics and will be less than \code{alpha} for all \code{n} > 1.
 #' }
 #'
 #' @examples
-#' get_bounds_one_sided(alpha = .05, n = 10, tol = 1e-6, max_it = 50)
+#' get_bounds_one_sided(alpha = .05, n = 10, max_it = 50)
 #'
 #'
 #' @export

@@ -25,7 +25,7 @@ A list with components
   \item x - Numeric vector of length n containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
   The value is \code{c(1:n) / (n + 1)}.
   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
-  statistics and will be less than or equal to \eqn{\alpha}.
+  statistics and will be less than \code{alpha} for all \code{n} > 1.
 }
 }
 \description{
@@ -34,8 +34,8 @@ from some distribution on the unit interval with c.d.f. F(x), and it is
 desired to test the null hypothesis that F(x) = x for all x in (0,1), 
 referred to as the "global null hypothesis," against the alternative F(x) > x for at least one x in (0, 1).
 An "equal local levels" test is used, in which each of the n order statistics is
-tested for significant deviation from its null distribution by a 1-sided test 
-with significance level eta.  The global null hypothesis is rejected if at 
+tested for significant deviation from its null distribution by a one-sided test 
+with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
 least one of the order statistic tests is rejected at level eta, where eta is 
 chosen so that the significance level of the global test is alpha.  
 Given the size of the dataset n and the desired global significance level alpha, 
@@ -45,7 +45,7 @@ If at least one order statistic falls below the corresponding bound,
 the global test is rejected. Note that the code may be slow for n > 500.
 }
 \examples{
-get_bounds_one_sided(alpha = .05, n = 10, tol = 1e-6, max_it = 50)
+get_bounds_one_sided(alpha = .05, n = 10, max_it = 50)
 
 
 }
