@@ -11,7 +11,7 @@ get_bounds_one_sided(alpha, n, tol = 1e-06, max_it = 100)
 
 \item{n}{Size of the dataset.}
 
-\item{tol}{(Optional) Relative tolerance of the \eqn{\alpha} level of the
+\item{tol}{(Optional) Relative tolerance of the \code{alpha} level of the
 simultaneous test. Defaults to 1e-6.}
 
 \item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm

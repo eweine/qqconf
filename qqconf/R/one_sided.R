@@ -144,7 +144,7 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #'
 #' @param alpha Desired global significance level of the test.
 #' @param n Size of the dataset.
-#' @param tol (Optional) Relative tolerance of the \eqn{\alpha} level of the
+#' @param tol (Optional) Relative tolerance of the \code{alpha} level of the
 #' simultaneous test. Defaults to 1e-6.
 #' @param max_it (Optional) Maximum number of iterations of Binary Search Algorithm
 #' used to find the bounds. Defaults to 100 which should be much larger than necessary
