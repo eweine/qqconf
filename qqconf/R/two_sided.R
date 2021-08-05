@@ -48,13 +48,13 @@ check_bounds_two_sided <- function(lower_bounds,
   
   if(is.unsorted(lower_bounds)) {
     
-    stop("Lower bounds are not sorted")
+    stop("Only lower bounds in ascending order are supported")
     
   }
   
   if(is.unsorted(upper_bounds)) {
     
-    stop("Upper bounds are not sorted")
+    stop("Only upper bounds in ascending order are supported")
     
   }
 
