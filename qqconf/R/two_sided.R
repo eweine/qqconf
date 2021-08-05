@@ -152,6 +152,10 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' for the acceptance interval for the ith order statistic. The values must be in ascending order,
 #' the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
 #' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct. 
+#' @param is_ell (Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
+#' an \eqn{\eta} level two-sided symmetric test on each order statistic. If the parameter is set to TRUE, a speedup
+#' will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
+#' set to TRUE and bounds are input that are not derived from an equal local levels test.
 #'
 #' @return Global Significance Level \eqn{\alpha}
 #'
@@ -171,7 +175,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' eta <- .05
 #' lb <- qbeta(eta / 2, c(1:n), c(n:1))
 #' ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
-#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
+#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub, is_ell=TRUE)
 #' 
 #' @importFrom rlang .data
 #'
@@ -179,7 +183,8 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #'
 #' @export
 get_level_from_bounds_two_sided <- function(lower_bounds,
-                                           upper_bounds) {
+                                           upper_bounds,
+                                           is_ell=FALSE) {
 
   check_bounds_two_sided(lower_bounds, upper_bounds)
   n <- length(lower_bounds)
@@ -190,14 +195,6 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   bound_id <- h_g_df$h_or_g
   out <- 0.0
   # Below, a C routine is called for speed.
-  is_ell <- TRUE
-  bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
-  bounds_delta_tol <- (10 ^ -8)
-  if (any(abs(bounds_delta) > bounds_delta_tol)) {
-    
-    is_ell <- FALSE
-    
-  }
   if (is_ell) {
     
     res <- .C("jointlevel_twosided_ell_speedup", b_vec = as.double(b_vec),
@@ -338,7 +335,7 @@ get_bounds_two_sided <- function(alpha,
       n_it <- n_it + 1
       h_vals <- stats::qbeta(eta_curr / 2, 1:n, n:1)
       g_vals <- stats::qbeta(1 - (eta_curr / 2), 1:n, n:1)
-      test_alpha <- get_level_from_bounds_two_sided(h_vals, g_vals)
+      test_alpha <- get_level_from_bounds_two_sided(h_vals, g_vals, is_ell=TRUE)
 
       if (abs(test_alpha - alpha) / alpha <= tol) break
 
