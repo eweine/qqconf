@@ -197,6 +197,16 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
   # Below, a C routine is called for speed.
   if (is_ell) {
     
+    bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
+    bounds_delta_tol <- (10 ^ -5)
+    
+    if (any(abs(bounds_delta) > bounds_delta_tol)) {
+      
+      warning("Some bounds are asymmetric by more than 10 ^ -5 and is_ell is set to TRUE. 
+  Ignore this if bounds are truly generated using equal local levels.")
+      
+    }
+    
     res <- .C("jointlevel_twosided_ell_speedup", b_vec = as.double(b_vec),
               bound_id = as.integer(bound_id), num_points = as.integer(n),
               out = as.double(out))
