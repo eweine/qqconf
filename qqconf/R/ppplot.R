@@ -7,12 +7,12 @@
 #' If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 #' level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
 #' specified distribution. If \code{difference} is set to TRUE, the vertical axis plots the 
-#' observed quantile minus expected quantile. If pointwise bounds are used, then on average, alpha * n of the points will fall outside
+#' observed probability minus expected probability. If pointwise bounds are used, then on average, alpha * n of the points will fall outside
 #' the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 #' is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred. 
 #' 
 #' @param obs The observed data.
-#' @param distribution The probability function for the specified distribution. Defaults to qnorm.
+#' @param distribution The probability function for the specified distribution. Defaults to \code{pnorm}.
 #' Custom distributions are allowed as long as all parameters are supplied in dparams.
 #' @param method Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
 #' test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a 
@@ -28,7 +28,7 @@
 #' observations in the right tail of the distribution easier to see, and set to false to make the 
 #' observations in the left tail of the distribution easier to see.
 #' @param add Whether to add points to an existing plot. 
-#' @param dparams List of additional parameters for the quantile function of the distribution
+#' @param dparams List of additional parameters for the probability function of the distribution
 #'   (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
 #'   on the unspecified parameters, and instead they will take on the default values set by the distribution function. 
 #'   For the uniform distribution, parameter estimation is not performed, and
@@ -42,7 +42,7 @@
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
-#' @param plot_pointwise Boolean indiciating whether pointwise bounds should be added to the plot
+#' @param plot_pointwise Boolean indicating whether pointwise bounds should be added to the plot
 #' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 #'   set to TRUE.
 #' @param points_params Parameters to be passed to the \code{points} function to plot the data.
@@ -62,7 +62,7 @@
 #'   distribution = pnorm
 #' )
 #' 
-#' # Make same plot on -log10 scale to highlight small p-values,
+#' # Make same plot on -log10 scale to highlight the left tail,
 #' # with radius of plot circles also reduced by .5
 #' pp_conf_plot(
 #'   obs=smp, 

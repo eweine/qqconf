@@ -43,7 +43,7 @@
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
-#' @param plot_pointwise Boolean indiciating whether pointwise bounds should be added to the plot
+#' @param plot_pointwise Boolean indicating whether pointwise bounds should be added to the plot
 #' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 #'   set to TRUE.
 #' @param points_params Parameters to be passed to the \code{points} function to plot the data.

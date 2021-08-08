@@ -16,9 +16,12 @@ the ith component must be greater than the ith component of the \code{lower_boun
 and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.}
 
 \item{is_ell}{(Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
-an \eqn{\eta} level two-sided symmetric test on each order statistic. If the parameter is set to TRUE, a speedup
+an \eqn{\eta} level two-sided symmetric test on each order statistic (where \eqn{\eta} is the same for each
+order statistic). If the parameter is set to TRUE, a speedup
 will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
-set to TRUE and bounds are input that are not derived from an equal local levels test.}
+set to TRUE and bounds are input that are not derived from an equal local levels test. The actual condition
+needed for \code{get_level_from_bounds_two_sided} to return a correct answer
+with \code{is_ell} set to \code{TRUE} is \code{upper_bounds == 1 - rev(lower_bounds)}.}
 }
 \value{
 Global Significance Level \eqn{\alpha}

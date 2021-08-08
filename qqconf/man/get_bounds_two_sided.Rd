@@ -53,10 +53,10 @@ referred to as the "global null hypothesis," against a two-sided alternative.
 An "equal local levels" test is used, in which each of the n order statistics is
 tested for significant deviation from its null distribution by a 2-sided test 
 with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
-least one of the order statistic tests is rejected at level eta, where eta is 
+least one of the order statistic tests is rejected at level \eqn{\eta}, where \eqn{\eta} is 
 chosen so that the significance level of the global test is alpha.  
 Given the size of the dataset n and the desired global significance level alpha, 
-this function calculates the local level eta and the acceptance/rejection regions for the test.
+this function calculates the local level \eqn{\eta} and the acceptance/rejection regions for the test.
 There are a set of n intervals, one for each order statistic.  
 If at least one order statistic falls outside the corresponding interval, 
 the global test is rejected.

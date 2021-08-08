@@ -67,7 +67,7 @@ parameters of the distribution must be provided by the user.}
 \item{line_params}{Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 reference distribution.}
 
-\item{plot_pointwise}{Boolean indiciating whether pointwise bounds should be added to the plot}
+\item{plot_pointwise}{Boolean indicating whether pointwise bounds should be added to the plot}
 
 \item{pointwise_lines_params}{Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 set to TRUE.}
