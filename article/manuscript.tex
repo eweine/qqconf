@@ -436,9 +436,6 @@ One of the main advantages of the local levels method compared to other global t
 
 \subsection{Examining the P-value Distribution for Testing Procedures}
 
-% It may also make sense for me to make a comparison to the Kolmogorov-Smirnov statistic at some point. I should probably include some instructive graphs or something.
-% I want to have a different paragraph to better introduce the concept
-% This shouldn't be too difficult
 Suppose we have devised a new testing procedure to test a null hypothesis $H_{0}$ with test statistic $T$, where we also specify a particular method to calculate or approximate p-values. In such a situation it is important to perform some simulations under the null hypothesis and check that the resulting p-value distribution is approximately uniform in the simulation experiment.
 \newline
 \newline
@@ -466,7 +463,7 @@ While the above procedure provides reliable information about the Type I error c
 (3) Make a q-q plot comparing $p_{1}, ..., p_{n}$ to a $U(0, 1)$ distribution, and apply the local levels procedure to create simultaneous testing bands for the null hypothesis that $p_{1}, ..., p_{n} \distras{iid} U(0, 1)$.
 \newline
 \newline
-This allows us to easily visualize the global calibration of the p-values with just one graph and diagnose any issues if they exist. In Step 3, one could use many different testing bands. However, in the calibration of p-values, we typically don't have the expectation that our p-values would be more likely to deviate from uniform in any particular region, and so it makes sense to use the local levels test because it is agnostic to the alternative distribution. Moreover, since it is generally most concerning if small p-values are not calibrated, i.e. those in the lower tail of the uniform distribution, the local levels test is preferable to the standard KS test because it is much more sensitive in the tails (Aldor-Noiman 2013).
+This allows us to easily visualize the global calibration of the p-values with just one graph and diagnose any issues if they exist. In Step 3, one could use many different testing bands. However, in the calibration of p-values, we typically don't have the expectation that our p-values would be more likely to deviate from uniform in any particular region, and so it makes sense to use the local levels test because it is agnostic to the space of alternative distribution. Moreover, since it is generally most concerning if small p-values are not calibrated (i.e. those in the lower tail of the uniform distribution), the local levels test is preferable to the standard KS test because it is much more sensitive in the tails (Aldor-Noiman 2013).
 
 \subsubsection{Chi-Square Test for Independence in a $2$ X $2$ Table}
 We apply this approach to assess the calibration of p-values from the Pearson Chi-Square test for independence in a $2 \times 2$ table.  A well-known rule of thumb is that the chi-square test is appropriate as long as the expected cell count in each cell under the null hypothesis is at least 5.  We fix the cell probabilities under the null hypothesis and consider two different cases: in scenario 1, the sample size is $s=200$ and the rule of thumb holds, and scenario 2, the sample size is only $s=20$ and the rule of thumb does not hold.  We use the local levels approach to generate simultaneous testing bands to assess the calibration of the p-values from the Pearson Chi-Square test for these two scenarios.\\
@@ -571,7 +568,7 @@ R> legend(
 \begin{center}
 \includegraphics{manuscript-chisq_qq}
 \end{center}
-\caption{Q-Q plot for Scenario 1 and Scenario 2 With Standard Axes.}
+\caption{QQ plot for Scenario 1 and Scenario 2 With Standard Axes.}
 \end{figure}
 
 Figure 4 shows the same plots where the axes are transformed to be on the $-\log_{10}$ scale to focus the plot on small p-values. (Note that in Figure 4, small p-values are to the top and right of the plot, so a curve that is too low is conservative, and too high is anti-conservative.)  
@@ -604,7 +601,7 @@ R> legend(
 \begin{center}
 \includegraphics{manuscript-chisq_qq_log}
 \end{center}
-\caption{Q-Q plot for Scenario 1 and Scenario 2 With Axes On Log Scale.}
+\caption{QQ plot for Scenario 1 and Scenario 2 With Axes On Log Scale.}
 \end{figure}
 
 From these plots, it can be seen that in scenario 1, when $s=200$ and the smallest expected cell count is 12, there is no significant deviation of the p-values from i.i.d.\ Unif(0,1) under the null hypothesis.  In contrast, in scenario 2, when $s=20$ and the smallest expected cell count is 1.2, the $\chi^2_1$ asymptotic distribution is not an accurate approximation to the sampling distribution of $T$.  As a result, we can see in Figures 3 and 4 that the p-values differ significantly from i.i.d.\ Unif(0,1) under the null hypothesis, with small p-values tending to be overly conservative, while the larger p-values tend to be anti-conservative.
@@ -625,58 +622,88 @@ Once $\boldsymbol\beta$ and $\sigma^{2}$ are estimated (typically via maximum li
 where $\hat{\boldsymbol\beta}$ is our estimate of $\boldsymbol\beta$. Then, we would like a Q-Q plot of the residuals with a Normal reference distribution to aid in testing assumption (4) above. Strictly speaking, even if assumption (4) is correct, the residuals are not independent because OLS leads to an estimation of $\hat{\boldsymbol\beta}$ such that $\sum_{i=1}^{n}r_{i} = 0$. However, accounting for the resulting negative correlation between the residuals when creating testing bands would be very difficult, and with a sufficiently large sample size this correlation becomes negligible. Thus, without an a priori reason to believe that the errors may deviate from normality at any particular point in the distribution, it makes sense to use ELL bands in this case. This is very easy to do with \pkg{qqconf}, as we show below.
 \newline
 \newline
-First, we generate data to perform a regression. Here, we will generate each $\epsilon_{i}$ independently from a $t(2.5)$ distribution. 
-%
+First, we generate data to perform a regression. Here, we will generate each $\epsilon_{i}$ independently from a $t(3)$ distribution. 
+
 \begin{Schunk}
 \begin{Sinput}
-R> set.seed(100)
+R> set.seed(20)
 R> n <- 100
 R> x <- runif(n)
-R> eta <- rt(n, df = 2.5)
+R> eta <- rt(n, df = 3)
 R> y <- x + eta
 \end{Sinput}
 \end{Schunk}
-%
+
 Then, we fit a regression with the simulated data
-%
+
 \begin{Schunk}
 \begin{Sinput}
 R> reg <- lm(y ~ x)
 \end{Sinput}
 \end{Schunk}
-%
+
 With \pkg{base}-\proglang{R} functionality, we can can create a qqplot using the function \code{qqnorm} and \code{qqline}. 
-%
-%
+
 \begin{Schunk}
 \begin{Sinput}
 R> qqnorm(reg$residuals)
 R> qqline(reg$residuals)
 \end{Sinput}
 \end{Schunk}
+
+\begin{figure}
+\begin{center}
 \includegraphics{manuscript-base_qqplot}
-%
-%
-\newline
+\end{center}
+\caption{QQ Plot for Regression Residuals with Base R Functionality}
+\end{figure}
+
+
 Clearly there's some indication of deviation in this plot, but it can be hard to tell how significant the deviation is without confidence bounds. With our function \code{qq_conf_plot}, it is much easier to be able to judge the significance of the deviation.
-%
-%
+
 \begin{Schunk}
 \begin{Sinput}
 R> library(qqconf)
 R> qq_conf_plot(
 +    obs = reg$residuals,
-+    points_params = list(col="red")
++    points_params = list(col="blue", pch = 20, cex = .5)
 +  )
 \end{Sinput}
 \end{Schunk}
+
+\begin{figure}
+\begin{center}
 \includegraphics{manuscript-qqconf_qqplot}
-%
-%
+\end{center}
+\caption{QQ Plot for Regression Residuals with ELL Bounds}
+\end{figure}
+
+
+Here, we can clearly see that both the left and right tail of the residuals goes beyond the normal testing bounds, giving strong evidence that the errors were not generated from a normal distribution.
 \newline
-Here, we can clearly see that in the right tail of the residuals goes beyond the normal testing bounds, giving strong evidence that the errors were not generated from a normal distribution. 
+\newline
+This example also highlights an instance in which the ELL method is preferable to KS. Because KS is much more sensitive to deviations in the center of the distribution than it is to deviations in the tails of the distribution, it does not yeild a rejection of the null hypothesis in this case (Figure 7). We can generate KS bounds by simply setting the \code{method} arguments to \code{"ks"} in the \code{qq_conf_plot} function.
+
+\begin{Schunk}
+\begin{Sinput}
+R> library(qqconf)
+R> qq_conf_plot(
++    obs = reg$residuals,
++    method = "ks",
++    points_params = list(col="blue", pch = 20, cex = .5)
++  )
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}
+\begin{center}
+\includegraphics{manuscript-qqconf_qqplot_ks}
+\end{center}
+\caption{QQ Plot for Regression Residuals with KS Bounds}
+\end{figure}
 
 \subsection{Multiple Testing in Genome Wide Association Studies}
+\subsubsection{Applicability of Equal Local Levels to Genome Wide Association Studies}
 In genome wide association studies (GWAS), we are interested in identifying the genetic variants that are responsible for biological traits. Often, we test a large number of single-nucleotide polymorphisms (SNPs), to see if any of them are strongly correlated with some discrete or continuous trait. Often, it is useful to test the following global null hypothesis:
 \newline
 \newline
@@ -689,17 +716,104 @@ $H_{0}$: All genome-wide SNPs in some functional category have correlation 0 wit
 \noindent$H_{A}$: At least one SNP in some functional category has non-zero correlation with the trait of interest.
 \newline
 \newline
-Typically, when testing this global null, we apply some test to each of $n$ SNPs, yielding $n$ p-values. While the SNPs have a local correlation structure, this has only a weak effect at a genome-wide scale. Thus, the local levels procedure still provides a valuable visualization tool to assess the extent and type of any deviation from the null, even though it is not exact. Particularly in genetics, if the p-values deviate from the null, it can be very useful to view graphically how they deviate. For instance, if there are a few very large p-values but the rest of the distribution looks relatively uniform, then this indicates that the trait of interest is driven by a few mutations. If, however, there are some small deviations throughout the p-value distribution, then this indicates that trait of interest is driven by a number of genes that all play some small part in a complex biological process, or potentially by some confounding variables that are not controlled for.
+Typically, when testing this global null, we apply some test to each of $n$ SNPs, yielding $n$ p-values. While the SNPs have a local correlation structure, this has only a weak effect at a genome-wide scale. Thus, the local levels procedure still provides a valuable visualization tool to assess the extent and type of deviation from the null, even though it is not exact. Particularly in genetics, if the p-values deviate from the null, it can be very useful to view graphically how they deviate. For instance, if a few tests yield very small p-values but the p-values from the rest of the tests looks relatively uniform, this indicates that the trait of interest is likely driven by a few mutations. If, however, there are some small deviations throughout the p-value distribution, this indicates that trait of interest is likely driven by a number of genes that all play some small part in a complex biological process, or potentially by some confounding variables that are not controlled for.
 \newline
 \newline
-If a very specific distribution for $H_{A}$ is suspected, then it makes sense to use a test that has high power under this alternative, which may not be our local levels test. However, in the general case when little is known about the alternative distribution, using local levels is desirable because it is agnostic to alternative distributions. Moreover, since small p-values are often of great interest in GWAS because they can indicate the main biological drivers of a trait, the local levels test is far superior to the KS test due to its tail sensitivity.
-%Here is where the biological example goes with the code. I want to have the graphs that I make from this and then I also want
+If a very specific distribution for $H_{A}$ is suspected, then it makes sense to use a test that has high power under this alternative, which may not be our local levels test. However, in the general case when little is known about the alternative distribution, using local levels is desirable because it is agnostic to the space of alternative distributions. Moreover, since small p-values are often of great interest in GWAS because they can indicate the main biological drivers of a trait, the local levels test is far superior to the KS test due to its comparative tail sensitivity.
+\subsubsection{Appliction of Equal Local Levels to Creutzfeld-Jakob Disease}
+We downloaded the p-values from a GWAS of Creutzfeld-Jakob disease in a sample of 4110 cases and 13,569 controls \citep{jones2020identification}. Test of association between risk for the disease and genetic variants was done at 6,314,492 SNPs. Major genetic risk loci were found on chromosomes 1 and 20. Here, we remove those chromosomes from the results in order to display the p-values from tests that are not obviously from a non-uniform distribution. For display purposes, we subsample the remaining SNPs to 10,000 approximately evenly spaced SNPs. Subsampling helps ensure that correlations between SNPs that are located
+near each other is minimized.
+\begin{Schunk}
+\begin{Sinput}
+R> cjd_df <- read.table("data/cjd_sample.txt", header = TRUE)
+\end{Sinput}
+\end{Schunk}
+We then make QQ plots of these 10,000 tests with 95\% testing bands. First, we make a standard QQ plot of observed quantiles versus expected quantiles (Figure 8).
+\begin{Schunk}
+\begin{Sinput}
+R> library(qqconf)
+R> qq_conf_plot(
++    obs = cjd_df[,3],
++    distribution = qunif,
++    points_params = list(pch = 21, cex = 0.2)
++    )
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.5]{manuscript-cjd_standard_qq}
+\end{center}
+\caption{Standard QQ Plot for CJD GWAS p-values}
+\end{figure}
+
+Unfortunately, this plot results in deviations from the expected line that are difficult to see. To aid visualization, we also plot the deviation of the observed quantiles from the expected quantiles versus the expected quantiles (Figure 9). This can be done easily by setting the \code{difference} parameter to \code{TRUE} in \code{qq_conf_plot}.
+\begin{Schunk}
+\begin{Sinput}
+R> qq_conf_plot(
++    obs = cjd_df[,3],
++    distribution = qunif,
++    points_params = list(pch = 21, cex = 0.2),
++    difference = TRUE
++    )
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.5]{manuscript-cjd_diff_qq}
+\end{center}
+\caption{QQ Plot With y-axis as Observed - Expected Quantile for CJD GWAS p-values}
+\end{figure}
+
+This plot is much easier to interpret, but note that tests in which there is an association will result in small p-values, which will be difficult to see when the plot axes are on the 0 to 1 scale. To see the small p-values we repeat the plots but with the axes on the -log10 scale (Figures 10 and 11). This can be done by setting the \code{log10} parameter of \code{qqconf} to \code{TRUE}
+
+\begin{Schunk}
+\begin{Sinput}
+R> qq_conf_plot(
++    obs = cjd_df[,3],
++    distribution = qunif,
++    points_params = list(pch = 21, cex = 0.2),
++    log10 = TRUE
++    )
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.5]{manuscript-cjd_log_qq}
+\end{center}
+\caption{QQ Plot With y-axis as -$\textrm{log}_{10}$(Observed Quantile) for CJD GWAS p-values}
+\end{figure}
+
+\begin{Schunk}
+\begin{Sinput}
+R> qq_conf_plot(
++    obs = cjd_df[,3],
++    distribution = qunif,
++    points_params = list(pch = 21, cex = 0.2),
++    difference = TRUE,
++    log10 = TRUE,
++    ylim = c(-0.2, 1.1)
++    )
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}
+\begin{center}
+\includegraphics{manuscript-cjd_log_diff_qq}
+\end{center}
+\caption{QQ Plot With y-axis as -$\textrm{log}_{10}$(Observed Quantile) + $\textrm{log}_{10}$(Expected Quantile) for CJD GWAS p-values}
+\end{figure}
+
+From the QQ plots, we can see that there is an excess of small p-values, indicating that the test statistics do not follow the expected null distribution.
+
 \section{Discussion}
 \label{sec:discussion}
-The local levels test using an exact recursive calculation allows for the creation of relatively fast and alternative-agnostic simultaneous testing bands for Q-Q plots. Of course, our method is limited by the assumptions that (1) all of the tests are independent and that (2) all of the parameters of the null distribution are known. Currently, we are not aware of methods to handle the dependent case that allow for bands on Q-Q plots. To handle the second issue, Aldor-Noiman has adapted their method such that it will yield exact results when some parameters of the null distribution are unknown. However, if the dataset is very large, Aldor-Noiman's method is prohibitively slow. In this case, we suggest that our method be used because it is much faster, and with a sufficiently large dataset the uncertainty in the parameters will become negligible under standard regularity conditions. Methods to handle parameter uncertainty with an exact calculation have been discussed in the context of the normal distribution \citep{rosenkrantz2000confidence}, but a general method towards this end has not been developed, and would be an important next step.
+The local levels test using an exact recursive calculation allows for the creation of relatively fast and alternative-agnostic simultaneous testing bands for QQ plots. Of course, our method is limited by the assumptions that (1) all of the tests are independent and that (2) all of the parameters of the null distribution are known. Currently, we are not aware of methods to handle the dependent case that allow for bands on QQ plots. To handle the issue of parameter uncertainty, Aldor-Noiman has adapted their method such that it will yield exact results when some parameters of the null distribution are unknown. However, if the dataset is very large, Aldor-Noiman's method is prohibitively slow because it uses simulation. In this case, we suggest that our method be used because it is much faster, and with a sufficiently large dataset the uncertainty in the parameters will become negligible under standard regularity conditions. Methods to handle parameter uncertainty with an exact calculation (as opposed to simulation) have been discussed in the context of the normal distribution \citep{rosenkrantz2000confidence}, but a general method towards this end has not been developed, and would be an important next step.
 \newline
 \newline
-Our software is available on CRAN. To aid in computation speed, we have pre-computed a number of different local level values given a global level and the size of the dataset. This computes the testing bands very quickly with little error. We have also implemented a one-sided test for the case in which we are only concerned with values that are smaller than would be expected under the null (e.g. we only care about small p-values).
+Our software is available on CRAN. In addition to the QQ plot functionality, we've implemented PP plots using the same methodology and a very similar interface. We've also provided functionality to directly calculate ELL bounds given a sample size $n$ and a global level $\alpha$. For more information on these functions, please see the code documentation.
 
 \bibliography{refs}
 %\bibliographystyle{ieeetr}

@@ -20,6 +20,9 @@
 # RStudio files
 .Rproj.user/
 
+# produced article files
+article/*.pdf
+
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf

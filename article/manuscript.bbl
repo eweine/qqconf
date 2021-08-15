@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{11}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -51,6 +51,15 @@ Gontscharuk V, Landwehr S, Finner H, \emph{et~al.} (2016).
 \newblock \enquote{Goodness of fit tests in terms of local levels with special
   emphasis on higher criticism tests.}
 \newblock \emph{Bernoulli}, \textbf{22}(3), 1331--1363.
+
+\bibitem[{Jones \emph{et~al.}(2020)Jones, Hummerich, Vir{\'e}, Uphill,
+  Dimitriadis, Speedy, Campbell, Norsworthy, Quinn, Whitfield
+  \emph{et~al.}}]{jones2020identification}
+Jones E, Hummerich H, Vir{\'e} E, Uphill J, Dimitriadis A, Speedy H, Campbell
+  T, Norsworthy P, Quinn L, Whitfield J, \emph{et~al.} (2020).
+\newblock \enquote{Identification of novel risk loci and causal insights for
+  sporadic Creutzfeldt-Jakob disease: a genome-wide association study.}
+\newblock \emph{The Lancet Neurology}, \textbf{19}(10), 840--848.
 
 \bibitem[{Kolmogorov(1941)}]{kolmogoroff1941confidence}
 Kolmogorov A (1941).
