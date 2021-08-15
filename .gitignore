@@ -22,6 +22,7 @@
 
 # produced article files
 article/*.pdf
+article/*.log
 
 # produced vignettes
 vignettes/*.html
