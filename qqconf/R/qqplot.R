@@ -55,6 +55,8 @@
 #' @importFrom graphics abline lines plot points polygon
 #' 
 #' @export
+#' 
+#' @return None, QQ plot is produced.
 #'
 #' @examples
 #' set.seed(0)

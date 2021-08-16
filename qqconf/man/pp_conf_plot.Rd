@@ -78,6 +78,9 @@ By default \code{border} is set to NA and \code{col} is set to grey.}
 
 \item{...}{Additional parameters passed to the plot function.}
 }
+\value{
+None, PP plot is produced.
+}
 \description{
 Create a pp-plot with with a shaded simultaneous acceptance region and,
 optionally, lines for a point-wise region. The observed values are plotted

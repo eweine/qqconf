@@ -51,6 +51,8 @@
 #' @param ... Additional parameters passed to the plot function.
 #' 
 #' @export
+#' 
+#' @return None, PP plot is produced.
 #'
 #' @examples
 #' set.seed(0)
