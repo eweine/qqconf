@@ -4,12 +4,19 @@
 \alias{get_level_from_bounds_one_sided}
 \title{Calculates Global Significance Level From Simultaneous One-Sided Bounds for Rejection Region}
 \usage{
-get_level_from_bounds_one_sided(bounds)
+get_level_from_bounds_one_sided(bounds, approx = FALSE, rel_err = 1e-06)
 }
 \arguments{
 \item{bounds}{Numeric vector where the ith component is the lower bound
 for the ith order statistic. The components must be distinct values 
 in (0, 1) that are in ascending order.}
+
+\item{approx}{(Optional) Boolean that when TRUE causes the function to use a faster approximate
+method that will return a global significance level with relative error
+no greater than \code{rel_err}.}
+
+\item{rel_err}{(Optional) Maximum relative error allowed for approximate calculation. 
+This parameter is only used if \code{approx} is TRUE.}
 }
 \value{
 Global significance level
