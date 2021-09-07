@@ -42,6 +42,11 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' Given the lower bounds, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics 
 #' falls below its corresponding lower bound.
+#' 
+#' This function contains the option to use an approximate method with a user defined 
+#' maximum relative error for the returned global level. 
+#' Because this approximate method is much faster even with a low tolerance for relative
+#' error (the default is 1e-6), it is used by default. See the parameters for more details.
 #'
 #' @param bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The components must be distinct values 
@@ -64,7 +69,7 @@ check_bounds_one_sided <- function(upper_bounds) {
 #'
 #' @export
 get_level_from_bounds_one_sided <- function(bounds,
-                                            approx = FALSE,
+                                            approx = TRUE,
                                             rel_err = 1e-6) {
   
   check_bounds_one_sided(bounds)
