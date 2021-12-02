@@ -20,9 +20,12 @@ Imports:
     ggplot2 (>= 3.0.0),
     MASS (>= 7.3-50),
     robustbase (>= 0.93-4)
+Suggests:
+    knitr, rmarkdown
 Collate: 
     'one_sided.R'
     'ppplot.R'
     'qqconf-package.R'
     'qqplot.R'
     'two_sided.R'
+VignetteBuilder: knitr
