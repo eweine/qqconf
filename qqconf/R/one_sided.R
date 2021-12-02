@@ -42,10 +42,22 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' Given the lower bounds, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics 
 #' falls below its corresponding lower bound.
+#' 
+#' This function contains the option to use an approximate method with a user defined 
+#' maximum relative error for the returned global level. 
+#' Because this approximate method is much faster even with a low tolerance for relative
+#' error (the default is 1e-6), it is used by default. See the parameters for more details.
 #'
 #' @param bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The components must be distinct values 
 #' in (0, 1) that are in ascending order.
+#' @param approx (Optional) Boolean that when TRUE causes the function to use a faster approximate
+#' method that will return a global significance level with relative error
+#' no greater than \code{rel_err}.
+#' @param rel_err (Optional) Maximum relative error allowed for approximate calculation. 
+#' This parameter is only used if \code{approx} is TRUE.
+#' 
+#' @useDynLib qqconf
 #'
 #' @return Global significance level
 #'
@@ -56,71 +68,39 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
 #'
 #' @export
-get_level_from_bounds_one_sided <- function(bounds) {
+get_level_from_bounds_one_sided <- function(bounds,
+                                            approx = TRUE,
+                                            rel_err = 1e-6) {
   
   check_bounds_one_sided(bounds)
   n <- length(bounds)
-  bounds <- append(bounds, 1) # adding h_(n+1) = 1
-  if (is.unsorted(bounds)) {
+  if(n == 1) {
     
-    stop("crit.vals must satisfy 0 < h_1 < h_2 < ... h_n < 1")
+    return(bounds[1]) # checks for edge case of one bound
     
   }
   
-  if (n == 1) {
+  if(approx == TRUE) {
     
-    return(bounds[1])
+    first_check = 50
+    check_int = 100
     
   } else {
     
-    lgamma_vec <- numeric(n + 1)
+    first_check = n + 1
+    check_int = 2 * n
+    rel_err = 0
     
-    lgamma_vec[1] <- 0
-    for (i in seq(2, n + 1)) {
-      
-      lgamma_vec[i] <- lgamma_vec[i - 1] + log(i - 1)
-      
-    }
-    
-    cc <- c((1 - bounds[2]) ^ n, exp(log(n) + log(bounds[2] - bounds[1]) + (n - 1) * log(1 - bounds[2])), 0)
-    cn <- cc
-    
-    if (n > 2) for(k in c(2:(n-1))) {
-      
-      cn[1] <- (1 - bounds[k + 1]) ^ n
-      
-      for (j in c(1:(k-1))) {
-        
-        cn[j + 1] <- exp(log(cc[j + 1]) + (n - j) * log(1 - bounds[k + 1]) - (n - j) * log(1 - bounds[k]))
-        
-        for(l in c(0:(j-1))) {
-          
-          cn[j + 1] <- cn[j + 1] + exp(log(cc[l + 1]) + (j - l) * log(bounds[k + 1] - bounds[k]) + 
-                          (n - j) * log(1 - bounds[k + 1]) - (n - l) * log(1 - bounds[k]) + lgamma_vec[n - l + 1] - lgamma_vec[j - l + 1] - lgamma_vec[n - j + 1])
-          
-        } 
-      
-      }
-      
-      cn[k + 1] <- 0
-      for(l in c(0:(k-1))) {
-        
-        cn[k + 1] <- cn[k + 1] + exp(log(cc[l + 1]) + (k - l) * log(bounds[k + 1] - bounds[k]) + (n - k) * log(1 - bounds[k + 1]) - (n - l) *
-                        log(1 - bounds[k]) + lgamma_vec[n - l + 1] - lgamma_vec[k - l + 1] - lgamma_vec[n - k + 1])
-        
-      } 
-      
-      cc <- cn
-      cn <- c(cn, 0)
-    }
-    
-    cn[n + 1] <- 0
-    return(1-sum(cc))
-
   }
+  out <- 0.0
+  res <- .C("jointlevel_onesided", crit_vals = as.double(bounds),
+            num_points = as.integer(n), checkint = as.integer(check_int),
+            firstcheck = as.integer(first_check), relerr = as.double(rel_err),
+            out = as.double(out))
+  
+  return(res$out)
   
 }
-
 
 
 #' Calculates Rejection Region of One-Sided Equal Local Levels Test

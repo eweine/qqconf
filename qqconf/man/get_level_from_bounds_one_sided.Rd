@@ -4,12 +4,19 @@
 \alias{get_level_from_bounds_one_sided}
 \title{Calculates Global Significance Level From Simultaneous One-Sided Bounds for Rejection Region}
 \usage{
-get_level_from_bounds_one_sided(bounds)
+get_level_from_bounds_one_sided(bounds, approx = TRUE, rel_err = 1e-06)
 }
 \arguments{
 \item{bounds}{Numeric vector where the ith component is the lower bound
 for the ith order statistic. The components must be distinct values 
 in (0, 1) that are in ascending order.}
+
+\item{approx}{(Optional) Boolean that when TRUE causes the function to use a faster approximate
+method that will return a global significance level with relative error
+no greater than \code{rel_err}.}
+
+\item{rel_err}{(Optional) Maximum relative error allowed for approximate calculation. 
+This parameter is only used if \code{approx} is TRUE.}
 }
 \value{
 Global significance level
@@ -24,6 +31,12 @@ described by a set of lower bounds, one for each order statistic.
 Given the lower bounds, this function calculates the significance level of the test where the
 null hypothesis is rejected if at least one of the order statistics 
 falls below its corresponding lower bound.
+}
+\details{
+This function contains the option to use an approximate method with a user defined 
+maximum relative error for the returned global level. 
+Because this approximate method is much faster even with a low tolerance for relative
+error (the default is 1e-6), it is used by default. See the parameters for more details.
 }
 \examples{
 # For X1, X2, X3 i.i.d. unif(0, 1), 

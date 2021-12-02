@@ -1,7 +1,7 @@
 Package: qqconf
 Type: Package
 Title: Creates Simultaneous Testing Bands for QQ-Plots
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
@@ -19,10 +19,14 @@ Imports:
     rlang (>= 0.4.9),
     ggplot2 (>= 3.0.0),
     MASS (>= 7.3-50),
-    robustbase (>= 0.93-4)
+    robustbase (>= 0.93-4),
+    distr (>= 2.8.0)
+Suggests:
+    knitr, rmarkdown
 Collate: 
     'one_sided.R'
     'ppplot.R'
     'qqconf-package.R'
     'qqplot.R'
     'two_sided.R'
+VignetteBuilder: knitr
