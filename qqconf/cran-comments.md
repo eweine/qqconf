@@ -1,10 +1,5 @@
-## Resubmission
-This is a resubmission. In this version I have:
-
-* Changed the vignette title from the default.
-
 ## Test environments
-* local OS X install, R 3.5.1
+* local OS X install, R 4.1.2
 * win-builder (devel and release)
 
 ## R CMD check results
