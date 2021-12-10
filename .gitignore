@@ -47,3 +47,6 @@ po/*~
 # Mac Files
 .DS_Store
 .Rproj.user
+
+# scratch files
+scratch
