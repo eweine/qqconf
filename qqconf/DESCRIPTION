@@ -12,7 +12,7 @@ License: GPL-3
 Depends: 
     R (>= 3.0.0)
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     dplyr (>= 1.0.0),
     magrittr (>= 1.5),
@@ -20,7 +20,8 @@ Imports:
     ggplot2 (>= 3.0.0),
     MASS (>= 7.3-50),
     robustbase (>= 0.93-4),
-    distr (>= 2.8.0)
+    distr (>= 2.8.0),
+    Rcpp
 Suggests:
     knitr, rmarkdown
 Collate: 
@@ -30,3 +31,5 @@ Collate:
     'qqplot.R'
     'two_sided.R'
 VignetteBuilder: knitr
+LinkingTo: 
+    Rcpp
