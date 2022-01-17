@@ -1,7 +1,7 @@
 Package: qqconf
 Type: Package
 Title: Creates Simultaneous Testing Bands for QQ-Plots
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
@@ -12,7 +12,7 @@ License: GPL-3
 Depends: 
     R (>= 3.0.0)
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     dplyr (>= 1.0.0),
     magrittr (>= 1.5),

@@ -5,9 +5,10 @@
 #include <stdlib.h>
 #include <R.h>
 #include <Rinternals.h>
+#include<fftw3.h>
 
 // Calculate global level associated with bounds given in b_vec
-// Parameter bound_id indicates if bound is upper or lower 
+// Parameter bound_id indicates if bound is upper or lower
 void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *out) {
 
   int n = *num_points;
@@ -18,11 +19,11 @@ void jointlevel_twosided(double *b_vec, int *bound_id, int *num_points, double *
   lgamma_arr[0] = 0;
   lgamma_arr[1] = 0;
   for(int i = 2; i <= (n + 1); i = i + 1) {
-    
+
     lgamma_arr[i] = lgamma_arr[i - 1] + log(i - 1);
-    
+
   }
-  
+
   b_vec_prev = (double *) malloc((n + 1) * sizeof(double));
   b_vec_prev[0] = pow((1 - b_vec[0]), n);
 
