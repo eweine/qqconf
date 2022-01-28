@@ -27,17 +27,17 @@ for a reasonable tolerance.}
 \item{method}{(Optional) Parameter indicating if the calculation should be done using a highly
 accurate approximation, "approximate", or if the calculations should be done using an exact
 binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
-when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method 
-isn't prohibitively slow (occurs for small to moderate \code{n} with \code{alpha} = .1). 
+when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
+isn't prohibitively slow (occurs for small to moderate \code{n} with \code{alpha} = .1).
 Of note, the approximate method is only available for alpha values of .1, .05, and .01. In the case of alpha = .05 or .01, the
 approximation is highly accurate for all values of \code{n} up to at least \code{10^6}.}
 }
 \value{
 A list with components
 \itemize{
-  \item lower_bound - Numeric vector of length \code{n} containing the lower bounds 
+  \item lower_bound - Numeric vector of length \code{n} containing the lower bounds
   for the acceptance regions of the test of each order statistic.
-  \item upper_bound - Numeric vector of length \code{n} containing the upper bounds 
+  \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
   for the acceptance regions of the test of each order statistic.
   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
   The value is \code{c(1:n) / (n + 1)}.
@@ -47,18 +47,18 @@ A list with components
 }
 \description{
 The context is that n i.i.d. observations are assumed to be drawn
-from some distribution on the unit interval with c.d.f. F(x), and it is 
-desired to test the null hypothesis that F(x) = x for all x in (0,1), 
+from some distribution on the unit interval with c.d.f. F(x), and it is
+desired to test the null hypothesis that F(x) = x for all x in (0,1),
 referred to as the "global null hypothesis," against a two-sided alternative.
 An "equal local levels" test is used, in which each of the n order statistics is
-tested for significant deviation from its null distribution by a 2-sided test 
-with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
-least one of the order statistic tests is rejected at level \eqn{\eta}, where \eqn{\eta} is 
-chosen so that the significance level of the global test is alpha.  
-Given the size of the dataset n and the desired global significance level alpha, 
+tested for significant deviation from its null distribution by a 2-sided test
+with significance level \eqn{\eta}.  The global null hypothesis is rejected if at
+least one of the order statistic tests is rejected at level \eqn{\eta}, where \eqn{\eta} is
+chosen so that the significance level of the global test is alpha.
+Given the size of the dataset n and the desired global significance level alpha,
 this function calculates the local level \eqn{\eta} and the acceptance/rejection regions for the test.
-There are a set of n intervals, one for each order statistic.  
-If at least one order statistic falls outside the corresponding interval, 
+There are a set of n intervals, one for each order statistic.
+If at least one order statistic falls outside the corresponding interval,
 the global test is rejected.
 }
 \examples{

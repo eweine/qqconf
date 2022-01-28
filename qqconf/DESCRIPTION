@@ -29,6 +29,7 @@ Collate:
     'ppplot.R'
     'qqconf-package.R'
     'qqplot.R'
+    'RcppExports.R'
     'two_sided.R'
 VignetteBuilder: knitr
 LinkingTo: 
