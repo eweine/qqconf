@@ -22,3 +22,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+RcppExport void jointlevel_onesided(void *, void *, void *, void *, void *, void *);
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_qqconf_fft_get_level_from_bounds_two_sided", (DL_FUNC) &_qqconf_fft_get_level_from_bounds_two_sided, 2},
+    {"jointlevel_onesided", (DL_FUNC) &jointlevel_onesided, 6},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_qqconf(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

@@ -40,12 +40,6 @@ check_bounds_two_sided <- function(lower_bounds,
 
   }
 
-  if(any(duplicated(c(lower_bounds, upper_bounds)))) {
-
-    stop("Not all values in the union of the upper_bounds and the lower_bounds are distinct")
-
-  }
-
   if(is.unsorted(lower_bounds)) {
 
     stop("Only lower bounds in ascending order are supported")
@@ -152,13 +146,6 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' for the acceptance interval for the ith order statistic. The values must be in ascending order,
 #' the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
 #' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.
-#' @param is_ell (Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
-#' an \eqn{\eta} level two-sided symmetric test on each order statistic (where \eqn{\eta} is the same for each
-#' order statistic). If the parameter is set to TRUE, a speedup
-#' will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
-#' set to TRUE and bounds are input that are not derived from an equal local levels test. The actual condition
-#' needed for \code{get_level_from_bounds_two_sided} to return a correct answer
-#' with \code{is_ell} set to \code{TRUE} is \code{upper_bounds == 1 - rev(lower_bounds)}.
 #'
 #' @return Global Significance Level \eqn{\alpha}
 #'
@@ -178,7 +165,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' eta <- .05
 #' lb <- qbeta(eta / 2, c(1:n), c(n:1))
 #' ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
-#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub, is_ell=TRUE)
+#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
 #'
 #' @importFrom rlang .data
 #'
@@ -186,99 +173,11 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #'
 #' @export
 get_level_from_bounds_two_sided <- function(lower_bounds,
-                                           upper_bounds,
-                                           is_ell=FALSE) {
-
-  check_bounds_two_sided(lower_bounds, upper_bounds)
-  n <- length(lower_bounds)
-  b_vec <- c(lower_bounds, upper_bounds)
-  h_g_df <- data.frame(b = b_vec, h_or_g = c(rep(0, n), rep(1, n)))
-  h_g_df <- dplyr::arrange(h_g_df, .data$b)
-  b_vec <- h_g_df$b
-  bound_id <- h_g_df$h_or_g
-  out <- 0.0
-  # Below, a C routine is called for speed.
-  if (is_ell) {
-
-    bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
-    bounds_delta_tol <- (10 ^ -5)
-
-    if (any(abs(bounds_delta) > bounds_delta_tol)) {
-
-      warning("Some bounds are asymmetric by more than 10 ^ -5 and is_ell is set to TRUE.
-  Ignore this if bounds are truly generated using equal local levels.")
-
-    }
-
-    res <- .C("jointlevel_twosided_ell_speedup", b_vec = as.double(b_vec),
-              bound_id = as.integer(bound_id), num_points = as.integer(n),
-              out = as.double(out))
-
-  } else {
-
-    res <- .C("jointlevel_twosided", b_vec = as.double(b_vec),
-              bound_id = as.integer(bound_id), num_points = as.integer(n),
-              out = as.double(out))
-
-  }
-
-  return(1 - res$out)
-
-}
-
-#' Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region
-#'
-#' For a test of uniformity of i.i.d. observations on the unit interval, this function will determine the significance
-#' level as a function of the rejection region. Suppose \eqn{n} observations are drawn i.i.d. from some CDF F(x) on the unit interval,
-#' and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative.
-#' Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
-#' Given the bounds for these intervals, this function calculates the significance level of the test where the
-#' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
-#'
-#' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
-#' for the ith order statistic. The components must be distinct values in (0, 1) that are in ascending order.
-#' @param upper_bounds Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
-#' for the acceptance interval for the ith order statistic. The values must be in ascending order,
-#' the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
-#' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.
-#' @param is_ell (Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
-#' an \eqn{\eta} level two-sided symmetric test on each order statistic (where \eqn{\eta} is the same for each
-#' order statistic). If the parameter is set to TRUE, a speedup
-#' will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
-#' set to TRUE and bounds are input that are not derived from an equal local levels test. The actual condition
-#' needed for \code{get_level_from_bounds_two_sided} to return a correct answer
-#' with \code{is_ell} set to \code{TRUE} is \code{upper_bounds == 1 - rev(lower_bounds)}.
-#'
-#' @return Global Significance Level \eqn{\alpha}
-#'
-#' @examples
-#' # For X1, X2 iid unif(0,1), calculate 1 - P(.1 < min(X1, X2) < .6 and .5 < max(X1, X2) < .9)
-#' get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
-#'
-#' # Finds the global significance level corresponding to the local level eta.
-#' # Suppose we reject the null hypothesis that X1, ..., Xn are iid unif(0, 1) if and only if at least
-#' # one of the order statistics X(i) is significantly different from
-#' # its null distribution based on a level-eta
-#' # two-sided test, i.e. we reject if and only if X(i) is outside the interval
-#' # (qbeta(eta/2, i, n - i + 1), qbeta(1 - eta/2, i, n - i + 1)) for at least one i.
-#' # The lines of code below calculate the global significance level of
-#' # the test (which is necessarily larger than eta if n > 1).
-#' n <- 100
-#' eta <- .05
-#' lb <- qbeta(eta / 2, c(1:n), c(n:1))
-#' ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
-#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub, is_ell=TRUE)
-#'
-#' @importFrom rlang .data
-#'
-#' @useDynLib qqconf
-#'
-#' @export
-get_level_from_bounds_two_sided_fft <- function(lower_bounds,
                                             upper_bounds) {
 
   check_bounds_two_sided(lower_bounds, upper_bounds)
-  fft_get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
+  alpha <- 1 - fft_get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
+  return(alpha)
 
 }
 

@@ -4,7 +4,7 @@
 \alias{get_level_from_bounds_two_sided}
 \title{Calculates Global Significance Level From Simultaneous Two-Sided Bounds for Rejection Region}
 \usage{
-get_level_from_bounds_two_sided(lower_bounds, upper_bounds, is_ell = FALSE)
+get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
 }
 \arguments{
 \item{lower_bounds}{Numeric vector where the ith component is the lower bound for the acceptance interval
@@ -14,14 +14,6 @@ for the ith order statistic. The components must be distinct values in (0, 1) th
 for the acceptance interval for the ith order statistic. The values must be in ascending order,
 the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
 and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.}
-
-\item{is_ell}{(Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
-an \eqn{\eta} level two-sided symmetric test on each order statistic (where \eqn{\eta} is the same for each
-order statistic). If the parameter is set to TRUE, a speedup
-will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
-set to TRUE and bounds are input that are not derived from an equal local levels test. The actual condition
-needed for \code{get_level_from_bounds_two_sided} to return a correct answer
-with \code{is_ell} set to \code{TRUE} is \code{upper_bounds == 1 - rev(lower_bounds)}.}
 }
 \value{
 Global Significance Level \eqn{\alpha}
@@ -50,6 +42,6 @@ n <- 100
 eta <- .05
 lb <- qbeta(eta / 2, c(1:n), c(n:1))
 ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
-get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub, is_ell=TRUE)
+get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
 
 }
