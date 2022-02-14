@@ -20,7 +20,8 @@ Imports:
     ggplot2 (>= 3.0.0),
     MASS (>= 7.3-50),
     robustbase (>= 0.93-4),
-    distr (>= 2.8.0)
+    distr (>= 2.8.0),
+    Rcpp
 Suggests:
     knitr, rmarkdown
 Collate: 
@@ -28,5 +29,8 @@ Collate:
     'ppplot.R'
     'qqconf-package.R'
     'qqplot.R'
+    'RcppExports.R'
     'two_sided.R'
 VignetteBuilder: knitr
+LinkingTo: 
+    Rcpp

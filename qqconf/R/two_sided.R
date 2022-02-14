@@ -16,15 +16,15 @@
 check_bounds_two_sided <- function(lower_bounds,
                                    upper_bounds) {
 
-  if(any(lower_bounds >= 1) || any(lower_bounds <= 0)) {
+  if(any(lower_bounds > 1) || any(lower_bounds < 0)) {
 
-    stop("Not all lower bounds between 0 and 1 (exclusive)")
+    stop("Not all lower bounds between 0 and 1 (inclusive)")
 
   }
 
-  if(any(upper_bounds >= 1) || any(upper_bounds <= 0)) {
+  if(any(upper_bounds > 1) || any(upper_bounds < 0)) {
 
-    stop("Not all upper bounds between 0 and 1 (exclusive)")
+    stop("Not all upper bounds between 0 and 1 (inclusive)")
 
   }
 
@@ -39,23 +39,17 @@ check_bounds_two_sided <- function(lower_bounds,
     stop("The length of the bounds differ")
 
   }
-  
-  if(any(duplicated(c(lower_bounds, upper_bounds)))) {
-    
-    stop("Not all values in the union of the upper_bounds and the lower_bounds are distinct")
-    
-  }
-  
+
   if(is.unsorted(lower_bounds)) {
-    
+
     stop("Only lower bounds in ascending order are supported")
-    
+
   }
-  
+
   if(is.unsorted(upper_bounds)) {
-    
+
     stop("Only upper bounds in ascending order are supported")
-    
+
   }
 
 }
@@ -67,7 +61,7 @@ check_bounds_two_sided <- function(lower_bounds,
 #' the Type I Error Rate \eqn{\alpha} using simulations.
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic. The components must be distinct values in (0, 1) that 
+#' for the ith order statistic. The components must be distinct values in (0, 1) that
 #' are in ascending order.
 #' @param upper_bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The values must be in ascending order and
@@ -141,7 +135,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #'
 #' For a test of uniformity of i.i.d. observations on the unit interval, this function will determine the significance
 #' level as a function of the rejection region. Suppose \eqn{n} observations are drawn i.i.d. from some CDF F(x) on the unit interval,
-#' and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative. 
+#' and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against a two-sided alternative.
 #' Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
 #' Given the bounds for these intervals, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
@@ -151,97 +145,57 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' @param upper_bounds Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
 #' for the acceptance interval for the ith order statistic. The values must be in ascending order,
 #' the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
-#' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct. 
-#' @param is_ell (Optional) Boolean parameter indicating whether the bounds were derived as a result of conducting
-#' an \eqn{\eta} level two-sided symmetric test on each order statistic (where \eqn{\eta} is the same for each
-#' order statistic). If the parameter is set to TRUE, a speedup
-#' will be used that cuts the computation time roughly in half. However, this will return an incorrect answer if
-#' set to TRUE and bounds are input that are not derived from an equal local levels test. The actual condition
-#' needed for \code{get_level_from_bounds_two_sided} to return a correct answer
-#' with \code{is_ell} set to \code{TRUE} is \code{upper_bounds == 1 - rev(lower_bounds)}.
+#' and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.
 #'
 #' @return Global Significance Level \eqn{\alpha}
 #'
 #' @examples
 #' # For X1, X2 iid unif(0,1), calculate 1 - P(.1 < min(X1, X2) < .6 and .5 < max(X1, X2) < .9)
 #' get_level_from_bounds_two_sided(lower_bounds = c(.1, .5), upper_bounds = c(.6, .9))
-#' 
+#'
 #' # Finds the global significance level corresponding to the local level eta.
 #' # Suppose we reject the null hypothesis that X1, ..., Xn are iid unif(0, 1) if and only if at least
-#' # one of the order statistics X(i) is significantly different from 
+#' # one of the order statistics X(i) is significantly different from
 #' # its null distribution based on a level-eta
-#' # two-sided test, i.e. we reject if and only if X(i) is outside the interval 
-#' # (qbeta(eta/2, i, n - i + 1), qbeta(1 - eta/2, i, n - i + 1)) for at least one i. 
+#' # two-sided test, i.e. we reject if and only if X(i) is outside the interval
+#' # (qbeta(eta/2, i, n - i + 1), qbeta(1 - eta/2, i, n - i + 1)) for at least one i.
 #' # The lines of code below calculate the global significance level of
 #' # the test (which is necessarily larger than eta if n > 1).
 #' n <- 100
 #' eta <- .05
 #' lb <- qbeta(eta / 2, c(1:n), c(n:1))
 #' ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
-#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub, is_ell=TRUE)
-#' 
+#' get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
+#'
 #' @importFrom rlang .data
 #'
 #' @useDynLib qqconf
 #'
 #' @export
 get_level_from_bounds_two_sided <- function(lower_bounds,
-                                           upper_bounds,
-                                           is_ell=FALSE) {
+                                            upper_bounds) {
 
   check_bounds_two_sided(lower_bounds, upper_bounds)
-  n <- length(lower_bounds)
-  b_vec <- c(lower_bounds, upper_bounds)
-  h_g_df <- data.frame(b = b_vec, h_or_g = c(rep(0, n), rep(1, n)))
-  h_g_df <- dplyr::arrange(h_g_df, .data$b)
-  b_vec <- h_g_df$b
-  bound_id <- h_g_df$h_or_g
-  out <- 0.0
-  # Below, a C routine is called for speed.
-  if (is_ell) {
-    
-    bounds_delta <- upper_bounds - (1 - rev(lower_bounds))
-    bounds_delta_tol <- (10 ^ -5)
-    
-    if (any(abs(bounds_delta) > bounds_delta_tol)) {
-      
-      warning("Some bounds are asymmetric by more than 10 ^ -5 and is_ell is set to TRUE. 
-  Ignore this if bounds are truly generated using equal local levels.")
-      
-    }
-    
-    res <- .C("jointlevel_twosided_ell_speedup", b_vec = as.double(b_vec),
-              bound_id = as.integer(bound_id), num_points = as.integer(n),
-              out = as.double(out))
-    
-  } else {
-    
-    res <- .C("jointlevel_twosided", b_vec = as.double(b_vec),
-              bound_id = as.integer(bound_id), num_points = as.integer(n),
-              out = as.double(out))
-    
-  }
-
-  return(1 - res$out)
+  alpha <- 1 - fft_get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
+  return(alpha)
 
 }
-
 
 #' Calculates Rejection Region of Two-Sided Equal Local Levels Test.
 #'
 #' The context is that n i.i.d. observations are assumed to be drawn
-#' from some distribution on the unit interval with c.d.f. F(x), and it is 
-#' desired to test the null hypothesis that F(x) = x for all x in (0,1), 
+#' from some distribution on the unit interval with c.d.f. F(x), and it is
+#' desired to test the null hypothesis that F(x) = x for all x in (0,1),
 #' referred to as the "global null hypothesis," against a two-sided alternative.
 #' An "equal local levels" test is used, in which each of the n order statistics is
-#' tested for significant deviation from its null distribution by a 2-sided test 
-#' with significance level \eqn{\eta}.  The global null hypothesis is rejected if at 
-#' least one of the order statistic tests is rejected at level \eqn{\eta}, where \eqn{\eta} is 
-#' chosen so that the significance level of the global test is alpha.  
-#' Given the size of the dataset n and the desired global significance level alpha, 
+#' tested for significant deviation from its null distribution by a 2-sided test
+#' with significance level \eqn{\eta}.  The global null hypothesis is rejected if at
+#' least one of the order statistic tests is rejected at level \eqn{\eta}, where \eqn{\eta} is
+#' chosen so that the significance level of the global test is alpha.
+#' Given the size of the dataset n and the desired global significance level alpha,
 #' this function calculates the local level \eqn{\eta} and the acceptance/rejection regions for the test.
-#' There are a set of n intervals, one for each order statistic.  
-#' If at least one order statistic falls outside the corresponding interval, 
+#' There are a set of n intervals, one for each order statistic.
+#' If at least one order statistic falls outside the corresponding interval,
 #' the global test is rejected.
 #'
 #'
@@ -255,16 +209,16 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @param method (Optional) Parameter indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
 #' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
-#' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method 
-#' isn't prohibitively slow (occurs for small to moderate \code{n} with \code{alpha} = .1). 
+#' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
+#' isn't prohibitively slow (occurs for small to moderate \code{n} with \code{alpha} = .1).
 #' Of note, the approximate method is only available for alpha values of .1, .05, and .01. In the case of alpha = .05 or .01, the
 #' approximation is highly accurate for all values of \code{n} up to at least \code{10^6}.
 #'
 #' @return A list with components
 #' \itemize{
-#'   \item lower_bound - Numeric vector of length \code{n} containing the lower bounds 
+#'   \item lower_bound - Numeric vector of length \code{n} containing the lower bounds
 #'   for the acceptance regions of the test of each order statistic.
-#'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds 
+#'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
 #'   for the acceptance regions of the test of each order statistic.
 #'   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
 #'   The value is \code{c(1:n) / (n + 1)}.
@@ -284,45 +238,45 @@ get_bounds_two_sided <- function(alpha,
                                 method=c("best_available", "approximate", "search")) {
 
   if (alpha >= 1 || alpha <= 0) {
-    
+
     stop("alpha must be between 0 and 1 (exclusive).")
-    
+
   }
-  
+
   if (as.integer(n) != n) {
-    
+
     stop("n must be an integer")
-    
+
   }
-  
+
   if (n < 1) {
-    
+
     stop("n must be greater than 0")
-    
+
   }
-  
+
   if (n == 1) {
-    
+
     return(list(lower_bound = c(alpha / 2),
                 upper_bound = c(1 - alpha / 2),
                 x = c(.5),
                 local_level = alpha))
-    
+
   }
-  
+
   `%>%` <- magrittr::`%>%`
   n_param <- n
   if (n >= 10) {
-    
+
     # Approximation only available for n < 10
     method <- match.arg(method)
-    
+
   } else {
-    
+
     method <- "search"
-    
+
   }
-  
+
   # Value used for testing if alpha is approximately equal to a set of pre-set values
   alpha_epsilon <- 10 ^ (-5)
 
@@ -330,15 +284,15 @@ get_bounds_two_sided <- function(alpha,
   if (method == "search") {
 
     if (n < 7 || alpha > .99) {
-      
+
       eta_high <- alpha
-      
+
     } else {
-      
+
       eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
-      
+
     }
-    
+
     eta_low <- alpha / n
     eta_curr <- eta_low + (eta_high - eta_low) / 2
     n_it <- 0
@@ -378,7 +332,7 @@ get_bounds_two_sided <- function(alpha,
 
   else if (method == "approximate") {
 
-    if (!(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) || 
+    if (!(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
           dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
           dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
 
@@ -397,7 +351,7 @@ get_bounds_two_sided <- function(alpha,
     }
 
     if (
-      dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) || 
+      dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
         dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
         ) {
 
@@ -409,7 +363,7 @@ get_bounds_two_sided <- function(alpha,
         eta <- eta_df$local_level[1]
 
       } else if (
-        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) || 
+        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) ||
           (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
 
         eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
@@ -450,17 +404,17 @@ get_bounds_two_sided <- function(alpha,
     h_vals <- stats::qbeta(eta / 2, 1:n, n:1)
     g_vals <- stats::qbeta(1 - (eta / 2), 1:n, n:1)
 
-  } 
-  
+  }
+
   else if (method == "best_available") {
-    
+
     # Don't return approximation for alpha = .1 and n <= 500, it's not accurate
     if (dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon) && n <= 500 ||
-        !(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) || 
+        !(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
           dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
           dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))
         ) {
-      
+
       return(
         get_bounds_two_sided(
           alpha = alpha,
@@ -470,9 +424,9 @@ get_bounds_two_sided <- function(alpha,
           method="search"
         )
       )
-      
+
     } else {
-      
+
       return(
         get_bounds_two_sided(
           alpha = alpha,
@@ -482,9 +436,9 @@ get_bounds_two_sided <- function(alpha,
           method="approximate"
         )
       )
-      
-    } 
-    
+
+    }
+
   }
 
   alpha_vec <- seq(from = 1, to = n, by = 1)
