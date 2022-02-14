@@ -16,7 +16,7 @@
 check_bounds_two_sided <- function(lower_bounds,
                                    upper_bounds) {
 
-  if(any(lower_bounds >= 1) || any(lower_bounds <= 0)) {
+  if(any(lower_bounds > 1) || any(lower_bounds < 0)) {
 
     stop("Not all lower bounds between 0 and 1 (exclusive)")
 
