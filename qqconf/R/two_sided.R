@@ -302,7 +302,7 @@ get_bounds_two_sided <- function(alpha,
       n_it <- n_it + 1
       h_vals <- stats::qbeta(eta_curr / 2, 1:n, n:1)
       g_vals <- stats::qbeta(1 - (eta_curr / 2), 1:n, n:1)
-      test_alpha <- get_level_from_bounds_two_sided(h_vals, g_vals, is_ell=TRUE)
+      test_alpha <- get_level_from_bounds_two_sided(h_vals, g_vals)
 
       if (abs(test_alpha - alpha) / alpha <= tol) break
 

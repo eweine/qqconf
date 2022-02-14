@@ -30,7 +30,7 @@ pp_conf_plot(
 Custom distributions are allowed as long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
-test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a 
+test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a
 Kolmogorov-Smirnov test. For \code{alpha} = .01, .05, and .1, "ell" is recommended.}
 
 \item{alpha}{Type I error of global test of whether the data come from the reference distribution.}
@@ -42,16 +42,16 @@ expected values on the vertical axis.}
 
 \item{right_tail}{This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
 the x-axis is -log10(1 - Expected Probability) and the y-axis is -log10(1 - Observed Probability).
-When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is 
+When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is
 -log10(Observed Probability). The parameter should be set to \code{TRUE} to make
-observations in the right tail of the distribution easier to see, and set to false to make the 
+observations in the right tail of the distribution easier to see, and set to false to make the
 observations in the left tail of the distribution easier to see.}
 
 \item{add}{Whether to add points to an existing plot.}
 
 \item{dparams}{List of additional parameters for the probability function of the distribution
 (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
-on the unspecified parameters, and instead they will take on the default values set by the distribution function. 
+on the unspecified parameters, and instead they will take on the default values set by the distribution function.
 For the uniform distribution, parameter estimation is not performed, and
 the default parameters are max = 1 and min = 0.
 For other distributions parameters will be estimated if not provided.
@@ -89,7 +89,7 @@ against their expected values had they come from the specified distribution.
 \details{
 If any of the points of the pp-plot fall outside the simultaneous acceptance region for the selected
 level alpha test, that means that we can reject the null hypothesis that the data are i.i.d. draws from the
-specified distribution. If \code{difference} is set to TRUE, the vertical axis plots the 
+specified distribution. If \code{difference} is set to TRUE, the vertical axis plots the
 observed probability minus expected probability. If pointwise bounds are used, then on average, alpha * n of the points will fall outside
 the bounds under the null hypothesis, so the chance that the pp-plot has any points falling outside of the pointwise bounds
 is typically much higher than alpha under the null hypothesis. For this reason, a simultaneous region is preferred.
@@ -100,22 +100,22 @@ smp <- rnorm(100)
 
 # Plot PP plot against normal distribution with mean and variance estimated
 pp_conf_plot(
-  obs=smp, 
+  obs=smp,
   distribution = pnorm
 )
 
 # Make same plot on -log10 scale to highlight the left tail,
 # with radius of plot circles also reduced by .5
 pp_conf_plot(
-  obs=smp, 
+  obs=smp,
   distribution = pnorm,
   log10 = TRUE,
   points_params = list(cex = .5)
 )
 
-# Make same plot with difference between observed and expected values on the y-axis 
+# Make same plot with difference between observed and expected values on the y-axis
 pp_conf_plot(
-  obs=smp, 
+  obs=smp,
   distribution = pnorm,
   difference = TRUE
 )
@@ -123,7 +123,7 @@ pp_conf_plot(
 # Make same plot with samples plotted as a blue line, expected value line plotted as a red line,
 # and pointwise bounds plotted as black lines
 pp_conf_plot(
-  obs=smp, 
+  obs=smp,
   distribution = pnorm,
   plot_pointwise = TRUE,
   method = "ell",
