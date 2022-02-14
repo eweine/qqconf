@@ -23,11 +23,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport void jointlevel_onesided(void *, void *, void *, void *, void *, void *);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_qqconf_fft_get_level_from_bounds_two_sided", (DL_FUNC) &_qqconf_fft_get_level_from_bounds_two_sided, 2},
-    {"jointlevel_onesided", (DL_FUNC) &jointlevel_onesided, 6},
     {NULL, NULL, 0}
 };
 

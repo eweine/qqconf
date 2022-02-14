@@ -18,13 +18,13 @@ check_bounds_two_sided <- function(lower_bounds,
 
   if(any(lower_bounds > 1) || any(lower_bounds < 0)) {
 
-    stop("Not all lower bounds between 0 and 1 (exclusive)")
+    stop("Not all lower bounds between 0 and 1 (inclusive)")
 
   }
 
-  if(any(upper_bounds >= 1) || any(upper_bounds <= 0)) {
+  if(any(upper_bounds > 1) || any(upper_bounds < 0)) {
 
-    stop("Not all upper bounds between 0 and 1 (exclusive)")
+    stop("Not all upper bounds between 0 and 1 (inclusive)")
 
   }
 

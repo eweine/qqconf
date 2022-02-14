@@ -4,42 +4,29 @@
 \alias{get_level_from_bounds_one_sided}
 \title{Calculates Global Significance Level From Simultaneous One-Sided Bounds for Rejection Region}
 \usage{
-get_level_from_bounds_one_sided(bounds, approx = TRUE, rel_err = 1e-06)
+get_level_from_bounds_one_sided(bounds)
 }
 \arguments{
 \item{bounds}{Numeric vector where the ith component is the lower bound
-for the ith order statistic. The components must be distinct values 
+for the ith order statistic. The components must be distinct values
 in (0, 1) that are in ascending order.}
-
-\item{approx}{(Optional) Boolean that when TRUE causes the function to use a faster approximate
-method that will return a global significance level with relative error
-no greater than \code{rel_err}.}
-
-\item{rel_err}{(Optional) Maximum relative error allowed for approximate calculation. 
-This parameter is only used if \code{approx} is TRUE.}
 }
 \value{
 Global significance level
 }
 \description{
-For a one-sided test of uniformity of i.i.d. observations on the unit interval, 
-this function will determine the significance level as a function of the rejection region. 
+For a one-sided test of uniformity of i.i.d. observations on the unit interval,
+this function will determine the significance level as a function of the rejection region.
 Suppose \eqn{n} observations are drawn i.i.d. from some CDF F(x) on the unit interval,
-and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against 
-the one-sided alternative F(x) > x. Suppose the acceptance region for the test is 
+and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) against
+the one-sided alternative F(x) > x. Suppose the acceptance region for the test is
 described by a set of lower bounds, one for each order statistic.
 Given the lower bounds, this function calculates the significance level of the test where the
-null hypothesis is rejected if at least one of the order statistics 
+null hypothesis is rejected if at least one of the order statistics
 falls below its corresponding lower bound.
 }
-\details{
-This function contains the option to use an approximate method with a user defined 
-maximum relative error for the returned global level. 
-Because this approximate method is much faster even with a low tolerance for relative
-error (the default is 1e-6), it is used by default. See the parameters for more details.
-}
 \examples{
-# For X1, X2, X3 i.i.d. unif(0, 1), 
+# For X1, X2, X3 i.i.d. unif(0, 1),
 # calculate 1 - P(X(1) > .1 and X(2) > .5 and X(3) > .8),
 # where X(1), X(2), and X(3) are the order statistics.
 get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
