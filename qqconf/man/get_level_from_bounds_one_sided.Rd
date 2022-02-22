@@ -8,8 +8,8 @@ get_level_from_bounds_one_sided(bounds)
 }
 \arguments{
 \item{bounds}{Numeric vector where the ith component is the lower bound
-for the ith order statistic. The components must be distinct values
-in (0, 1) that are in ascending order.}
+for the ith order statistic. The components must lie in [0, 1], and each component must be
+greater than or equal to the previous one.}
 }
 \value{
 Global significance level
@@ -25,10 +25,21 @@ Given the lower bounds, this function calculates the significance level of the t
 null hypothesis is rejected if at least one of the order statistics
 falls below its corresponding lower bound.
 }
+\details{
+Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
+for Poisson processes."
+}
 \examples{
 # For X1, X2, X3 i.i.d. unif(0, 1),
 # calculate 1 - P(X(1) > .1 and X(2) > .5 and X(3) > .8),
 # where X(1), X(2), and X(3) are the order statistics.
 get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
 
+}
+\references{
+\itemize{
+\item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
+Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
+Statistics & Probability Letters 123 (2017): 177-182.}}
+}
 }

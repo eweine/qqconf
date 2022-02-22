@@ -16,7 +16,7 @@
 #' Custom distributions are allowed as long as all parameters are supplied in dparams.
 #' @param method Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
 #' test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a
-#' Kolmogorov-Smirnov test. For \code{alpha} = .01, .05, and .1, "ell" is recommended.
+#' Kolmogorov-Smirnov test. "ell" is recommended.
 #' @param alpha Type I error of global test of whether the data come from the reference distribution.
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
@@ -68,7 +68,6 @@
 #' # with radius of plot circles also reduced by .5
 #' pp_conf_plot(
 #'   obs=smp,
-#'   distribution = pnorm,
 #'   log10 = TRUE,
 #'   points_params = list(cex = .5)
 #' )
@@ -76,7 +75,6 @@
 #' # Make same plot with difference between observed and expected values on the y-axis
 #' pp_conf_plot(
 #'   obs=smp,
-#'   distribution = pnorm,
 #'   difference = TRUE
 #' )
 #'
@@ -84,9 +82,7 @@
 #' # and pointwise bounds plotted as black lines
 #' pp_conf_plot(
 #'   obs=smp,
-#'   distribution = pnorm,
 #'   plot_pointwise = TRUE,
-#'   method = "ell",
 #'   points_params = list(col="blue", type="l"),
 #'   line_params = list(col="red")
 #' )

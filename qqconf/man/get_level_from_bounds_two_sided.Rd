@@ -8,12 +8,13 @@ get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
 }
 \arguments{
 \item{lower_bounds}{Numeric vector where the ith component is the lower bound for the acceptance interval
-for the ith order statistic. The components must be distinct values in (0, 1) that are in ascending order.}
+for the ith order statistic. The components must lie in [0, 1], and each component must be greater than
+or equal to the previous one.}
 
 \item{upper_bounds}{Numeric vector of the same length as \code{lower_bounds} where the ith component is the upper bound
-for the acceptance interval for the ith order statistic. The values must be in ascending order,
-the ith component must be greater than the ith component of the \code{lower_bounds} vector and less than 1,
-and the elements of \code{c(lower_bounds, upper_bounds)} must all be distinct.}
+for the acceptance interval for the ith order statistic. The components must lie in [0, 1], and each component must be
+greater than or equal to the previous one. In addition,
+the ith component of \code{upper_bounds} must be greater than or equal to the ith component of \code{lower_bounds}.}
 }
 \value{
 Global Significance Level \eqn{\alpha}
@@ -25,6 +26,10 @@ and it is desired to test the null hypothesis that F(x) = x for all x in (0, 1) 
 Suppose the acceptance region for the test is described by a set of intervals, one for each order statistic.
 Given the bounds for these intervals, this function calculates the significance level of the test where the
 null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
+}
+\details{
+Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
+for Poisson processes."
 }
 \examples{
 # For X1, X2 iid unif(0,1), calculate 1 - P(.1 < min(X1, X2) < .6 and .5 < max(X1, X2) < .9)
@@ -44,4 +49,11 @@ lb <- qbeta(eta / 2, c(1:n), c(n:1))
 ub <- qbeta(1 - eta / 2, c(1:n), c(n:1))
 get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
 
+}
+\references{
+\itemize{
+\item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
+Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
+Statistics & Probability Letters 123 (2017): 177-182.}}
+}
 }

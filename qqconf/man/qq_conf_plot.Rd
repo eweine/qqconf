@@ -31,7 +31,7 @@ Custom distributions are allowed as long as all parameters are supplied in dpara
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
 test to each order statistic such that the Type I error of the global test is \code{alpha}, or "ks" to apply a
-Kolmogorov-Smirnov test. For \code{alpha} = .01, .05, and .1, "ell" is recommended.}
+Kolmogorov-Smirnov test. "ell" is recommended.}
 
 \item{alpha}{Type I error of global test of whether the data come from the reference distribution.}
 
@@ -44,8 +44,10 @@ positive distributions.}
 \item{right_tail}{This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
 the x-axis is -log10(1 - Expected Quantile) and the y-axis is -log10(1 - Observed Quantile).
 When \code{FALSE} (default) the x-axis is -log10(Expected Quantile) and the y-axis is
--log10(Observed Quantile). The parameter should be set to \code{TRUE} to make
-observations in the right tail of the distribution easier to see, and set to false to make the
+-log10(Observed Quantile). The parameter should be set to \code{TRUE} only when the support
+of the distribution lies in (0, 1), and one wants to make
+observations in the right tail of the distribution easier to see. The parameter should be
+set to \code{FALSE} when one wants to make
 observations in the left tail of the distribution easier to see.}
 
 \item{add}{Whether to add points to an existing plot.}
@@ -127,7 +129,6 @@ qq_conf_plot(
   obs=smp,
   distribution = qunif,
   plot_pointwise = TRUE,
-  method = "ell",
   points_params = list(col="blue", type="l"),
   line_params = list(col="red")
 )

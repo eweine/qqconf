@@ -43,9 +43,19 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' null hypothesis is rejected if at least one of the order statistics
 #' falls below its corresponding lower bound.
 #'
+#' Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
+#' for Poisson processes."
+#'
 #' @param bounds Numeric vector where the ith component is the lower bound
-#' for the ith order statistic. The components must be distinct values
-#' in (0, 1) that are in ascending order.
+#' for the ith order statistic. The components must lie in [0, 1], and each component must be
+#' greater than or equal to the previous one.
+#'
+#' @references
+#' \itemize{
+#' \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
+#' Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
+#' Statistics & Probability Letters 123 (2017): 177-182.}}
+#' }
 #'
 #' @useDynLib qqconf
 #'
@@ -91,14 +101,14 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #' this function calculates the local level eta and the acceptance/rejection regions for the test.
 #' The result is a set of lower bounds, one for each order statistic.
 #' If at least one order statistic falls below the corresponding bound,
-#' the global test is rejected. Note that the code may be slow for n > 500.
+#' the global test is rejected.
 #'
 #'
 #'
 #' @param alpha Desired global significance level of the test.
 #' @param n Size of the dataset.
 #' @param tol (Optional) Relative tolerance of the \code{alpha} level of the
-#' simultaneous test. Defaults to 1e-6.
+#' simultaneous test. Defaults to 1e-8.
 #' @param max_it (Optional) Maximum number of iterations of Binary Search Algorithm
 #' used to find the bounds. Defaults to 100 which should be much larger than necessary
 #' for a reasonable tolerance.
@@ -117,7 +127,7 @@ get_level_from_bounds_one_sided <- function(bounds) {
 #'
 #'
 #' @export
-get_bounds_one_sided <- function(alpha, n, tol = 1e-6, max_it = 100) {
+get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
 
   if (alpha >= 1 || alpha <= 0) {
 

@@ -4,7 +4,7 @@
 \alias{get_bounds_one_sided}
 \title{Calculates Rejection Region of One-Sided Equal Local Levels Test}
 \usage{
-get_bounds_one_sided(alpha, n, tol = 1e-06, max_it = 100)
+get_bounds_one_sided(alpha, n, tol = 1e-08, max_it = 100)
 }
 \arguments{
 \item{alpha}{Desired global significance level of the test.}
@@ -12,7 +12,7 @@ get_bounds_one_sided(alpha, n, tol = 1e-06, max_it = 100)
 \item{n}{Size of the dataset.}
 
 \item{tol}{(Optional) Relative tolerance of the \code{alpha} level of the
-simultaneous test. Defaults to 1e-6.}
+simultaneous test. Defaults to 1e-8.}
 
 \item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm
 used to find the bounds. Defaults to 100 which should be much larger than necessary
@@ -42,7 +42,7 @@ Given the size of the dataset n and the desired global significance level alpha,
 this function calculates the local level eta and the acceptance/rejection regions for the test.
 The result is a set of lower bounds, one for each order statistic.
 If at least one order statistic falls below the corresponding bound,
-the global test is rejected. Note that the code may be slow for n > 500.
+the global test is rejected.
 }
 \examples{
 get_bounds_one_sided(alpha = .05, n = 10, max_it = 50)
