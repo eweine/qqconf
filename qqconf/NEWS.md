@@ -1,3 +1,7 @@
+# qqconf 1.2.0
+
+* Implemented FFT method for one and two sided bounds to increase speed in `get_level_from_bounds_one_sided()` and `get_level_from_bounds_two_sided()`
+
 # qqconf 1.1.1
 
 * Updated vignette to include table of contents
