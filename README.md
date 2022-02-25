@@ -13,4 +13,4 @@ Full documentation can be found in our [reference manual](https://cloud.r-projec
 
 ## Acknowledgements
 
-Thanks to Amit Moscovich and Boaz Nadler for their help implementing the FFT method for computing testing bands. Our C++ code is copied from [Amit's repository](https://github.com/mosco/crossing-probability), with a few small changes for R compatibility.
+Thanks to Amit Moscovich for bringing to our attention his [Crossprod code](https://github.com/mosco/crossing-probability) for computing the boundary crossing of the empirical CDF, which we have used in two of our functions.
