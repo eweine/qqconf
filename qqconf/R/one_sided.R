@@ -147,16 +147,7 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
 
   }
 
-  if (alpha > .99 || n < 7) {
-
-    eta_high <- alpha
-
-  } else {
-
-    eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
-
-  }
-
+  eta_high <- alpha
   eta_low <- alpha / n
   eta_curr <- eta_low + (eta_high - eta_low) / 2
   n_it <- 0
@@ -179,6 +170,12 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
 
       eta_low <- eta_curr
       eta_curr <- eta_curr + (eta_high - eta_curr) / 2
+
+    }
+
+    if(n_it == max_it) {
+
+      warning("Maximum number of iterations reached.")
 
     }
 
