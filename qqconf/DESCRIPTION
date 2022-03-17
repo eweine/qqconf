@@ -11,6 +11,7 @@ Description: Provides functionality for creating Quantile-Quantile (QQ) and Prob
 License: GPL-3
 Depends: 
     R (>= 3.0.0)
+SystemRequirements: fftw3 (>= 3.1.2)
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports: 
