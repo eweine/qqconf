@@ -4,6 +4,10 @@
 
 * Added more accurate calculations for a few grid points for alpha = .01.
 
+* Added fftw3 to SystemRequirements.
+
+* Added bug fix for architectures without mm_malloc.h.
+
 # qqconf 1.2.1
 
 * Added github repo to URL section in description
