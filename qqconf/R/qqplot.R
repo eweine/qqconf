@@ -269,8 +269,7 @@ qq_conf_plot <- function(obs,
 
     global.bounds <- do.call(get_bounds_two_sided,
                              c(list(alpha = alpha, n = samp.size), bounds_params))
-    # Here, have to figure out how to do this for the KS test
-    # I don't think that this should be too hard, but I'm not completely sure
+
     if (method == "ell") {
 
       global.low <- do.call(distribution, c(list(p = global.bounds$lower_bound), dparams))
