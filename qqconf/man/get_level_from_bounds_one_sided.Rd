@@ -26,8 +26,7 @@ null hypothesis is rejected if at least one of the order statistics
 falls below its corresponding lower bound.
 }
 \details{
-Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
-for Poisson processes."
+Uses the method of Moscovich and Nadler (2016) as implemented in Crossprob (Moscovich 2020).
 }
 \examples{
 # For X1, X2, X3 i.i.d. unif(0, 1),
@@ -41,5 +40,8 @@ get_level_from_bounds_one_sided(bounds = c(.1, .5, .8))
 \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
 Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
 Statistics & Probability Letters 123 (2017): 177-182.}}
+\item{\href{https://github.com/mosco/crossing-probability}{
+Amit Moscovich (2020). Fast calculation of p-values for one-sided
+Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 }
 }

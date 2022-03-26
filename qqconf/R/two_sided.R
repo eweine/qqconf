@@ -140,8 +140,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' Given the bounds for these intervals, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
 #'
-#' Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
-#' for Poisson processes."
+#' Uses the method of Moscovich and Nadler (2016) as implemented in Crossprob (Moscovich 2020).
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
 #' for the ith order statistic. The components must lie in [0, 1], and each component must be greater than
@@ -176,6 +175,9 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
 #' Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
 #' Statistics & Probability Letters 123 (2017): 177-182.}}
+#' \item{\href{https://github.com/mosco/crossing-probability}{
+#' Amit Moscovich (2020). Fast calculation of p-values for one-sided
+#' Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 #' }
 #'
 #' @importFrom rlang .data
