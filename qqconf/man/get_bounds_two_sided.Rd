@@ -18,11 +18,15 @@ get_bounds_two_sided(
 \item{n}{Size of the dataset.}
 
 \item{tol}{(Optional) Relative tolerance of the \code{alpha} level of the
-simultaneous test. Defaults to 1e-8.}
+simultaneous test. Defaults to 1e-8. Used only if \code{method} is set to
+"search" or if method is set to "best_available" and the best available
+method is a search.}
 
 \item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm
 used to find the bounds. Defaults to 100 which should be much larger than necessary
-for a reasonable tolerance.}
+for a reasonable tolerance. Used only if \code{method} is set to
+"search" or if method is set to "best_available" and the best available
+method is a search.}
 
 \item{method}{(Optional) Parameter indicating if the calculation should be done using a highly
 accurate approximation, "approximate", or if the calculations should be done using an exact

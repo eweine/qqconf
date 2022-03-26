@@ -1,7 +1,7 @@
 Package: qqconf
 Type: Package
 Title: Creates Simultaneous Testing Bands for QQ-Plots
-Version: 1.2.1
+Version: 1.2.2
 Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
@@ -11,6 +11,7 @@ Description: Provides functionality for creating Quantile-Quantile (QQ) and Prob
 License: GPL-3
 Depends: 
     R (>= 3.0.0)
+SystemRequirements: fftw3 (>= 3.1.2)
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports: 

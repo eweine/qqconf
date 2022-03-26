@@ -28,8 +28,7 @@ Given the bounds for these intervals, this function calculates the significance 
 null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
 }
 \details{
-Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
-for Poisson processes."
+Uses the method of Moscovich and Nadler (2016) as implemented in Crossprob (Moscovich 2020).
 }
 \examples{
 # For X1, X2 iid unif(0,1), calculate 1 - P(.1 < min(X1, X2) < .6 and .5 < max(X1, X2) < .9)
@@ -55,5 +54,8 @@ get_level_from_bounds_two_sided(lower_bounds = lb, upper_bounds = ub)
 \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
 Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
 Statistics & Probability Letters 123 (2017): 177-182.}}
+\item{\href{https://github.com/mosco/crossing-probability}{
+Amit Moscovich (2020). Fast calculation of p-values for one-sided
+Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 }
 }

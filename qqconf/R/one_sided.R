@@ -43,8 +43,7 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' null hypothesis is rejected if at least one of the order statistics
 #' falls below its corresponding lower bound.
 #'
-#' Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
-#' for Poisson processes."
+#' Uses the method of Moscovich and Nadler (2016) as implemented in Crossprob (Moscovich 2020).
 #'
 #' @param bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The components must lie in [0, 1], and each component must be
@@ -55,6 +54,9 @@ check_bounds_one_sided <- function(upper_bounds) {
 #' \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
 #' Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
 #' Statistics & Probability Letters 123 (2017): 177-182.}}
+#' \item{\href{https://github.com/mosco/crossing-probability}{
+#' Amit Moscovich (2020). Fast calculation of p-values for one-sided
+#' Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 #' }
 #'
 #' @useDynLib qqconf
@@ -147,16 +149,7 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
 
   }
 
-  if (alpha > .99 || n < 7) {
-
-    eta_high <- alpha
-
-  } else {
-
-    eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n))
-
-  }
-
+  eta_high <- alpha
   eta_low <- alpha / n
   eta_curr <- eta_low + (eta_high - eta_low) / 2
   n_it <- 0
@@ -179,6 +172,12 @@ get_bounds_one_sided <- function(alpha, n, tol = 1e-8, max_it = 100) {
 
       eta_low <- eta_curr
       eta_curr <- eta_curr + (eta_high - eta_curr) / 2
+
+    }
+
+    if(n_it == max_it) {
+
+      warning("Maximum number of iterations reached.")
 
     }
 

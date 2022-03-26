@@ -8,7 +8,14 @@
 #include <algorithm>
 #include <iostream>
 #include <fftw3.h>
-#include "mm_malloc.h"
+
+#if !defined(__SSE__)
+  #include <stdlib.h>
+  #define _mm_malloc(size, align) aligned_alloc(align, size)
+  #define _mm_free free
+#else
+  #include <mm_malloc.h>
+#endif
 using namespace Rcpp;
 
 #define ALIGNMENT (32)

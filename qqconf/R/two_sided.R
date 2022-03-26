@@ -140,8 +140,7 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' Given the bounds for these intervals, this function calculates the significance level of the test where the
 #' null hypothesis is rejected if at least one of the order statistics is outside its corresponding interval.
 #'
-#' Uses the method of Moscovich and Nadler (2016) "Fast calculation of boundary crossing probabilities
-#' for Poisson processes."
+#' Uses the method of Moscovich and Nadler (2016) as implemented in Crossprob (Moscovich 2020).
 #'
 #' @param lower_bounds Numeric vector where the ith component is the lower bound for the acceptance interval
 #' for the ith order statistic. The components must lie in [0, 1], and each component must be greater than
@@ -176,6 +175,9 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' \item{\href{https://www.sciencedirect.com/science/article/abs/pii/S0167715216302802}{
 #' Moscovich, Amit, and Boaz Nadler. "Fast calculation of boundary crossing probabilities for Poisson processes."
 #' Statistics & Probability Letters 123 (2017): 177-182.}}
+#' \item{\href{https://github.com/mosco/crossing-probability}{
+#' Amit Moscovich (2020). Fast calculation of p-values for one-sided
+#' Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 #' }
 #'
 #' @importFrom rlang .data
@@ -213,10 +215,14 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @param alpha Desired global significance level of the test.
 #' @param n Size of the dataset.
 #' @param tol (Optional) Relative tolerance of the \code{alpha} level of the
-#' simultaneous test. Defaults to 1e-8.
+#' simultaneous test. Defaults to 1e-8. Used only if \code{method} is set to
+#' "search" or if method is set to "best_available" and the best available
+#' method is a search.
 #' @param max_it (Optional) Maximum number of iterations of Binary Search Algorithm
 #' used to find the bounds. Defaults to 100 which should be much larger than necessary
-#' for a reasonable tolerance.
+#' for a reasonable tolerance. Used only if \code{method} is set to
+#' "search" or if method is set to "best_available" and the best available
+#' method is a search.
 #' @param method (Optional) Parameter indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
 #' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
@@ -294,16 +300,7 @@ get_bounds_two_sided <- function(alpha,
   # Approximations are only available for alpha = .05 or alpha = .01
   if (method == "search") {
 
-    if (n < 7 || alpha > .99) {
-
-      eta_high <- alpha
-
-    } else {
-
-      eta_high <- -log(1 - alpha) / (2 * log(log(n)) * log(n)) # this is the asymptotic level of eta
-
-    }
-
+    eta_high <- alpha
     eta_low <- alpha / n
     eta_curr <- eta_low + (eta_high - eta_low) / 2
     n_it <- 0

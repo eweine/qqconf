@@ -1,3 +1,15 @@
+# qqconf 1.2.2
+
+* Changed upper bound in binary search for local level for one_sided and two sided cases.
+
+* Added more accurate calculations for a few grid points for alpha = .01.
+
+* Added fftw3 to SystemRequirements.
+
+* Added bug fix for architectures without mm_malloc.h.
+
+* Slightly changed boundaries at the endpoints of qq and pp plots to enhance visualization.
+
 # qqconf 1.2.1
 
 * Added github repo to URL section in description

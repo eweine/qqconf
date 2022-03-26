@@ -3,9 +3,7 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
-
-There is one NOTE: 2 days since last submission.
+There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of qqconf, all packages passed

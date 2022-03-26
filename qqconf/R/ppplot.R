@@ -274,13 +274,6 @@ pp_conf_plot <- function(obs,
       global.high <- -log10(global.high)
     }
 
-    # code to extend region for visibility
-    global.low <- c(global.low[1], global.low, global.low[samp.size])
-    global.high <- c(global.high[1], global.high, global.high[samp.size])
-    pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
-    pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
-    exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
-
     if ("ylim" %in% names(dots)) {
 
       bottom <- dots$ylim[1] - 1000
@@ -296,20 +289,38 @@ pp_conf_plot <- function(obs,
     }
 
     if (difference) {
+
+      low_global_diff <- global.low - exp.pts
+      low_global_diff <- c(low_global_diff[1], low_global_diff, low_global_diff[samp.size])
+      high_global_diff <- global.high - exp.pts
+      high_global_diff <- c(high_global_diff[1], high_global_diff, high_global_diff[samp.size])
+      low_pointwise_diff <- pointwise.low - exp.pts
+      low_pointwise_diff <- c(low_pointwise_diff[1], low_pointwise_diff, low_pointwise_diff[samp.size])
+      high_pointwise_diff <- pointwise.high - exp.pts
+      high_pointwise_diff <- c(high_pointwise_diff[1], high_pointwise_diff, high_pointwise_diff[samp.size])
+      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+
       do.call(
         polygon,
         c(list(x = c(exp.pts, rev(exp.pts)),
-               y = pmin(pmax(c(global.low - exp.pts, rev(global.high) - rev(exp.pts)), bottom), top)),
+               y = pmin(pmax(c(low_global_diff, rev(high_global_diff)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
 
-        do.call(lines, c(list(x = exp.pts, y = pointwise.low - exp.pts), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = pointwise.high - exp.pts), pointwise_lines_params))
+        do.call(lines, c(list(x = exp.pts, y = low_pointwise_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp.pts, y = high_pointwise_diff), pointwise_lines_params))
 
       }
 
     } else {
+
+      # code to extend region for visibility
+      global.low <- c(global.low[1], global.low, global.low[samp.size])
+      global.high <- c(global.high[1], global.high, global.high[samp.size])
+      pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
+      pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
+      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
 
       do.call(
         polygon,
