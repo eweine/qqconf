@@ -8,6 +8,8 @@
 
 * Added bug fix for architectures without mm_malloc.h.
 
+* Slightly changed boundaries at the endpoints of qq and pp plots to enhance visualization.
+
 # qqconf 1.2.1
 
 * Added github repo to URL section in description
