@@ -1,3 +1,7 @@
+# qqconf 1.2.3
+
+* Replaced mm_malloc with fftw_malloc in cpp code for cross-compatibility.
+
 # qqconf 1.2.2
 
 * Changed upper bound in binary search for local level for one_sided and two sided cases.

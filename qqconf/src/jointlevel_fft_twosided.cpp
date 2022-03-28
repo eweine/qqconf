@@ -9,13 +9,6 @@
 #include <iostream>
 #include <fftw3.h>
 
-#if !defined(__SSE__)
-  #include <stdlib.h>
-  #define _mm_malloc(size, align) aligned_alloc(align, size)
-  #define _mm_free free
-#else
-  #include <mm_malloc.h>
-#endif
 using namespace Rcpp;
 
 #define ALIGNMENT (32)
@@ -25,18 +18,18 @@ const int MINIMUM_SIZE_FOR_FFTW_CONVOLUTION = 80;
 
 inline double* allocate_aligned_doubles(int n)
 {
-  return static_cast<double*>(_mm_malloc(n*sizeof(double), ALIGNMENT));
+  return static_cast<double*>(fftw_malloc(n*sizeof(double)));
 }
 
 inline std::complex<double>* allocate_aligned_complexes(int n)
 {
-  return static_cast<std::complex<double>*>(_mm_malloc(n*sizeof(std::complex<double>), ALIGNMENT));
+  return static_cast<std::complex<double>*>(fftw_malloc(n*sizeof(std::complex<double>)));
 }
 
 
 inline void free_aligned_mem(void* p)
 {
-  _mm_free(p);
+  fftw_free(p);
 }
 
 template<class T>
