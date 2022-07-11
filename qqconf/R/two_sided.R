@@ -382,7 +382,7 @@ get_bounds_two_sided <- function(alpha,
         larger_n_eta <- larger_n_df$local_level[1]
 
         smaller_n_df <- lookup_table[lookup_table$n < n_param, ]
-        smaller_n_df <- tail(larger_n_df, 1)
+        smaller_n_df <- tail(smaller_n_df, 1)
         smaller_n <- smaller_n_df$n[1]
         smaller_n_eta <- smaller_n_df$local_level[1]
 
