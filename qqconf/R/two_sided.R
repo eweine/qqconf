@@ -180,8 +180,6 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 #' }
 #'
-#' @importFrom rlang .data
-#'
 #' @useDynLib qqconf
 #'
 #' @export
@@ -246,6 +244,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @examples
 #' get_bounds_two_sided(alpha = .05, n = 100)
 #'
+#' @importFrom utils head tail
 #'
 #' @export
 get_bounds_two_sided <- function(alpha,
@@ -281,7 +280,6 @@ get_bounds_two_sided <- function(alpha,
 
   }
 
-  `%>%` <- magrittr::`%>%`
   n_param <- n
   if (n >= 10) {
 
@@ -340,39 +338,37 @@ get_bounds_two_sided <- function(alpha,
 
   else if (method == "approximate") {
 
-    if (!(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-          dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
-          dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
+    if (!(between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+          between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
+          between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
 
       stop("The approximate method is only configured for alpha = .1, .05, .01. Consider setting method='search'")
 
     }
 
-    if (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
+    if (between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
 
       lookup_table <- alpha_01_df
 
-    } else if (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
+    } else if (between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
 
       lookup_table <- alpha_05_df
 
     }
 
     if (
-      dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-        dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
+      between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+        between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
         ) {
 
       if (n %in% lookup_table$n) {
 
-        eta_df <- lookup_table %>%
-          dplyr::filter(n == n_param)
-
+        eta_df <- lookup_table[lookup_table$n == n_param, ]
         eta <- eta_df$local_level[1]
 
       } else if (
-        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) ||
-          (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
+        (between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) ||
+          (between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
 
         eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
 
@@ -380,19 +376,13 @@ get_bounds_two_sided <- function(alpha,
       else {
 
         # Do linear interpolation
-        larger_n_df <- lookup_table %>%
-          dplyr::filter(n > n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_head()
-
+        larger_n_df <- lookup_table[lookup_table$n > n_param, ]
+        larger_n_df <- head(larger_n_df, 1)
         larger_n <- larger_n_df$n[1]
         larger_n_eta <- larger_n_df$local_level[1]
 
-        smaller_n_df <- lookup_table %>%
-          dplyr::filter(n < n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_tail()
-
+        smaller_n_df <- lookup_table[lookup_table$n < n_param, ]
+        smaller_n_df <- tail(smaller_n_df, 1)
         smaller_n <- smaller_n_df$n[1]
         smaller_n_eta <- smaller_n_df$local_level[1]
 
@@ -417,10 +407,10 @@ get_bounds_two_sided <- function(alpha,
   else if (method == "best_available") {
 
     # Don't return approximation for alpha = .1 and n <= 500, it's not accurate
-    if (dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon) && n <= 500 ||
-        !(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-          dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
-          dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))
+    if (between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon) && n <= 500 ||
+        !(between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+          between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
+          between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))
         ) {
 
       return(

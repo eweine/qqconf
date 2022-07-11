@@ -1,7 +1,7 @@
 Package: qqconf
 Type: Package
 Title: Creates Simultaneous Testing Bands for QQ-Plots
-Version: 1.2.3
+Version: 1.3.0
 Authors@R: c(
     person("Eric", "Weine", email = "ericweine15@gmail.com", role = c("aut", "cre")),
     person("Mary Sara", "McPeek", email = "mcpeek@uchicago.edu", role = "aut"),
@@ -15,9 +15,6 @@ SystemRequirements: fftw3 (>= 3.1.2)
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports: 
-    dplyr (>= 1.0.0),
-    magrittr (>= 1.5),
-    rlang (>= 0.4.9),
     MASS (>= 7.3-50),
     robustbase (>= 0.93-4),
     Rcpp
@@ -32,6 +29,7 @@ Collate:
     'qqplot.R'
     'RcppExports.R'
     'two_sided.R'
+    'utils.R'
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp
