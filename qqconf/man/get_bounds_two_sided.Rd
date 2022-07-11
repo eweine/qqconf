@@ -68,5 +68,4 @@ the global test is rejected.
 \examples{
 get_bounds_two_sided(alpha = .05, n = 100)
 
-
 }
