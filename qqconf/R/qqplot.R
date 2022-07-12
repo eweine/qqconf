@@ -114,15 +114,6 @@ qq_conf_plot <- function(obs,
                          polygon_params = list(border = NA, col = 'gray'),
                          ...) {
 
-  dist_name <- as.character(substitute(distribution))
-
-  if(length(dparams) == 0) {
-    cat("no dparams supplied. Estimating parameters from the data...\n")
-
-    MASS_name <- get_mass_name_from_distr(dist_name, "qq")
-    dparams <- estimate_params_from_data(MASS_name, obs)
-  }
-
   dots <- list(...)
   method <- match.arg(method)
   if ( is.null(dots$ylab)) {
