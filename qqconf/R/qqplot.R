@@ -41,7 +41,7 @@
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
-#' @param bounds_params List of optional parameters for get_bounds_two_sided
+#' @param bounds_params List of optional parameters for \code{get_ell_bounds_two_sided}
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
@@ -117,61 +117,10 @@ qq_conf_plot <- function(obs,
   dist_name <- as.character(substitute(distribution))
 
   if(length(dparams) == 0) {
-    # equivalence between base R and MASS::fitdistr distribution names
-    corresp <- function(distributionName) {
-      switch(
-        distributionName,
-        qbeta = "beta",
-        qcauchy = "cauchy",
-        qchisq = "chi-squared",
-        qexp = "exponential",
-        qf = "f",
-        qgamma = "gamma",
-        qgeom = "geometric",
-        qlnorm = "log-normal",
-        qlogis = "logistic",
-        qnorm = "normal",
-        qnbinom = "negative binomial",
-        qpois = "poisson",
-        qt = "t",
-        qweibull = "weibull",
-        NULL
-      )
-    }
+    cat("no dparams supplied. Estimating parameters from the data...\n")
 
-    # initial value for some distributions
-    initVal <- function(distributionName) {
-      switch(
-        distributionName,
-        qbeta = list(shape1 = 1, shape2 = 1),
-        qchisq = list(df = 1),
-        qf = list(df1 = 1, df2 = 2),
-        qt = list(df = 1),
-        NULL
-      )
-    }
-
-    suppressWarnings({
-      if(!is.null(corresp(dist_name))) {
-        if(is.null(initVal(dist_name))) {
-          if(corresp(dist_name) == "normal") {
-
-            # Use special estimators for the normal distribution
-            dparams <- c()
-            dparams['mean'] <- median(x = obs)
-            dparams['sd'] <- robustbase::Sn(x = obs)
-
-          } else {
-
-            dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
-
-          }
-
-        } else {
-          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name), start = initVal(dist_name))$estimate
-        }
-      }
-    })
+    MASS_name <- get_mass_name_from_distr(dist_name, "qq")
+    dparams <- estimate_params_from_data(MASS_name, obs)
   }
 
   dots <- list(...)
@@ -216,7 +165,21 @@ qq_conf_plot <- function(obs,
   # constant for visual expansion of confidence regions
   c <- .5
   obs.pts <- sort(obs)
-  exp.pts <- do.call(distribution, c(list(p=ppoints(samp.size, a=0)), dparams))
+
+  global.bounds <- get_qq_bounds(
+    obs = obs,
+    alpha = alpha,
+    distribution = distribution,
+    dparams = dparams,
+    ell_params = bounds_params,
+    method = method,
+    band_type = "qq"
+  )
+
+  global.low <- global.bounds$lower_bound
+  global.high <- global.bounds$upper_bound
+
+  exp.pts <- global.bounds$expected_value
   if (log10 && right_tail) {
 
     exp.pts <- -log10(1 - exp.pts)
@@ -266,25 +229,6 @@ qq_conf_plot <- function(obs,
                              c(list(p=qbeta(conf[1], 1:samp.size, samp.size:1)), dparams))
     pointwise.high <- do.call(distribution,
                               c(list(p=qbeta(conf[2], 1:samp.size, samp.size:1)), dparams))
-
-    global.bounds <- do.call(get_bounds_two_sided,
-                             c(list(alpha = alpha, n = samp.size), bounds_params))
-
-    if (method == "ell") {
-
-      global.low <- do.call(distribution, c(list(p = global.bounds$lower_bound), dparams))
-      global.high <- do.call(distribution, c(list(p = global.bounds$upper_bound), dparams))
-
-    } else if (method == "ks") {
-
-      probs <- ppoints(samp.size)
-      epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
-      lp <- pmax(probs - epsilon, rep(0, samp.size))
-      up <- pmin(probs + epsilon, rep(1, samp.size))
-      global.low <- do.call(distribution, c(list(p = lp), dparams))
-      global.high <- do.call(distribution, c(list(p = up), dparams))
-
-    }
 
     if(log10 == TRUE && right_tail == TRUE) {
 

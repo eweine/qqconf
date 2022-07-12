@@ -38,7 +38,7 @@
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
-#' @param bounds_params List of optional parameters for get_bounds_two_sided
+#' @param bounds_params List of optional parameters for get_ell_bounds_two_sided
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
@@ -104,66 +104,6 @@ pp_conf_plot <- function(obs,
                          polygon_params = list(border = NA, col = 'gray'),
                          ...) {
 
-  dist_name <- as.character(substitute(distribution))
-
-  if(length(dparams) == 0) {
-    # equivalence between base R and MASS::fitdistr distribution names
-    corresp <- function(distributionName) {
-      switch(
-        distributionName,
-        pbeta = "beta",
-        pcauchy = "cauchy",
-        pchisq = "chi-squared",
-        pexp = "exponential",
-        pf = "f",
-        pgamma = "gamma",
-        pgeom = "geometric",
-        plnorm = "log-normal",
-        plogis = "logistic",
-        pnorm = "normal",
-        pnbinom = "negative binomial",
-        ppois = "poisson",
-        pt = "t",
-        pweibull = "weibull",
-        NULL
-      )
-    }
-
-    # initial value for some distributions
-    initVal <- function(distributionName) {
-      switch(
-        distributionName,
-        pbeta = list(shape1 = 1, shape2 = 1),
-        pchisq = list(df = 1),
-        pf = list(df1 = 1, df2 = 2),
-        pt = list(df = 1),
-        NULL
-      )
-    }
-
-    suppressWarnings({
-      if(!is.null(corresp(dist_name))) {
-        if(is.null(initVal(dist_name))) {
-          if(corresp(dist_name) == "normal") {
-
-            # Use special estimators for the normal distribution
-            dparams <- c()
-            dparams['mean'] <- median(x = obs)
-            dparams['sd'] <- robustbase::Sn(x = obs)
-
-          } else {
-
-            dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
-
-          }
-
-        } else {
-          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name), start = initVal(dist_name))$estimate
-        }
-      }
-    })
-  }
-
   dots <- list(...)
   method <- match.arg(method)
   if (is.null(dots$ylab)) {
@@ -204,8 +144,24 @@ pp_conf_plot <- function(obs,
   ## distribution
   # constant for visual expansion of confidence regions
   c <- .5
+
+  global.bounds <- get_qq_bounds(
+    obs = obs,
+    alpha = alpha,
+    distribution = distribution,
+    dparams = dparams,
+    ell_params = bounds_params,
+    method = method,
+    band_type = "pp"
+  )
+
+  global.low <- global.bounds$lower_bound
+  global.high <- global.bounds$upper_bound
+
+  exp.pts <- global.bounds$expected_value
+
   obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
-  exp.pts <- ppoints(samp.size, a=0)
+
   if (log10 == TRUE && right_tail == TRUE) {
 
     exp.pts <- -log10(1 - exp.pts)
@@ -244,23 +200,6 @@ pp_conf_plot <- function(obs,
 
     pointwise.low <- qbeta(conf[1], 1:samp.size, samp.size:1)
     pointwise.high <- qbeta(conf[2], 1:samp.size, samp.size:1)
-
-    global.bounds <- do.call(get_bounds_two_sided,
-                             c(list(alpha = alpha, n = samp.size), bounds_params))
-
-    if (method == "ell") {
-
-      global.low <- global.bounds$lower_bound
-      global.high <- global.bounds$upper_bound
-
-    } else if (method == "ks") {
-
-      probs <- ppoints(samp.size)
-      epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
-      global.low <- pmax(probs - epsilon, rep(0, samp.size))
-      global.high <- pmin(probs + epsilon, rep(1, samp.size))
-
-    }
 
     if (log10 == TRUE && right_tail == TRUE) {
       pointwise.low <- -log10(1 - pointwise.low)
