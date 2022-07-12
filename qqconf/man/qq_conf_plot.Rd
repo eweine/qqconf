@@ -63,7 +63,7 @@ For the normal distribution, we estimate the mean as the median and the standard
 the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 parameters of the distribution must be provided by the user.}
 
-\item{bounds_params}{List of optional parameters for get_bounds_two_sided
+\item{bounds_params}{List of optional parameters for \code{get_bounds_two_sided}
 (i.e. \code{tol}, \code{max_it}, \code{method}).}
 
 \item{line_params}{Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
