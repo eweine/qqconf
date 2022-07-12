@@ -38,7 +38,7 @@
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
-#' @param bounds_params List of optional parameters for get_ell_bounds_two_sided
+#' @param bounds_params List of optional parameters for \code{get_bounds_two_sided}.
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
 #' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
