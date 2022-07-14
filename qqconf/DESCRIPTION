@@ -16,11 +16,11 @@ Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports: 
     MASS (>= 7.3-50),
-    robustbase (>= 0.93-4),
     Rcpp
 Suggests:
     knitr, 
     rmarkdown,
+    robustbase (>= 0.93-4),
     distr (>= 2.8.0)
 Collate: 
     'one_sided.R'
