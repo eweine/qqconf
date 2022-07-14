@@ -235,7 +235,8 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #'   for the acceptance regions of the test of each order statistic.
 #'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
 #'   for the acceptance regions of the test of each order statistic.
-#'   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+#'   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic.
+#'   These are the x-coordinates for the bounds if used in a qq-plot or pp-plot.
 #'   The value is \code{c(1:n) / (n + 1)}.
 #'   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
 #'   statistics and will be less than \code{alpha} for all \code{n} > 1.
