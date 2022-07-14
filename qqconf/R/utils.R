@@ -107,10 +107,22 @@ estimate_params_from_data <- function(distr_name, obs) {
     if(is.null(initVal(distr_name))) {
       if(distr_name == "normal") {
 
-        # Use special estimators for the normal distribution
-        dparams <- c()
+        # use special estimators for the normal distribution
+        dparams <- list()
         dparams['mean'] <- median(x = obs)
-        dparams['sd'] <- robustbase::Sn(x = obs)
+
+        if (requireNamespace("robustbase", quietly = TRUE)) {
+
+          dparams['sd'] <- robustbase::Sn(x = obs)
+
+        } else {
+
+          cat("robustbase is not installed...\n")
+          cat("estimating the standard deviation of a normal distribution with the MLE...\n")
+          cat("this may be sensitive to outliers. Please consider installing robustbase\n")
+          dparams['sd'] <- sd(obs)
+
+        }
 
       } else {
 
