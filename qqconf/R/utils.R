@@ -32,6 +32,7 @@ get_mass_name_from_distr <- function(distr, band_type) {
         qf = "f",
         qgamma = "gamma",
         qgeom = "geometric",
+        qnorm = "normal",
         qlnorm = "log-normal",
         qlogis = "logistic",
         qnorm = "normal",
@@ -55,6 +56,7 @@ get_mass_name_from_distr <- function(distr, band_type) {
         pf = "f",
         pgamma = "gamma",
         pgeom = "geometric",
+        pnorm = "normal",
         plnorm = "log-normal",
         plogis = "logistic",
         pnorm = "normal",
@@ -68,7 +70,13 @@ get_mass_name_from_distr <- function(distr, band_type) {
 
   }
 
-  corresp_dn(distr)
+  dist <- corresp_dn(distr)
+  if(is.null(dist)) {
+
+    stop("Unknown distribution provided")
+
+  }
+  return(dist)
 
 }
 

@@ -7,8 +7,8 @@
 get_qq_bounds(
   n,
   obs,
-  alpha,
-  distribution,
+  alpha = 0.05,
+  distribution = qnorm,
   dparams = list(),
   ell_params = list(),
   method = c("ell", "ks", "pointwise"),
@@ -16,28 +16,29 @@ get_qq_bounds(
 )
 }
 \arguments{
-\item{n}{(Optional) number of observations. If \code{obs} is not provided,
-this must be specified. Providing \code{n} is simpler when all parameters
+\item{n, obs}{either a number of observations (specified by setting \code{n}),
+or a numeric vector of observations (specified by setting \code{obs}). One
+argument must be specified. In principle, if all parameters \code{distribution}
+are known, then testing bands only depend on the number of observations \code{n}.
+Thus, providing \code{n} is simpler when all parameters
 of \code{distribution} are known and specified via \code{dparams}
-(or when using all default parameter choices of \code{distribution} is desired).}
+(or when using all default parameter choices of \code{distribution} is desired).
+If estimating parameters from the data is preferred, \code{obs} should be
+specified and estimation will take place.}
 
-\item{obs}{(Optional) numeric vector of observations. If \code{n} is not
-provided, this must be specified. Supplying this argument is only recommended
-when estimating parameters of \code{distribution} from data is desired.}
-
-\item{alpha}{desired significance level of the testing bands. If \code{method}
+\item{alpha}{(optional) desired significance level of the testing bands. If \code{method}
 is set to \code{"ell"} or \code{"ks"}, then this is the global significance
 of the testing bands. If \code{method} is set to \code{"pointwise"}, then
 the bands are equivalent to simply conducting a test on each order statistic
 with Type I error \code{alpha}. Pointwise bands will generally have much
-larger global Type I error than \code{alpha}.}
+larger global Type I error than \code{alpha}. Defaults to \code{.05}.}
 
-\item{distribution}{either a quantile function (e.g. \code{qnorm}) for
+\item{distribution}{(optional) either a quantile function (e.g. \code{qnorm}) for
 constructing bands on a QQ-plot or a probability function (e.g. \code{pnorm})
 for constructing bands on a PP-plot. \code{band_type} must be set
-appropriately.}
+appropriately. Defaults to \code{qnorm} for a normal distribution.}
 
-\item{dparams}{(Optional)  List of additional parameters for the \code{distribution} function
+\item{dparams}{(optional)  List of additional parameters for the \code{distribution} function
 (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
 on the unspecified parameters, and instead they will take on the default values set by the distribution function.
 For the uniform distribution, parameter estimation is not performed, and
@@ -48,23 +49,47 @@ For the normal distribution, we estimate the mean as the median and the standard
 the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 parameters of the distribution must be provided by the user.}
 
-\item{ell_params}{(Optional) list of optional parameters for \code{get_bounds_two_sided}
+\item{ell_params}{(optional) list of optional parameters for \code{get_bounds_two_sided}
 (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
 is set to \code{"ell"}}
 
-\item{method}{(Optional) method for creating testing bands. The default,
+\item{method}{(optional) method for creating testing bands. The default,
 \code{"ell"} uses the equal local levels method
 (see \code{get_bounds_two_sided} for more information). \code{"ks"} uses
 the Kolmogorov-Smirnov test. \code{"pointwise"} uses pointwise bands (see
 documentation for parameter \code{alpha} for more information). \code{"ell"}
 is recommended.}
 
-\item{band_type}{(Optional) string specifying if the bands should be created
+\item{band_type}{(optional) string specifying if the bands should be created
 for a Quantile-Quantile (QQ) plot or a Probability-Probability (PP) plot.}
 }
 \value{
-
+A list with components
+\itemize{
+  \item lower_bound - Numeric vector of length \code{n} containing the lower bounds
+  for the acceptance regions of the test corresponding to each order statistic.
+  \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
+  for the acceptance regions of the test corresponding to each order statistic.
+  \item expected_value - Numeric vector of length \code{n} containing the expectation of each order statistic.
+  These are the x-coordinates for the bounds if used in a qq-plot.
+}
 }
 \description{
-Create QQ or PP Plot Testing Bounds
+Flexible interface for creating testing bounds for Quantile-Quantile (QQ) or
+Probability-Probability (PP) plots.
+}
+\examples{
+
+# Get ell level .05 QQ testing bounds for normal(0, 1) distribution with 100 observations
+bounds <- get_qq_bounds(n = 100)
+
+# Get ell level .05 QQ testing bounds for normal distribution with unknown parameters
+obs <- rnorm(100)
+bounds <- get_qq_bounds(obs = obs)
+
+# Get ell level .05 PP testing bounds for t(2) distribution with 100 observations
+bounds <- get_qq_bounds(
+  n = 100, distribution = pt, dparams = list(df = 1), band_type = 'pp'
+)
+
 }
