@@ -71,7 +71,7 @@ A list with components
   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
   for the acceptance regions of the test corresponding to each order statistic.
   \item expected_value - Numeric vector of length \code{n} containing the expectation of each order statistic.
-  These are the x-coordinates for the bounds if used in a qq-plot.
+  These are the x-coordinates for the bounds if used in a qq-plot or pp-plot.
 }
 }
 \description{
