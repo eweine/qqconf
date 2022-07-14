@@ -114,6 +114,13 @@ qq_conf_plot <- function(obs,
                          polygon_params = list(border = NA, col = 'gray'),
                          ...) {
 
+  if (!("p" %in% names(formals(distribution)))) {
+
+    stop("distribution function must take 'p' as an argument.
+         Did you mean to make a PP plot?")
+
+  }
+
   dots <- list(...)
   method <- match.arg(method)
   if ( is.null(dots$ylab)) {
@@ -156,6 +163,20 @@ qq_conf_plot <- function(obs,
   # constant for visual expansion of confidence regions
   c <- .5
   obs.pts <- sort(obs)
+
+  dist_name <- as.character(substitute(distribution))
+  if(length(dparams) == 0 && dist_name == "qunif") {
+
+    dparams['min'] <- 0
+    dparams['max'] <- 1
+
+  } else if (length(dparams) == 0) {
+
+    cat("no dparams supplied. Estimating parameters from the data...\n")
+    MASS_name <- get_mass_name_from_distr(dist_name, "qq")
+    dparams <- estimate_params_from_data(MASS_name, obs)
+
+  }
 
   global.bounds <- get_qq_bounds(
     obs = obs,
