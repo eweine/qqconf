@@ -89,6 +89,8 @@ get_mass_name_from_distr <- function(distr, band_type) {
 #' @param distr_name \code{MASS} name of distribution
 #' @param obs observation vector
 #'
+#' @importFrom stats sd
+#'
 #' @return list of distribution parameters
 estimate_params_from_data <- function(distr_name, obs) {
 
@@ -103,7 +105,6 @@ estimate_params_from_data <- function(distr_name, obs) {
     )
   }
 
-  suppressWarnings({
     if(is.null(initVal(distr_name))) {
       if(distr_name == "normal") {
 
@@ -117,26 +118,35 @@ estimate_params_from_data <- function(distr_name, obs) {
 
         } else {
 
-          cat("robustbase is not installed...\n")
-          cat("estimating the standard deviation of a normal distribution with the MLE...\n")
-          cat("this may be sensitive to outliers. Please consider installing robustbase\n")
+          warning(
+            "Using an MLE to estimate the sd of a normal. Resulting bands may be highly conservative.
+            To use a more robust estimator, please install robustbase and rerun the code",
+            call. = FALSE,
+            immediate. = TRUE
+            )
           dparams['sd'] <- sd(obs)
 
         }
 
       } else {
 
-        dparams <- MASS::fitdistr(x = obs, densfun = distr_name)$estimate
+        suppressWarnings({
+          dparams <- MASS::fitdistr(x = obs, densfun = distr_name)$estimate
+        })
 
       }
 
     } else {
-      dparams <- MASS::fitdistr(
-        x = obs,
-        densfun = distr_name,
-        start = initVal(distr_name))$estimate
+
+      suppressWarnings({
+        dparams <- MASS::fitdistr(
+          x = obs,
+          densfun = distr_name,
+          start = initVal(distr_name))$estimate
+      })
+
     }
-  })
+
 
   return(dparams)
 
