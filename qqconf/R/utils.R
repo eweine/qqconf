@@ -111,22 +111,7 @@ estimate_params_from_data <- function(distr_name, obs) {
         # use special estimators for the normal distribution
         dparams <- list()
         dparams['mean'] <- median(x = obs)
-
-        if (requireNamespace("robustbase", quietly = TRUE)) {
-
-          dparams['sd'] <- robustbase::Sn(x = obs)
-
-        } else {
-
-          warning(
-            "Using an MLE to estimate the sd of a normal. Resulting bands may be highly conservative.
-            To use a more robust estimator, please install robustbase and rerun the code",
-            call. = FALSE,
-            immediate. = TRUE
-            )
-          dparams['sd'] <- sd(obs)
-
-        }
+        dparams['sd'] <- robustbase::Sn(x = obs)
 
       } else {
 
