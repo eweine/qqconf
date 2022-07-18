@@ -505,6 +505,10 @@ get_bounds_two_sided <- function(alpha,
 #'   for the acceptance regions of the test corresponding to each order statistic.
 #'   \item expected_value - Numeric vector of length \code{n} containing the expectation of each order statistic.
 #'   These are the x-coordinates for the bounds if used in a qq-plot or pp-plot.
+#'   \item dparams - List of parameters used to apply \code{distribution} to
+#'   \code{obs} (if observations are provided). If the user provides parameters,
+#'   then these parameters will simply be returned. If parameters are estimated
+#'   from the data, then the estimated parameters will be returned.
 #' }
 #' @export
 #'
@@ -639,7 +643,8 @@ get_qq_bounds <- function(
     list(
       lower_bound = lower_bound,
       upper_bound = upper_bound,
-      expected_value = exp_pts
+      expected_value = exp_pts,
+      dparams = dparams
     )
   )
 
