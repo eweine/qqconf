@@ -136,3 +136,69 @@ estimate_params_from_data <- function(distr_name, obs) {
   return(dparams)
 
 }
+
+#' Get Best Available Method for Expected Points
+#'
+#' Determines name of best method for obtaining expected points for a qq or pp
+#' plot.
+#'
+#' @param dist_name character name of distribution
+#'
+#' @return character name of best expected points method
+#'
+get_best_available_exp_pts_method <- function(dist_name) {
+
+  if (dist_name %in% c("qunif", "punif")) {
+
+    return("uniform")
+
+  } else if (dist_name %in% c("qnorm", "pnorm")) {
+
+    return("normal")
+
+  } else {
+
+    return("median")
+
+  }
+
+}
+
+#' Get Quantile for First and Last Point of QQ or PP Plot
+#'
+#' @param exp_pts_method method used to derive expected points
+#' @param n sample size
+#'
+#' @return list with low and high point
+#'
+get_extended_quantile <- function(exp_pts_method, n) {
+
+  if (exp_pts_method == "uniform") {
+
+    high_pt <- 1 - (1 / max(n * 1.25, n + 2))
+    low_pt <- 1 / max(n * 1.25, n + 2)
+
+  } else if (exp_pts_method == "median"){
+
+    new_samp_size <- floor(n * 1.02)
+    ppoints_adj <- ppoints(new_samp_size)
+    low_pt <- ppoints_adj[1]
+    high_pt <- ppoints_adj[new_samp_size]
+
+  } else if (exp_pts_method == "normal") {
+
+    new_samp_size <- floor(n * 1.3)
+    ppoints_adj <- ppoints(new_samp_size)
+    low_pt <- ppoints_adj[1]
+    high_pt <- ppoints_adj[new_samp_size]
+
+  }
+
+  return(
+    list(
+      low_pt = low_pt,
+      high_pt = high_pt
+    )
+  )
+
+}

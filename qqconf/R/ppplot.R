@@ -166,14 +166,17 @@ pp_conf_plot <- function(obs,
 
   }
 
-  global.bounds <- get_qq_bounds(
+  exp_pts_method <- get_best_available_exp_pts_method(dist_name)
+
+  global.bounds <- get_qq_bands(
     obs = obs,
     alpha = alpha,
     distribution = distribution,
     dparams = dparams,
     ell_params = bounds_params,
-    method = method,
-    band_type = "pp"
+    bands_method = method,
+    band_type = "pp",
+    exp_pts_method = exp_pts_method
   )
 
   global.low <- global.bounds$lower_bound
@@ -183,26 +186,28 @@ pp_conf_plot <- function(obs,
 
   obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
 
+  ext_quantile <- get_extended_quantile(exp_pts_method, samp.size)
+
   if (log10 == TRUE && right_tail == TRUE) {
 
     exp.pts <- -log10(1 - exp.pts)
-    low_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10((1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp.pts[samp.size]
     obs.pts <- -log10(1 - obs.pts)
 
   }
   else if (log10 == TRUE) {
 
     exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp.pts[samp.size]
     obs.pts <- -log10(obs.pts)
 
   }
   else {
 
-    low_exp_pt <- c * (1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * (1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * (ext_quantile$low_pt) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * (ext_quantile$high_pt) + (1 - c) * exp.pts[samp.size]
 
   }
   if (difference) {

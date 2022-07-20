@@ -178,25 +178,31 @@ qq_conf_plot <- function(obs,
 
   }
 
-  global.bounds <- get_qq_bounds(
+  exp_pts_method <- get_best_available_exp_pts_method(dist_name)
+
+  global.bounds <- get_qq_bands(
     obs = obs,
     alpha = alpha,
     distribution = distribution,
     dparams = dparams,
     ell_params = bounds_params,
-    method = method,
-    band_type = "qq"
+    bands_method = method,
+    band_type = "qq",
+    exp_pts_method = exp_pts_method
   )
 
   global.low <- global.bounds$lower_bound
   global.high <- global.bounds$upper_bound
 
   exp.pts <- global.bounds$expected_value
+
+  ext_quantile <- get_extended_quantile(exp_pts_method, samp.size)
+
   if (log10 && right_tail) {
 
     exp.pts <- -log10(1 - exp.pts)
-    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=ext_quantile$high_pt), dparams))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=ext_quantile$low_pt), dparams))) + (1 - c) * exp.pts[samp.size]
     if (any(obs.pts <= 0)) {
 
       stop("log10 scaling can only be used with strictly positive distributions. Consider using pp_conf_plot.")
@@ -208,8 +214,8 @@ qq_conf_plot <- function(obs,
   else if (log10 == TRUE) {
 
     exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * -log10(do.call(distribution, c(list(p=ext_quantile$low_pt), dparams))) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * -log10(do.call(distribution, c(list(p=ext_quantile$high_pt), dparams))) + (1 - c) * exp.pts[samp.size]
     if (any(obs.pts <= 0)) {
 
       stop("log10 scaling can only be used with strictly positive distributions. Consider using pp_conf_plot.")
@@ -220,8 +226,8 @@ qq_conf_plot <- function(obs,
   }
   else {
 
-    low_exp_pt <- c * do.call(distribution, c(list(p=c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * do.call(distribution, c(list(p=1 - c(1 / max(samp.size * 1.25, samp.size + 2))), dparams)) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * do.call(distribution, c(list(p=ext_quantile$low_pt), dparams)) + (1 - c) * exp.pts[1]
+    high_exp_pt <- c * do.call(distribution, c(list(p=ext_quantile$high_pt), dparams)) + (1 - c) * exp.pts[samp.size]
 
   }
   if (difference) {

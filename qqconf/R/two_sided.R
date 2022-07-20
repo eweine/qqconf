@@ -451,7 +451,7 @@ get_bounds_two_sided <- function(alpha,
 
 }
 
-#' Create QQ or PP Plot Testing Bounds
+#' Create QQ or PP Plot Testing Bands
 #'
 #' Flexible interface for creating testing bounds for Quantile-Quantile (QQ) or
 #' Probability-Probability (PP) plots.
@@ -488,7 +488,7 @@ get_bounds_two_sided <- function(alpha,
 #' @param ell_params (optional) list of optional parameters for \code{get_bounds_two_sided}
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
 #'   is set to \code{"ell"}
-#' @param method (optional) method for creating testing bands. The default,
+#' @param bands_method (optional) method for creating testing bands. The default,
 #' \code{"ell"} uses the equal local levels method
 #' (see \code{get_bounds_two_sided} for more information). \code{"ks"} uses
 #' the Kolmogorov-Smirnov test. \code{"pointwise"} uses pointwise bands (see
@@ -496,6 +496,14 @@ get_bounds_two_sided <- function(alpha,
 #' is recommended.
 #' @param band_type (optional) string specifying if the bands should be created
 #' for a Quantile-Quantile (QQ) plot or a Probability-Probability (PP) plot.
+#' @param exp_pts_method (optional) method used to get expected points for QQ or PP plot.
+#' Setting this parameter to \code{"normal"} (recommended for a normal QQ plot)
+#' will return \code{ppoints(n)}, which is what most other plotting softwares
+#' use. Setting this parameter to \code{"uniform"} (recommended for a uniform QQ plot)
+#' will return \code{ppoints(n, a=0)}. Finally, setting this parameter to
+#' \code{"median"} (recommended for all other distributions)
+#' will return \code{qbeta(.5, c(1:n), c(n:1))}. The default setting, \code{"best_available"}
+#' will return the expected points as recommended above.
 #'
 #' @return A list with components
 #' \itemize{
@@ -515,26 +523,27 @@ get_bounds_two_sided <- function(alpha,
 #' @examples
 #'
 #' # Get ell level .05 QQ testing bounds for normal(0, 1) distribution with 100 observations
-#' bounds <- get_qq_bounds(n = 100)
+#' bands <- get_qq_bands(n = 100)
 #'
 #' # Get ell level .05 QQ testing bounds for normal distribution with unknown parameters
 #' obs <- rnorm(100)
-#' bounds <- get_qq_bounds(obs = obs)
+#' bands <- get_qq_bands(obs = obs)
 #'
 #' # Get ell level .05 PP testing bounds for t(2) distribution with 100 observations
-#' bounds <- get_qq_bounds(
+#' bands <- get_qq_bands(
 #'   n = 100, distribution = pt, dparams = list(df = 1), band_type = 'pp'
 #' )
 #'
-get_qq_bounds <- function(
+get_qq_bands <- function(
   n,
   obs,
   alpha = .05,
   distribution = qnorm,
   dparams = list(),
   ell_params = list(),
-  method = c("ell", "ks", "pointwise"),
-  band_type = c("qq", "pp")
+  bands_method = c("ell", "ks", "pointwise"),
+  band_type = c("qq", "pp"),
+  exp_pts_method = c("best_available", "normal", "uniform", "median")
 ) {
 
   if (missing(obs) && missing(n)) {
@@ -559,14 +568,14 @@ get_qq_bounds <- function(
 
   }
 
-  method <- match.arg(method)
+  bands_method <- match.arg(bands_method)
+  exp_pts_method <- match.arg(exp_pts_method)
+  dist_name <- as.character(substitute(distribution))
 
   if(!missing(obs)) {
 
     n <- length(obs)
     if (length(dparams) == 0) {
-
-      dist_name <- as.character(substitute(distribution))
 
       if (dist_name %in% c("qunif", "punif")) {
 
@@ -586,12 +595,32 @@ get_qq_bounds <- function(
 
   }
 
+  if (exp_pts_method == "best_available") {
+
+    exp_pts_method <- get_best_available_exp_pts_method(dist_name)
+
+  }
+
+  if (exp_pts_method == "uniform") {
+
+    raw_exp_pts <- ppoints(n, a=0)
+
+  } else if (exp_pts_method == "normal") {
+
+    raw_exp_pts <- ppoints(n)
+
+  } else if (exp_pts_method == "median") {
+
+    raw_exp_pts <- qbeta(.5, c(1:n), c(n:1))
+
+  }
+
   if (band_type == "qq") {
 
     tryCatch(
       expr = {
 
-        exp_pts <- do.call(distribution, c(list(p=ppoints(n, a=0)), dparams))
+        exp_pts <- do.call(distribution, c(list(p=raw_exp_pts), dparams))
 
       },
       error = function(e){
@@ -603,12 +632,12 @@ get_qq_bounds <- function(
 
   } else if (band_type == "pp") {
 
-    exp_pts <- ppoints(n, a=0)
+    exp_pts <- raw_exp_pts
 
   }
 
 
-  if (method == "ell") {
+  if (bands_method == "ell") {
 
     ell_params["n"] <- n
     ell_params["alpha"] <- alpha
@@ -616,14 +645,14 @@ get_qq_bounds <- function(
     lower_bound <- ell_bounds$lower_bound
     upper_bound <- ell_bounds$upper_bound
 
-  } else if (method == "ks") {
+  } else if (bands_method == "ks") {
 
     probs <- ppoints(n)
     epsilon <- sqrt((1 / (2 * n)) * log(2 / alpha))
     lower_bound <- pmax(probs - epsilon, rep(0, n))
     upper_bound <- pmin(probs + epsilon, rep(1, n))
 
-  } else if (method == "pointwise") {
+  } else if (bands_method == "pointwise") {
 
     conf.int <- 1 - alpha
     conf <- c(alpha / 2, conf.int + alpha / 2)
