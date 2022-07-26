@@ -137,7 +137,7 @@ estimate_params_from_data <- function(distr_name, obs) {
 
 }
 
-#' Get Best Available Method for Expected Points
+#' Get Best Available Method for Probability Points
 #'
 #' Determines name of best method for obtaining expected points for a qq or pp
 #' plot.
@@ -146,7 +146,7 @@ estimate_params_from_data <- function(distr_name, obs) {
 #'
 #' @return character name of best expected points method
 #'
-get_best_available_exp_pts_method <- function(dist_name) {
+get_best_available_prob_pts_method <- function(dist_name) {
 
   if (dist_name %in% c("qunif", "punif")) {
 
@@ -200,5 +200,18 @@ get_extended_quantile <- function(exp_pts_method, n) {
       high_pt = high_pt
     )
   )
+
+}
+
+#' Get Quantile Distribution from Probability Distribution
+#'
+#' @param dname probability distribution (e.g. \code{pnorm})
+#'
+#' @return quantile distribution (e.g. \code{qnorm}).
+#'
+get_qq_distribution_from_pp_distribution <- function(dname) {
+
+  dname_no_p <- substr(dname, 2, nchar(dname))
+  eval(parse(text = paste0("q", dname_no_p)))
 
 }

@@ -144,9 +144,9 @@ pp_conf_plot <- function(obs,
     dots <- within(dots, rm(xlab))
   }
 
-  samp.size <- length(obs)
-  conf.int <- 1 - alpha
-  conf <- c(alpha / 2, conf.int + alpha / 2)
+  samp_size <- length(obs)
+  conf_int <- 1 - alpha
+  conf <- c(alpha / 2, conf_int + alpha / 2)
   ## The observed and expected probabilities. Expected probabilities are based on the specified
   ## distribution
   # constant for visual expansion of confidence regions
@@ -166,77 +166,80 @@ pp_conf_plot <- function(obs,
 
   }
 
-  exp_pts_method <- get_best_available_exp_pts_method(dist_name)
+  prob_pts_method <- get_best_available_prob_pts_method(dist_name)
 
-  global.bounds <- get_qq_bands(
-    obs = obs,
-    alpha = alpha,
-    distribution = distribution,
-    dparams = dparams,
-    ell_params = bounds_params,
-    bands_method = method,
-    band_type = "pp",
-    exp_pts_method = exp_pts_method
+  qq_distribution <- get_qq_distribution_from_pp_distribution(
+    as.character(substitute(distribution))
   )
 
-  global.low <- global.bounds$lower_bound
-  global.high <- global.bounds$upper_bound
+  global_bounds_qq <- get_qq_band(
+    obs = obs,
+    alpha = alpha,
+    distribution = qq_distribution,
+    dparams = dparams,
+    ell_params = bounds_params,
+    band_method = method,
+    prob_pts_method = prob_pts_method
+  )
 
-  exp.pts <- global.bounds$expected_value
+  global_low <- do.call(distribution, c(list(q=global_bounds_qq$lower_bound), dparams))
+  global_high <- do.call(distribution, c(list(q=global_bounds_qq$upper_bound), dparams))
 
-  obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
+  exp_pts <- do.call(distribution, c(list(q=global_bounds_qq$expected_value), dparams))
 
-  ext_quantile <- get_extended_quantile(exp_pts_method, samp.size)
+  obs_pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
+
+  ext_quantile <- get_extended_quantile(prob_pts_method, samp_size)
 
   if (log10 == TRUE && right_tail == TRUE) {
 
-    exp.pts <- -log10(1 - exp.pts)
-    low_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp.pts[samp.size]
-    obs.pts <- -log10(1 - obs.pts)
+    exp_pts <- -log10(1 - exp_pts)
+    low_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp_pts[samp_size]
+    obs_pts <- -log10(1 - obs_pts)
 
   }
   else if (log10 == TRUE) {
 
-    exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp.pts[samp.size]
-    obs.pts <- -log10(obs.pts)
+    exp_pts <- -log10(exp_pts)
+    low_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp_pts[samp_size]
+    obs_pts <- -log10(obs_pts)
 
   }
   else {
 
-    low_exp_pt <- c * (ext_quantile$low_pt) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * (ext_quantile$high_pt) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * (ext_quantile$low_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * (ext_quantile$high_pt) + (1 - c) * exp_pts[samp_size]
 
   }
   if (difference) {
-    y.pts <- obs.pts - exp.pts
+    y_pts <- obs_pts - exp_pts
   } else {
-    y.pts <- obs.pts
+    y_pts <- obs_pts
   }
 
   ## When not adding points to a pp-plot compute pointwise and global confidence bounds.
   if (!add) {
-    left <- exp.pts[1]
-    right <- exp.pts[samp.size]
-    bottom <- min(y.pts) #obs.pts[1]
-    top <- max(y.pts) #obs.pts[samp.size]
+    left <- exp_pts[1]
+    right <- exp_pts[samp_size]
+    bottom <- min(y_pts) #obs_pts[1]
+    top <- max(y_pts) #obs_pts[samp_size]
     do.call(plot, c(list(x=c(left, right), y=c(bottom, top), type='n', xlab=xlab, ylab=ylab), dots))
 
-    pointwise.low <- qbeta(conf[1], 1:samp.size, samp.size:1)
-    pointwise.high <- qbeta(conf[2], 1:samp.size, samp.size:1)
+    pointwise_low <- qbeta(conf[1], 1:samp_size, samp_size:1)
+    pointwise_high <- qbeta(conf[2], 1:samp_size, samp_size:1)
 
     if (log10 == TRUE && right_tail == TRUE) {
-      pointwise.low <- -log10(1 - pointwise.low)
-      pointwise.high <- -log10(1 - pointwise.high)
-      global.low <- -log10(1 - global.low)
-      global.high <- -log10(1 - global.high)
+      pointwise_low <- -log10(1 - pointwise_low)
+      pointwise_high <- -log10(1 - pointwise_high)
+      global_low <- -log10(1 - global_low)
+      global_high <- -log10(1 - global_high)
     } else if (log10 == TRUE) {
-      pointwise.low <- -log10(pointwise.low)
-      pointwise.high <- -log10(pointwise.high)
-      global.low <- -log10(global.low)
-      global.high <- -log10(global.high)
+      pointwise_low <- -log10(pointwise_low)
+      pointwise_high <- -log10(pointwise_high)
+      global_low <- -log10(global_low)
+      global_high <- -log10(global_high)
     }
 
     if ("ylim" %in% names(dots)) {
@@ -246,76 +249,76 @@ pp_conf_plot <- function(obs,
 
     } else {
 
-      global.low_temp <- global.low[is.finite(global.low)]
-      global.high_temp <- global.high[is.finite(global.high)]
-      bottom <- min(global.low_temp) - 1000
-      top <- max(global.high_temp) + 1000
+      global_low_temp <- global_low[is.finite(global_low)]
+      global_high_temp <- global_high[is.finite(global_high)]
+      bottom <- min(global_low_temp) - 1000
+      top <- max(global_high_temp) + 1000
 
     }
 
     if (difference) {
 
-      low_global_diff <- global.low - exp.pts
-      low_global_diff <- c(low_global_diff[1], low_global_diff, low_global_diff[samp.size])
-      high_global_diff <- global.high - exp.pts
-      high_global_diff <- c(high_global_diff[1], high_global_diff, high_global_diff[samp.size])
-      low_pointwise_diff <- pointwise.low - exp.pts
-      low_pointwise_diff <- c(low_pointwise_diff[1], low_pointwise_diff, low_pointwise_diff[samp.size])
-      high_pointwise_diff <- pointwise.high - exp.pts
-      high_pointwise_diff <- c(high_pointwise_diff[1], high_pointwise_diff, high_pointwise_diff[samp.size])
-      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      low_global_diff <- global_low - exp_pts
+      low_global_diff <- c(low_global_diff[1], low_global_diff, low_global_diff[samp_size])
+      high_global_diff <- global_high - exp_pts
+      high_global_diff <- c(high_global_diff[1], high_global_diff, high_global_diff[samp_size])
+      low_pointwise_diff <- pointwise_low - exp_pts
+      low_pointwise_diff <- c(low_pointwise_diff[1], low_pointwise_diff, low_pointwise_diff[samp_size])
+      high_pointwise_diff <- pointwise_high - exp_pts
+      high_pointwise_diff <- c(high_pointwise_diff[1], high_pointwise_diff, high_pointwise_diff[samp_size])
+      exp_pts <- c(low_exp_pt, exp_pts, high_exp_pt)
 
       do.call(
         polygon,
-        c(list(x = c(exp.pts, rev(exp.pts)),
+        c(list(x = c(exp_pts, rev(exp_pts)),
                y = pmin(pmax(c(low_global_diff, rev(high_global_diff)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
 
-        do.call(lines, c(list(x = exp.pts, y = low_pointwise_diff), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = high_pointwise_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = low_pointwise_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = high_pointwise_diff), pointwise_lines_params))
 
       }
 
     } else {
 
       # code to extend region for visibility
-      global.low <- c(global.low[1], global.low, global.low[samp.size])
-      global.high <- c(global.high[1], global.high, global.high[samp.size])
-      pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
-      pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
-      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      global_low <- c(global_low[1], global_low, global_low[samp_size])
+      global_high <- c(global_high[1], global_high, global_high[samp_size])
+      pointwise_low <- c(pointwise_low[1], pointwise_low, pointwise_low[samp_size])
+      pointwise_high <- c(pointwise_high[1], pointwise_high, pointwise_high[samp_size])
+      exp_pts <- c(low_exp_pt, exp_pts, high_exp_pt)
 
       do.call(
         polygon,
-        c(list(x = c(exp.pts, rev(exp.pts)),
-               y = pmin(pmax(c(global.low, rev(global.high)), bottom), top)),
+        c(list(x = c(exp_pts, rev(exp_pts)),
+               y = pmin(pmax(c(global_low, rev(global_high)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
 
-        do.call(lines, c(list(x = exp.pts, y = pointwise.low), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = pointwise.high), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = pointwise_low), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = pointwise_high), pointwise_lines_params))
 
       }
 
     }
 
-    do.call(points, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts), points_params))
+    do.call(points, c(list(x = exp_pts[2:(samp_size + 1)], y = y_pts), points_params))
 
   } else {
 
-    do.call(points, c(list(x = exp.pts, y = y.pts), points_params))
+    do.call(points, c(list(x = exp_pts, y = y_pts), points_params))
 
   }
   if (difference) {
 
-    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(0, 0)), line_params))
+    do.call(lines, c(list(x = c(min(exp_pts), max(exp_pts)), y = c(0, 0)), line_params))
 
   } else{
 
-    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(min(exp.pts), max(exp.pts))), line_params))
+    do.call(lines, c(list(x = c(min(exp_pts), max(exp_pts)), y = c(min(exp_pts), max(exp_pts))), line_params))
 
   }
 

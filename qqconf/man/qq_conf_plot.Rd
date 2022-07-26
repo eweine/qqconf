@@ -26,7 +26,7 @@ qq_conf_plot(
 \arguments{
 \item{obs}{The observed data.}
 
-\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
+\item{distribution}{The quantile function for the specified distribution. Defaults to \code{qnorm}.
 Custom distributions are allowed as long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise

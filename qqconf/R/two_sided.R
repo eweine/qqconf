@@ -451,68 +451,78 @@ get_bounds_two_sided <- function(alpha,
 
 }
 
-#' Create QQ or PP Plot Testing Bands
+#' Create QQ Plot Testing Band
 #'
-#' Flexible interface for creating testing bounds for Quantile-Quantile (QQ) or
-#' Probability-Probability (PP) plots.
+#' Flexible interface for creating a testing band for a Quantile-Quantile (QQ)
+#' plot.
 #'
 #' @param n,obs either a number of observations (specified by setting \code{n}),
 #' or a numeric vector of observations (specified by setting \code{obs}). One
-#' argument must be specified. In principle, if all parameters \code{distribution}
-#' are known, then testing bands only depend on the number of observations \code{n}.
+#' argument must be specified. If all parameters \code{distribution}
+#' are known, then the testing band only depends on the number of observations \code{n}.
 #' Thus, providing \code{n} is simpler when all parameters
 #' of \code{distribution} are known and specified via \code{dparams}
 #' (or when using all default parameter choices of \code{distribution} is desired).
 #' If estimating parameters from the data is preferred, \code{obs} should be
-#' specified and estimation will take place.
-#' @param alpha (optional) desired significance level of the testing bands. If \code{method}
+#' specified and estimation will take place as described in the documentation for
+#' argument \code{dparams}.
+#' @param alpha (optional) desired significance level of the testing band. If \code{method}
 #' is set to \code{"ell"} or \code{"ks"}, then this is the global significance
-#' of the testing bands. If \code{method} is set to \code{"pointwise"}, then
-#' the bands are equivalent to simply conducting a test on each order statistic
-#' with Type I error \code{alpha}. Pointwise bands will generally have much
+#' level of the testing band. If \code{method} is set to \code{"pointwise"}, then
+#' the band is equivalent to simply conducting a level \code{alpha} test on each
+#' order statistic individually. Pointwise bands will generally have much
 #' larger global Type I error than \code{alpha}. Defaults to \code{.05}.
-#' @param distribution (optional) either a quantile function (e.g. \code{qnorm}) for
-#' constructing bands on a QQ-plot or a probability function (e.g. \code{pnorm})
-#' for constructing bands on a PP-plot. \code{band_type} must be set
-#' appropriately. Defaults to \code{qnorm} for a normal distribution.
+#' @param distribution The quantile function for the specified distribution.
+#' Defaults to \code{qnorm}, which is appropriate for testing the normality
+#' ob observations in a QQ plot.
 #' @param dparams (optional)  List of additional parameters for the \code{distribution} function
-#'   (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
-#'   on the unspecified parameters, and instead they will take on the default values set by the distribution function.
-#'   For the uniform distribution, parameter estimation is not performed, and
-#'   the default parameters are max = 1 and min = 0.
-#'   For other distributions parameters will be estimated if not provided.
+#'   (e.g. df=1). If \code{obs} is not specified and this argument is left blank,
+#'   the default arguments of \code{distribution} are used. If \code{obs} is specified and this argument is left blank,
+#'   parameters are estimated from the data (except if \code{distribution} is set to \code{qunif},
+#'   in which case no estimation occurs and the default parameters are \code{max = 1} and \code{min = 0}).
 #'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
-#'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
-#'   parameters of the distribution must be provided by the user.
+#'   the code uses MLE to estimate the parameters. Note that if any parameters of the distribution are specified
+#'   in \code{dparams}, parameter estimation will not be performed
+#'   on the unspecified parameters, and instead they will take on the default values
+#'   set by \code{distribution}.
 #' @param ell_params (optional) list of optional parameters for \code{get_bounds_two_sided}
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
 #'   is set to \code{"ell"}
-#' @param bands_method (optional) method for creating testing bands. The default,
+#' @param band_method (optional) method for creating the testing band. The default,
 #' \code{"ell"} uses the equal local levels method
 #' (see \code{get_bounds_two_sided} for more information). \code{"ks"} uses
-#' the Kolmogorov-Smirnov test. \code{"pointwise"} uses pointwise bands (see
-#' documentation for parameter \code{alpha} for more information). \code{"ell"}
-#' is recommended.
-#' @param band_type (optional) string specifying if the bands should be created
-#' for a Quantile-Quantile (QQ) plot or a Probability-Probability (PP) plot.
-#' @param exp_pts_method (optional) method used to get expected points for QQ or PP plot.
+#' the Kolmogorov-Smirnov test. \code{"pointwise"} uses a pointwise band (see
+#' documentation for argument \code{alpha} for more information). \code{"ell"}
+#' is recommended and is the default.
+#' @param prob_pts_method (optional) method used to get probability points for use in a QQ plot.
 #' Setting this parameter to \code{"normal"} (recommended for a normal QQ plot)
-#' will return \code{ppoints(n)}, which is what most other plotting softwares
-#' use. Setting this parameter to \code{"uniform"} (recommended for a uniform QQ plot)
-#' will return \code{ppoints(n, a=0)}. Finally, setting this parameter to
+#' will return \code{ppoints(n)}, which is what most other plotting software
+#' uses. Setting this parameter to \code{"uniform"} (recommended for a uniform QQ plot)
+#' will return \code{ppoints(n, a=0)}, which are the expected values of the
+#' order statistics of a Uniform(0, 1). Finally, setting this parameter to
 #' \code{"median"} (recommended for all other distributions)
 #' will return \code{qbeta(.5, c(1:n), c(n:1))}. The default setting, \code{"best_available"}
-#' will return the expected points as recommended above.
+#' will return the probability points as recommended above. Note that
+#' \code{"median"} is suitable for all distributions and is particularly recommended
+#' when \code{alpha} is large.
 #'
 #' @return A list with components
 #' \itemize{
 #'   \item lower_bound - Numeric vector of length \code{n} containing the lower bounds
 #'   for the acceptance regions of the test corresponding to each order statistic.
+#'   These form the lower boundary of the testing band for the QQ-plot.
 #'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
 #'   for the acceptance regions of the test corresponding to each order statistic.
-#'   \item expected_value - Numeric vector of length \code{n} containing the expectation of each order statistic.
-#'   These are the x-coordinates for the bounds if used in a qq-plot or pp-plot.
+#'   These form the upper boundary of the testing band for the QQ-plot.
+#'   \item expected_value - Numeric vector of length \code{n} containing the
+#'   exact or approximate expectation (or median) of each order statistic, depending on how
+#'   \code{prob_pts_method} is set.
+#'   These are the x-coordinates for the bounds if used in a qq-plot. Note that
+#'   if adding a band to an already existing plot, it is essential that the same
+#'   x-coordinates be used for the bounds as were used to plot the data. Thus,
+#'   the x-coordinates should always be used instead of this vector if they
+#'   are available.
 #'   \item dparams - List of parameters used to apply \code{distribution} to
 #'   \code{obs} (if observations are provided). If the user provides parameters,
 #'   then these parameters will simply be returned. If parameters are estimated
@@ -522,28 +532,27 @@ get_bounds_two_sided <- function(alpha,
 #'
 #' @examples
 #'
-#' # Get ell level .05 QQ testing bounds for normal(0, 1) distribution with 100 observations
-#' bands <- get_qq_bands(n = 100)
+#' # Get ell level .05 QQ testing band for normal(0, 1) distribution with 100 observations
+#' bands <- get_qq_band(n = 100)
 #'
-#' # Get ell level .05 QQ testing bounds for normal distribution with unknown parameters
+#' # Get ell level .05 QQ testing band for normal distribution with unknown parameters
 #' obs <- rnorm(100)
-#' bands <- get_qq_bands(obs = obs)
+#' bands <- get_qq_band(obs = obs)
 #'
-#' # Get ell level .05 PP testing bounds for t(2) distribution with 100 observations
-#' bands <- get_qq_bands(
-#'   n = 100, distribution = pt, dparams = list(df = 1), band_type = 'pp'
+#' # Get ell level .05 QQ testing band for t(2) distribution with 100 observations
+#' bands <- get_qq_band(
+#'   n = 100, distribution = qt, dparams = list(df = 1)
 #' )
 #'
-get_qq_bands <- function(
+get_qq_band <- function(
   n,
   obs,
   alpha = .05,
   distribution = qnorm,
   dparams = list(),
   ell_params = list(),
-  bands_method = c("ell", "ks", "pointwise"),
-  band_type = c("qq", "pp"),
-  exp_pts_method = c("best_available", "normal", "uniform", "median")
+  band_method = c("ell", "ks", "pointwise"),
+  prob_pts_method = c("best_available", "normal", "uniform", "median")
 ) {
 
   if (missing(obs) && missing(n)) {
@@ -552,24 +561,14 @@ get_qq_bands <- function(
 
   }
 
-  band_type <- match.arg(band_type)
+  if (!("p" %in% names(formals(distribution)))) {
 
-  if (band_type == "qq" && !("p" %in% names(formals(distribution)))) {
-
-    stop("distribution function must take 'p' as an argument when band_type is 'qq'.
-         Did you mean to set band_type to 'pp'?")
+    stop("distribution function must take 'p' as an argument.")
 
   }
 
-  if (band_type == "pp" && !("q" %in% names(formals(distribution)))) {
-
-    stop("distribution function must take 'q' as an argument when band_type is 'pp'.
-         Did you mean to set band_type to 'qq'?")
-
-  }
-
-  bands_method <- match.arg(bands_method)
-  exp_pts_method <- match.arg(exp_pts_method)
+  band_method <- match.arg(band_method)
+  prob_pts_method <- match.arg(prob_pts_method)
   dist_name <- as.character(substitute(distribution))
 
   if(!missing(obs)) {
@@ -586,7 +585,7 @@ get_qq_bands <- function(
       else {
 
         cat("no dparams supplied. Estimating parameters from the data...\n")
-        MASS_name <- get_mass_name_from_distr(dist_name, band_type)
+        MASS_name <- get_mass_name_from_distr(dist_name, "qq")
         dparams <- estimate_params_from_data(MASS_name, obs)
 
       }
@@ -595,49 +594,40 @@ get_qq_bands <- function(
 
   }
 
-  if (exp_pts_method == "best_available") {
+  if (prob_pts_method == "best_available") {
 
-    exp_pts_method <- get_best_available_exp_pts_method(dist_name)
+    prob_pts_method <- get_best_available_prob_pts_method(dist_name)
 
   }
 
-  if (exp_pts_method == "uniform") {
+  if (prob_pts_method == "uniform") {
 
     raw_exp_pts <- ppoints(n, a=0)
 
-  } else if (exp_pts_method == "normal") {
+  } else if (prob_pts_method == "normal") {
 
     raw_exp_pts <- ppoints(n)
 
-  } else if (exp_pts_method == "median") {
+  } else if (prob_pts_method == "median") {
 
     raw_exp_pts <- qbeta(.5, c(1:n), c(n:1))
 
   }
 
-  if (band_type == "qq") {
+  tryCatch(
+    expr = {
 
-    tryCatch(
-      expr = {
+      exp_pts <- do.call(distribution, c(list(p=raw_exp_pts), dparams))
 
-        exp_pts <- do.call(distribution, c(list(p=raw_exp_pts), dparams))
+    },
+    error = function(e){
+      message('Error applying distribution to calculated bounds.')
+      message('Did you specify all necessary parameter of distribution?')
+      message(e)
+    }
+  )
 
-      },
-      error = function(e){
-        message('Error applying distribution to calculated bounds.')
-        message('Did you specify all necessary parameter of distribution?')
-        message(e)
-      }
-    )
-
-  } else if (band_type == "pp") {
-
-    exp_pts <- raw_exp_pts
-
-  }
-
-
-  if (bands_method == "ell") {
+  if (band_method == "ell") {
 
     ell_params["n"] <- n
     ell_params["alpha"] <- alpha
@@ -645,14 +635,14 @@ get_qq_bands <- function(
     lower_bound <- ell_bounds$lower_bound
     upper_bound <- ell_bounds$upper_bound
 
-  } else if (bands_method == "ks") {
+  } else if (band_method == "ks") {
 
     probs <- ppoints(n)
     epsilon <- sqrt((1 / (2 * n)) * log(2 / alpha))
     lower_bound <- pmax(probs - epsilon, rep(0, n))
     upper_bound <- pmin(probs + epsilon, rep(1, n))
 
-  } else if (bands_method == "pointwise") {
+  } else if (band_method == "pointwise") {
 
     conf.int <- 1 - alpha
     conf <- c(alpha / 2, conf.int + alpha / 2)
@@ -661,12 +651,8 @@ get_qq_bands <- function(
 
   }
 
-  if (band_type == "qq") {
-
-    lower_bound <- do.call(distribution, c(list(p = lower_bound), dparams))
-    upper_bound <- do.call(distribution, c(list(p = upper_bound), dparams))
-
-  }
+  lower_bound <- do.call(distribution, c(list(p = lower_bound), dparams))
+  upper_bound <- do.call(distribution, c(list(p = upper_bound), dparams))
 
   return(
     list(
