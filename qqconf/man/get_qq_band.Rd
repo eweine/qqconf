@@ -18,7 +18,7 @@ get_qq_band(
 \arguments{
 \item{n, obs}{either a number of observations (specified by setting \code{n}),
 or a numeric vector of observations (specified by setting \code{obs}). One
-argument must be specified. If all parameters \code{distribution}
+argument must be specified. If all parameters of \code{distribution}
 are known, then the testing band only depends on the number of observations \code{n}.
 Thus, providing \code{n} is simpler when all parameters
 of \code{distribution} are known and specified via \code{dparams}
@@ -35,8 +35,8 @@ order statistic individually. Pointwise bands will generally have much
 larger global Type I error than \code{alpha}. Defaults to \code{.05}.}
 
 \item{distribution}{The quantile function for the specified distribution.
-Defaults to \code{qnorm}, which is appropriate for testing the normality
-ob observations in a QQ plot.}
+Defaults to \code{qnorm}, which is appropriate for testing normality
+of the observations in a QQ plot.}
 
 \item{dparams}{(optional)  List of additional parameters for the \code{distribution} function
 (e.g. df=1). If \code{obs} is not specified and this argument is left blank,
@@ -63,12 +63,16 @@ is recommended and is the default.}
 
 \item{prob_pts_method}{(optional) method used to get probability points for use in a QQ plot.
 Setting this parameter to \code{"normal"} (recommended for a normal QQ plot)
-will return \code{ppoints(n)}, which is what most other plotting software
+will return \code{ppoints(n)} transformed under \code{distribution}
+(e.g. \code{qnorm(ppoints(n))} for a \eqn{N(0,1)}),
+which is what most other plotting software
 uses. Setting this parameter to \code{"uniform"} (recommended for a uniform QQ plot)
-will return \code{ppoints(n, a=0)}, which are the expected values of the
+will return \code{ppoints(n, a=0)} transformed under \code{distribution},
+which are the expected values of the
 order statistics of a Uniform(0, 1). Finally, setting this parameter to
 \code{"median"} (recommended for all other distributions)
-will return \code{qbeta(.5, c(1:n), c(n:1))}. The default setting, \code{"best_available"}
+will return \code{qbeta(.5, c(1:n), c(n:1))} tranformed under \code{distribution}.
+ The default setting, \code{"best_available"}
 will return the probability points as recommended above. Note that
 \code{"median"} is suitable for all distributions and is particularly recommended
 when \code{alpha} is large.}
@@ -85,11 +89,12 @@ A list with components
   \item expected_value - Numeric vector of length \code{n} containing the
   exact or approximate expectation (or median) of each order statistic, depending on how
   \code{prob_pts_method} is set.
-  These are the x-coordinates for the bounds if used in a qq-plot. Note that
+  These are the x-coordinates for both the bounds and the data points
+  if used in a qq-plot. Note that
   if adding a band to an already existing plot, it is essential that the same
   x-coordinates be used for the bounds as were used to plot the data. Thus,
-  the x-coordinates should always be used instead of this vector if they
-  are available.
+  if some other x-coordinates have been used to plot the data those same
+  x-coordinates should always be used instead of this vector to plot the bounds.
   \item dparams - List of parameters used to apply \code{distribution} to
   \code{obs} (if observations are provided). If the user provides parameters,
   then these parameters will simply be returned. If parameters are estimated
@@ -103,15 +108,15 @@ plot.
 \examples{
 
 # Get ell level .05 QQ testing band for normal(0, 1) distribution with 100 observations
-bands <- get_qq_band(n = 100)
+band <- get_qq_band(n = 100)
 
 # Get ell level .05 QQ testing band for normal distribution with unknown parameters
 obs <- rnorm(100)
-bands <- get_qq_band(obs = obs)
+band <- get_qq_band(obs = obs)
 
 # Get ell level .05 QQ testing band for t(2) distribution with 100 observations
-bands <- get_qq_band(
-  n = 100, distribution = qt, dparams = list(df = 1)
+band <- get_qq_band(
+  n = 100, distribution = qt, dparams = list(df = 2)
 )
 
 }

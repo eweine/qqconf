@@ -20,6 +20,7 @@ pp_conf_plot(
   pointwise_lines_params = list(),
   points_params = list(),
   polygon_params = list(border = NA, col = "gray"),
+  prob_pts_method = c("best_available", "normal", "uniform", "median"),
   ...
 )
 }
@@ -75,6 +76,22 @@ set to TRUE.}
 
 \item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
 By default \code{border} is set to NA and \code{col} is set to grey.}
+
+\item{prob_pts_method}{(optional) method used to get probability points.
+Setting this parameter to \code{"normal"} (recommended for a normal PP plot)
+will return \code{ppoints(n)} transformed under \code{distribution}
+(e.g. \code{qnorm(ppoints(n))} for a \eqn{N(0,1)}),
+which is what most other plotting software
+uses. Setting this parameter to \code{"uniform"} (recommended for a uniform PP plot)
+will return \code{ppoints(n, a=0)} transformed under \code{distribution},
+which are the expected values of the
+order statistics of a Uniform(0, 1). Finally, setting this parameter to
+\code{"median"} (recommended for all other distributions)
+will return \code{qbeta(.5, c(1:n), c(n:1))} tranformed under \code{distribution}.
+ The default setting, \code{"best_available"}
+will return the probability points as recommended above. Note that
+\code{"median"} is suitable for all distributions and is particularly recommended
+when \code{alpha} is large.}
 
 \item{...}{Additional parameters passed to the plot function.}
 }
