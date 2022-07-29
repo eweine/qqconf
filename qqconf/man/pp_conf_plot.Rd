@@ -77,21 +77,18 @@ set to TRUE.}
 \item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
 By default \code{border} is set to NA and \code{col} is set to grey.}
 
-\item{prob_pts_method}{(optional) method used to get probability points.
-Setting this parameter to \code{"normal"} (recommended for a normal PP plot)
-will return \code{ppoints(n)} transformed under \code{distribution}
-(e.g. \code{qnorm(ppoints(n))} for a \eqn{N(0,1)}),
-which is what most other plotting software
-uses. Setting this parameter to \code{"uniform"} (recommended for a uniform PP plot)
-will return \code{ppoints(n, a=0)} transformed under \code{distribution},
-which are the expected values of the
-order statistics of a Uniform(0, 1). Finally, setting this parameter to
-\code{"median"} (recommended for all other distributions)
-will return \code{qbeta(.5, c(1:n), c(n:1))} tranformed under \code{distribution}.
- The default setting, \code{"best_available"}
-will return the probability points as recommended above. Note that
-\code{"median"} is suitable for all distributions and is particularly recommended
-when \code{alpha} is large.}
+\item{prob_pts_method}{(optional) method used to get probability points for
+plotting. The quantile function will be applied to these points to
+get the expected values.  When this parameter is set to \code{"normal"}
+(recommended for a normal QQ plot) \code{ppoints(n)} will be used,  which is what
+most other plotting software uses. When this parameter is set to \code{"uniform"}
+(recommended for a uniform QQ plot) \code{ppoints(n, a=0)}, which are the expected
+values of the order statistics of a Uniform(0, 1), will be used.  Finally,
+ when this parameter is set to \code{"median"} (recommended for all other
+ distributions) \code{qbeta(.5, c(1:n), c(n:1))} will be used. Under the default
+ setting, \code{"best_available"}, the probability points as recommended above will
+ be used. Note that \code{"median"} is suitable for all distributions and is
+ particularly recommended when alpha is large.}
 
 \item{...}{Additional parameters passed to the plot function.}
 }
