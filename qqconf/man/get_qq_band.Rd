@@ -38,7 +38,7 @@ larger global Type I error than \code{alpha}. Defaults to \code{.05}.}
 Defaults to \code{qnorm}, which is appropriate for testing normality
 of the observations in a QQ plot.}
 
-\item{dparams}{(optional)  List of additional parameters for the \code{distribution} function
+\item{dparams}{(optional)  List of additional arguments for the \code{distribution} function
 (e.g. df=1). If \code{obs} is not specified and this argument is left blank,
 the default arguments of \code{distribution} are used. If \code{obs} is specified and this argument is left blank,
 parameters are estimated from the data (except if \code{distribution} is set to \code{qunif},
@@ -50,7 +50,7 @@ in \code{dparams}, parameter estimation will not be performed
 on the unspecified parameters, and instead they will take on the default values
 set by \code{distribution}.}
 
-\item{ell_params}{(optional) list of optional parameters for \code{get_bounds_two_sided}
+\item{ell_params}{(optional) list of optional arguments for \code{get_bounds_two_sided}
 (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
 is set to \code{"ell"}}
 
@@ -63,12 +63,12 @@ is recommended and is the default.}
 
 \item{prob_pts_method}{(optional) method used to get probability points for
 use in a QQ plot. The quantile function will be applied to these points to
-get the expected values.  When this parameter is set to \code{"normal"}
+get the expected values.  When this argument is set to \code{"normal"}
 (recommended for a normal QQ plot) \code{ppoints(n)} will be used,  which is what
-most other plotting software uses. When this parameter is set to \code{"uniform"}
+most other plotting software uses. When this argument is set to \code{"uniform"}
 (recommended for a uniform QQ plot) \code{ppoints(n, a=0)}, which are the expected
-values of the order statistics of a Uniform(0, 1), will be used.  Finally,
- when this parameter is set to \code{"median"} (recommended for all other
+values of the order statistics of Uniform(0, 1), will be used.  Finally,
+ when this argument is set to \code{"median"} (recommended for all other
  distributions) \code{qbeta(.5, c(1:n), c(n:1))} will be used. Under the default
  setting, \code{"best_available"}, the probability points as recommended above will
  be used. Note that \code{"median"} is suitable for all distributions and is
@@ -92,7 +92,7 @@ A list with components
   x-coordinates be used for the bounds as were used to plot the data. Thus,
   if some other x-coordinates have been used to plot the data those same
   x-coordinates should always be used instead of this vector to plot the bounds.
-  \item dparams - List of parameters used to apply \code{distribution} to
+  \item dparams - List of arguments used to apply \code{distribution} to
   \code{obs} (if observations are provided). If the user provides parameters,
   then these parameters will simply be returned. If parameters are estimated
   from the data, then the estimated parameters will be returned.

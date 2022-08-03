@@ -221,7 +221,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' for a reasonable tolerance. Used only if \code{method} is set to
 #' "search" or if method is set to "best_available" and the best available
 #' method is a search.
-#' @param method (optional) Parameter indicating if the calculation should be done using a highly
+#' @param method (optional) Argument indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
 #' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 #' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
@@ -475,7 +475,7 @@ get_bounds_two_sided <- function(alpha,
 #' @param distribution The quantile function for the specified distribution.
 #' Defaults to \code{qnorm}, which is appropriate for testing normality
 #' of the observations in a QQ plot.
-#' @param dparams (optional)  List of additional parameters for the \code{distribution} function
+#' @param dparams (optional)  List of additional arguments for the \code{distribution} function
 #'   (e.g. df=1). If \code{obs} is not specified and this argument is left blank,
 #'   the default arguments of \code{distribution} are used. If \code{obs} is specified and this argument is left blank,
 #'   parameters are estimated from the data (except if \code{distribution} is set to \code{qunif},
@@ -486,7 +486,7 @@ get_bounds_two_sided <- function(alpha,
 #'   in \code{dparams}, parameter estimation will not be performed
 #'   on the unspecified parameters, and instead they will take on the default values
 #'   set by \code{distribution}.
-#' @param ell_params (optional) list of optional parameters for \code{get_bounds_two_sided}
+#' @param ell_params (optional) list of optional arguments for \code{get_bounds_two_sided}
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
 #'   is set to \code{"ell"}
 #' @param band_method (optional) method for creating the testing band. The default,
@@ -497,12 +497,12 @@ get_bounds_two_sided <- function(alpha,
 #' is recommended and is the default.
 #' @param prob_pts_method (optional) method used to get probability points for
 #' use in a QQ plot. The quantile function will be applied to these points to
-#' get the expected values.  When this parameter is set to \code{"normal"}
+#' get the expected values.  When this argument is set to \code{"normal"}
 #' (recommended for a normal QQ plot) \code{ppoints(n)} will be used,  which is what
-#' most other plotting software uses. When this parameter is set to \code{"uniform"}
+#' most other plotting software uses. When this argument is set to \code{"uniform"}
 #' (recommended for a uniform QQ plot) \code{ppoints(n, a=0)}, which are the expected
-#' values of the order statistics of a Uniform(0, 1), will be used.  Finally,
-#'  when this parameter is set to \code{"median"} (recommended for all other
+#' values of the order statistics of Uniform(0, 1), will be used.  Finally,
+#'  when this argument is set to \code{"median"} (recommended for all other
 #'  distributions) \code{qbeta(.5, c(1:n), c(n:1))} will be used. Under the default
 #'  setting, \code{"best_available"}, the probability points as recommended above will
 #'  be used. Note that \code{"median"} is suitable for all distributions and is
@@ -525,7 +525,7 @@ get_bounds_two_sided <- function(alpha,
 #'   x-coordinates be used for the bounds as were used to plot the data. Thus,
 #'   if some other x-coordinates have been used to plot the data those same
 #'   x-coordinates should always be used instead of this vector to plot the bounds.
-#'   \item dparams - List of parameters used to apply \code{distribution} to
+#'   \item dparams - List of arguments used to apply \code{distribution} to
 #'   \code{obs} (if observations are provided). If the user provides parameters,
 #'   then these parameters will simply be returned. If parameters are estimated
 #'   from the data, then the estimated parameters will be returned.

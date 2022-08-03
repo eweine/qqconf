@@ -28,7 +28,7 @@ for a reasonable tolerance. Used only if \code{method} is set to
 "search" or if method is set to "best_available" and the best available
 method is a search.}
 
-\item{method}{(optional) Parameter indicating if the calculation should be done using a highly
+\item{method}{(optional) Argument indicating if the calculation should be done using a highly
 accurate approximation, "approximate", or if the calculations should be done using an exact
 binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
