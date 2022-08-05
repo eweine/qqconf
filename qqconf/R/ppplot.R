@@ -53,9 +53,10 @@
 #' \code{ppoints(n, a=0)}, which are the expected
 #' values of the order statistics of Uniform(0, 1).  When
 #'  this argument is set to \code{"median"}, \code{qbeta(.5, c(1:n), c(n:1))},
-#'  the median of the order statistics of Uniform(0, 1) will be used. For a
+#'  the medians of the order statistics of Uniform(0, 1) will be used. For a
 #'  PP plot, there is no particular theoretical justification for setting this
-#'  argument to \code{"normal"}, but it is an option because it is used in some
+#'  argument to \code{"normal"}, which results in \code{ppoints(n)}, but it is
+#'  an option because it is used in some
 #'  other packages. When \code{alpha} is large, \code{"median"} is recommended.
 #' @param ... Additional arguments passed to the plot function.
 #'
