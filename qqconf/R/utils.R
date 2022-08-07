@@ -113,7 +113,23 @@ estimate_params_from_data <- function(distr_name, obs) {
         dparams['mean'] <- median(x = obs)
         dparams['sd'] <- robustbase::Sn(x = obs)
 
-      } else {
+      } else if (distr_name == "t") {
+
+        dparams <- list()
+        suppressWarnings({
+          param_ests <- MASS::fitdistr(
+            x = obs,
+            densfun = "t",
+            start = list(df = 2, m = 1),
+            s = 1
+          )$estimate
+        })
+
+        dparams['ncp'] <- param_ests['m']
+        dparams['df'] <- param_ests['df']
+
+      }
+      else {
 
         suppressWarnings({
           dparams <- MASS::fitdistr(x = obs, densfun = distr_name)$estimate
