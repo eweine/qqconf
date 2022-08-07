@@ -624,7 +624,7 @@ get_qq_band <- function(
     },
     error = function(e){
       message('Error applying distribution to calculated bounds.')
-      message('Did you specify all necessary parameter of distribution?')
+      message('Did you specify all necessary parameters of distribution?')
       message(e)
     }
   )
