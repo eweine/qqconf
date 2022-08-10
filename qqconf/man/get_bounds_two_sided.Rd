@@ -17,18 +17,18 @@ get_bounds_two_sided(
 
 \item{n}{Size of the dataset.}
 
-\item{tol}{(Optional) Relative tolerance of the \code{alpha} level of the
+\item{tol}{(optional) Relative tolerance of the \code{alpha} level of the
 simultaneous test. Defaults to 1e-8. Used only if \code{method} is set to
 "search" or if method is set to "best_available" and the best available
 method is a search.}
 
-\item{max_it}{(Optional) Maximum number of iterations of Binary Search Algorithm
+\item{max_it}{(optional) Maximum number of iterations of Binary Search Algorithm
 used to find the bounds. Defaults to 100 which should be much larger than necessary
 for a reasonable tolerance. Used only if \code{method} is set to
 "search" or if method is set to "best_available" and the best available
 method is a search.}
 
-\item{method}{(Optional) Parameter indicating if the calculation should be done using a highly
+\item{method}{(optional) Argument indicating if the calculation should be done using a highly
 accurate approximation, "approximate", or if the calculations should be done using an exact
 binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
@@ -43,7 +43,8 @@ A list with components
   for the acceptance regions of the test of each order statistic.
   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
   for the acceptance regions of the test of each order statistic.
-  \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+  \item x - Numeric vector of length \code{n} containing the expectation of each order statistic.
+  These are the x-coordinates for the bounds if used in a pp-plot.
   The value is \code{c(1:n) / (n + 1)}.
   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
   statistics and will be less than \code{alpha} for all \code{n} > 1.
@@ -67,6 +68,5 @@ the global test is rejected.
 }
 \examples{
 get_bounds_two_sided(alpha = .05, n = 100)
-
 
 }

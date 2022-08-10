@@ -20,6 +20,7 @@ pp_conf_plot(
   pointwise_lines_params = list(),
   points_params = list(),
   polygon_params = list(border = NA, col = "gray"),
+  prob_pts_method = c("uniform", "median", "normal"),
   ...
 )
 }
@@ -40,16 +41,16 @@ expected values on the vertical axis.}
 
 \item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values).}
 
-\item{right_tail}{This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
+\item{right_tail}{This argument is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
 the x-axis is -log10(1 - Expected Probability) and the y-axis is -log10(1 - Observed Probability).
 When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is
--log10(Observed Probability). The parameter should be set to \code{TRUE} to make
+-log10(Observed Probability). The argument should be set to \code{TRUE} to make
 observations in the right tail of the distribution easier to see, and set to false to make the
 observations in the left tail of the distribution easier to see.}
 
 \item{add}{Whether to add points to an existing plot.}
 
-\item{dparams}{List of additional parameters for the probability function of the distribution
+\item{dparams}{List of additional arguments for the probability function of the distribution
 (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
 on the unspecified parameters, and instead they will take on the default values set by the distribution function.
 For the uniform distribution, parameter estimation is not performed, and
@@ -60,23 +61,34 @@ For the normal distribution, we estimate the mean as the median and the standard
 the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 parameters of the distribution must be provided by the user.}
 
-\item{bounds_params}{List of optional parameters for get_bounds_two_sided
+\item{bounds_params}{List of optional arguments for \code{get_bounds_two_sided}.
 (i.e. \code{tol}, \code{max_it}, \code{method}).}
 
-\item{line_params}{Parameters passed to the line function to modify the line that indicates a perfect fit of the
+\item{line_params}{arguments passed to the line function to modify the line that indicates a perfect fit of the
 reference distribution.}
 
 \item{plot_pointwise}{Boolean indicating whether pointwise bounds should be added to the plot}
 
-\item{pointwise_lines_params}{Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
+\item{pointwise_lines_params}{arguments passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 set to TRUE.}
 
-\item{points_params}{Parameters to be passed to the \code{points} function to plot the data.}
+\item{points_params}{arguments to be passed to the \code{points} function to plot the data.}
 
-\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
+\item{polygon_params}{Arguments to be passed to the polygon function to construct simultaneous confidence region.
 By default \code{border} is set to NA and \code{col} is set to grey.}
 
-\item{...}{Additional parameters passed to the plot function.}
+\item{prob_pts_method}{(optional) method used to get probability points for
+plotting. The default value, \code{"uniform"}, results in
+\code{ppoints(n, a=0)}, which are the expected
+values of the order statistics of Uniform(0, 1).  When
+ this argument is set to \code{"median"}, \code{qbeta(.5, c(1:n), c(n:1))},
+ the medians of the order statistics of Uniform(0, 1) will be used. For a
+ PP plot, there is no particular theoretical justification for setting this
+ argument to \code{"normal"}, which results in \code{ppoints(n)}, but it is
+ an option because it is used in some
+ other packages. When \code{alpha} is large, \code{"median"} is recommended.}
+
+\item{...}{Additional arguments passed to the plot function.}
 }
 \value{
 None, PP plot is produced.

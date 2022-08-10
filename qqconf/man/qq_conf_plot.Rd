@@ -20,13 +20,14 @@ qq_conf_plot(
   pointwise_lines_params = list(),
   points_params = list(),
   polygon_params = list(border = NA, col = "gray"),
+  prob_pts_method = c("best_available", "normal", "uniform", "median"),
   ...
 )
 }
 \arguments{
 \item{obs}{The observed data.}
 
-\item{distribution}{The quantile function for the specified distribution. Defaults to qnorm.
+\item{distribution}{The quantile function for the specified distribution. Defaults to \code{qnorm}.
 Custom distributions are allowed as long as all parameters are supplied in dparams.}
 
 \item{method}{Method for simultaneous testing bands. Must be either "ell" (equal local levels test), which applies a level \eqn{\eta} pointwise
@@ -41,18 +42,18 @@ expected values on the vertical axis.}
 \item{log10}{Whether to plot axes on -log10 scale (e.g. to see small p-values). Can only be used for strictly
 positive distributions.}
 
-\item{right_tail}{This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
+\item{right_tail}{This argument is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
 the x-axis is -log10(1 - Expected Quantile) and the y-axis is -log10(1 - Observed Quantile).
 When \code{FALSE} (default) the x-axis is -log10(Expected Quantile) and the y-axis is
--log10(Observed Quantile). The parameter should be set to \code{TRUE} only when the support
+-log10(Observed Quantile). The argument should be set to \code{TRUE} only when the support
 of the distribution lies in (0, 1), and one wants to make
-observations in the right tail of the distribution easier to see. The parameter should be
+observations in the right tail of the distribution easier to see. The argument should be
 set to \code{FALSE} when one wants to make
 observations in the left tail of the distribution easier to see.}
 
 \item{add}{Whether to add points to an existing plot.}
 
-\item{dparams}{List of additional parameters for the quantile function of the distribution
+\item{dparams}{List of additional arguments for the quantile function of the distribution
 (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
 on the unspecified parameters, and instead they will take on the default values set by the distribution function.
 For the uniform distribution, parameter estimation is not performed, and
@@ -63,23 +64,36 @@ For the normal distribution, we estimate the mean as the median and the standard
 the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 parameters of the distribution must be provided by the user.}
 
-\item{bounds_params}{List of optional parameters for get_bounds_two_sided
+\item{bounds_params}{List of optional arguments for \code{get_bounds_two_sided}
 (i.e. \code{tol}, \code{max_it}, \code{method}).}
 
-\item{line_params}{Parameters passed to the \code{lines} function to modify the line that indicates a perfect fit of the
+\item{line_params}{Arguments passed to the \code{lines} function to modify the line that indicates a perfect fit of the
 reference distribution.}
 
 \item{plot_pointwise}{Boolean indicating whether pointwise bounds should be added to the plot}
 
-\item{pointwise_lines_params}{Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
+\item{pointwise_lines_params}{Arguments passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 set to TRUE.}
 
-\item{points_params}{Parameters to be passed to the \code{points} function to plot the data.}
+\item{points_params}{Arguments to be passed to the \code{points} function to plot the data.}
 
-\item{polygon_params}{Parmeters to be passed to the polygon function to construct simultaneous confidence region.
+\item{polygon_params}{Arguments to be passed to the polygon function to construct simultaneous confidence region.
 By default \code{border} is set to NA and \code{col} is set to grey.}
 
-\item{...}{Additional parameters passed to the plot function.}
+\item{prob_pts_method}{(optional) method used to get probability points for plotting.
+The quantile function will be applied to these points to
+get the expected values.  When this argument is set to \code{"normal"}
+(recommended for a normal QQ plot) \code{ppoints(n)} will be used,  which is what
+most other plotting software uses. When this argument is set to \code{"uniform"}
+(recommended for a uniform QQ plot) \code{ppoints(n, a=0)}, which are the expected
+values of the order statistics of Uniform(0, 1), will be used.  Finally,
+ when this argument is set to \code{"median"} (recommended for all other
+ distributions) \code{qbeta(.5, c(1:n), c(n:1))} will be used. Under the default
+ setting, \code{"best_available"}, the probability points as recommended above will
+ be used. Note that \code{"median"} is suitable for all distributions and is
+ particularly recommended when alpha is large.}
+
+\item{...}{Additional arguments passed to the plot function.}
 }
 \value{
 None, QQ plot is produced.

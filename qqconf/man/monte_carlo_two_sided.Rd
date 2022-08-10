@@ -15,7 +15,7 @@ are in ascending order.}
 for the ith order statistic. The values must be in ascending order and
 the ith component must be larger than the ith component of the lower bounds.}
 
-\item{num_sims}{(Optional) Number of simulations to be run, 1 Million by default.}
+\item{num_sims}{(optional) Number of simulations to be run, 1 Million by default.}
 }
 \value{
 Type I Error Rate \eqn{\alpha}

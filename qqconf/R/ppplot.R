@@ -21,14 +21,14 @@
 #' @param difference Whether to plot the difference between the observed and
 #'   expected values on the vertical axis.
 #' @param log10 Whether to plot axes on -log10 scale (e.g. to see small p-values).
-#' @param right_tail This parameter is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
+#' @param right_tail This argument is only used if \code{log10} is \code{TRUE}. When \code{TRUE},
 #' the x-axis is -log10(1 - Expected Probability) and the y-axis is -log10(1 - Observed Probability).
 #' When \code{FALSE} (default) the x-axis is -log10(Expected Probability) and the y-axis is
-#' -log10(Observed Probability). The parameter should be set to \code{TRUE} to make
+#' -log10(Observed Probability). The argument should be set to \code{TRUE} to make
 #' observations in the right tail of the distribution easier to see, and set to false to make the
 #' observations in the left tail of the distribution easier to see.
 #' @param add Whether to add points to an existing plot.
-#' @param dparams List of additional parameters for the probability function of the distribution
+#' @param dparams List of additional arguments for the probability function of the distribution
 #'   (e.g. df=1). Note that if any parameters of the distribution are specified, parameter estimation will not be performed
 #'   on the unspecified parameters, and instead they will take on the default values set by the distribution function.
 #'   For the uniform distribution, parameter estimation is not performed, and
@@ -38,17 +38,27 @@
 #'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
 #'   the code uses MLE to estimate the parameters. Note that estimation is not implemented for custom distributions, so all
 #'   parameters of the distribution must be provided by the user.
-#' @param bounds_params List of optional parameters for get_bounds_two_sided
+#' @param bounds_params List of optional arguments for \code{get_bounds_two_sided}.
 #'   (i.e. \code{tol}, \code{max_it}, \code{method}).
-#' @param line_params Parameters passed to the line function to modify the line that indicates a perfect fit of the
+#' @param line_params arguments passed to the line function to modify the line that indicates a perfect fit of the
 #'   reference distribution.
 #' @param plot_pointwise Boolean indicating whether pointwise bounds should be added to the plot
-#' @param pointwise_lines_params Parameters passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
+#' @param pointwise_lines_params arguments passed to the \code{lines} function that modifies pointwise bounds when plot_pointwise is
 #'   set to TRUE.
-#' @param points_params Parameters to be passed to the \code{points} function to plot the data.
-#' @param polygon_params Parmeters to be passed to the polygon function to construct simultaneous confidence region.
+#' @param points_params arguments to be passed to the \code{points} function to plot the data.
+#' @param polygon_params Arguments to be passed to the polygon function to construct simultaneous confidence region.
 #'   By default \code{border} is set to NA and \code{col} is set to grey.
-#' @param ... Additional parameters passed to the plot function.
+#' @param prob_pts_method (optional) method used to get probability points for
+#' plotting. The default value, \code{"uniform"}, results in
+#' \code{ppoints(n, a=0)}, which are the expected
+#' values of the order statistics of Uniform(0, 1).  When
+#'  this argument is set to \code{"median"}, \code{qbeta(.5, c(1:n), c(n:1))},
+#'  the medians of the order statistics of Uniform(0, 1) will be used. For a
+#'  PP plot, there is no particular theoretical justification for setting this
+#'  argument to \code{"normal"}, which results in \code{ppoints(n)}, but it is
+#'  an option because it is used in some
+#'  other packages. When \code{alpha} is large, \code{"median"} is recommended.
+#' @param ... Additional arguments passed to the plot function.
 #'
 #' @export
 #'
@@ -102,66 +112,14 @@ pp_conf_plot <- function(obs,
                          pointwise_lines_params = list(),
                          points_params = list(),
                          polygon_params = list(border = NA, col = 'gray'),
+                         prob_pts_method = c("uniform", "median", "normal"),
                          ...) {
 
-  dist_name <- as.character(substitute(distribution))
+  if (!("q" %in% names(formals(distribution)))) {
 
-  if(length(dparams) == 0) {
-    # equivalence between base R and MASS::fitdistr distribution names
-    corresp <- function(distributionName) {
-      switch(
-        distributionName,
-        pbeta = "beta",
-        pcauchy = "cauchy",
-        pchisq = "chi-squared",
-        pexp = "exponential",
-        pf = "f",
-        pgamma = "gamma",
-        pgeom = "geometric",
-        plnorm = "log-normal",
-        plogis = "logistic",
-        pnorm = "normal",
-        pnbinom = "negative binomial",
-        ppois = "poisson",
-        pt = "t",
-        pweibull = "weibull",
-        NULL
-      )
-    }
+    stop("distribution function must take 'q' as an argument.
+         Did you mean to make a QQ plot?")
 
-    # initial value for some distributions
-    initVal <- function(distributionName) {
-      switch(
-        distributionName,
-        pbeta = list(shape1 = 1, shape2 = 1),
-        pchisq = list(df = 1),
-        pf = list(df1 = 1, df2 = 2),
-        pt = list(df = 1),
-        NULL
-      )
-    }
-
-    suppressWarnings({
-      if(!is.null(corresp(dist_name))) {
-        if(is.null(initVal(dist_name))) {
-          if(corresp(dist_name) == "normal") {
-
-            # Use special estimators for the normal distribution
-            dparams <- c()
-            dparams['mean'] <- median(x = obs)
-            dparams['sd'] <- robustbase::Sn(x = obs)
-
-          } else {
-
-            dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name))$estimate
-
-          }
-
-        } else {
-          dparams <- MASS::fitdistr(x = obs, densfun = corresp(dist_name), start = initVal(dist_name))$estimate
-        }
-      }
-    })
   }
 
   dots <- list(...)
@@ -197,81 +155,102 @@ pp_conf_plot <- function(obs,
     dots <- within(dots, rm(xlab))
   }
 
-  samp.size <- length(obs)
-  conf.int <- 1 - alpha
-  conf <- c(alpha / 2, conf.int + alpha / 2)
+  samp_size <- length(obs)
+  conf_int <- 1 - alpha
+  conf <- c(alpha / 2, conf_int + alpha / 2)
   ## The observed and expected probabilities. Expected probabilities are based on the specified
   ## distribution
   # constant for visual expansion of confidence regions
   c <- .5
-  obs.pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
-  exp.pts <- ppoints(samp.size, a=0)
+
+  dist_name <- as.character(substitute(distribution))
+  if(length(dparams) == 0 && dist_name == "punif") {
+
+    dparams['min'] <- 0
+    dparams['max'] <- 1
+
+  } else if (length(dparams) == 0) {
+
+    cat("no dparams supplied. Estimating parameters from the data...\n")
+    MASS_name <- get_mass_name_from_distr(dist_name, "pp")
+    dparams <- estimate_params_from_data(MASS_name, obs)
+
+  }
+
+  prob_pts_method <- match.arg(prob_pts_method)
+
+  qq_distribution <- get_qq_distribution_from_pp_distribution(
+    as.character(substitute(distribution))
+  )
+
+  global_bounds_qq <- get_qq_band(
+    obs = obs,
+    alpha = alpha,
+    distribution = qq_distribution,
+    dparams = dparams,
+    ell_params = bounds_params,
+    band_method = method,
+    prob_pts_method = prob_pts_method
+  )
+
+  global_low <- do.call(distribution, c(list(q=global_bounds_qq$lower_bound), dparams))
+  global_high <- do.call(distribution, c(list(q=global_bounds_qq$upper_bound), dparams))
+
+  exp_pts <- do.call(distribution, c(list(q=global_bounds_qq$expected_value), dparams))
+
+  obs_pts <- do.call(distribution, c(list(q=sort(obs)), dparams))
+
+  ext_quantile <- get_extended_quantile(prob_pts_method, samp_size)
+
   if (log10 == TRUE && right_tail == TRUE) {
 
-    exp.pts <- -log10(1 - exp.pts)
-    low_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10((1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
-    obs.pts <- -log10(1 - obs.pts)
+    exp_pts <- -log10(1 - exp_pts)
+    low_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp_pts[samp_size]
+    obs_pts <- -log10(1 - obs_pts)
 
   }
   else if (log10 == TRUE) {
 
-    exp.pts <- -log10(exp.pts)
-    low_exp_pt <- c * -log10(1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * -log10(1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
-    obs.pts <- -log10(obs.pts)
+    exp_pts <- -log10(exp_pts)
+    low_exp_pt <- c * -log10(ext_quantile$low_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * -log10(ext_quantile$high_pt) + (1 - c) * exp_pts[samp_size]
+    obs_pts <- -log10(obs_pts)
 
   }
   else {
 
-    low_exp_pt <- c * (1 / max(samp.size * 1.25, samp.size + 2)) + (1 - c) * exp.pts[1]
-    high_exp_pt <- c * (1 - (1 / max(samp.size * 1.25, samp.size + 2))) + (1 - c) * exp.pts[samp.size]
+    low_exp_pt <- c * (ext_quantile$low_pt) + (1 - c) * exp_pts[1]
+    high_exp_pt <- c * (ext_quantile$high_pt) + (1 - c) * exp_pts[samp_size]
 
   }
   if (difference) {
-    y.pts <- obs.pts - exp.pts
+    y_pts <- obs_pts - exp_pts
   } else {
-    y.pts <- obs.pts
+    y_pts <- obs_pts
   }
 
   ## When not adding points to a pp-plot compute pointwise and global confidence bounds.
   if (!add) {
-    left <- exp.pts[1]
-    right <- exp.pts[samp.size]
-    bottom <- min(y.pts) #obs.pts[1]
-    top <- max(y.pts) #obs.pts[samp.size]
+    left <- exp_pts[1]
+    right <- exp_pts[samp_size]
+    bottom <- min(y_pts) #obs_pts[1]
+    top <- max(y_pts) #obs_pts[samp_size]
     do.call(plot, c(list(x=c(left, right), y=c(bottom, top), type='n', xlab=xlab, ylab=ylab), dots))
 
-    pointwise.low <- qbeta(conf[1], 1:samp.size, samp.size:1)
-    pointwise.high <- qbeta(conf[2], 1:samp.size, samp.size:1)
-
-    global.bounds <- do.call(get_bounds_two_sided,
-                             c(list(alpha = alpha, n = samp.size), bounds_params))
-
-    if (method == "ell") {
-
-      global.low <- global.bounds$lower_bound
-      global.high <- global.bounds$upper_bound
-
-    } else if (method == "ks") {
-
-      probs <- ppoints(samp.size)
-      epsilon <- sqrt((1 / (2 * samp.size)) * log(2 / (1 - conf.int)))
-      global.low <- pmax(probs - epsilon, rep(0, samp.size))
-      global.high <- pmin(probs + epsilon, rep(1, samp.size))
-
-    }
+    pointwise_low <- qbeta(conf[1], 1:samp_size, samp_size:1)
+    pointwise_high <- qbeta(conf[2], 1:samp_size, samp_size:1)
 
     if (log10 == TRUE && right_tail == TRUE) {
-      pointwise.low <- -log10(1 - pointwise.low)
-      pointwise.high <- -log10(1 - pointwise.high)
-      global.low <- -log10(1 - global.low)
-      global.high <- -log10(1 - global.high)
+      pointwise_low <- -log10(1 - pointwise_low)
+      pointwise_high <- -log10(1 - pointwise_high)
+      global_low <- -log10(1 - global_low)
+      global_high <- -log10(1 - global_high)
     } else if (log10 == TRUE) {
-      pointwise.low <- -log10(pointwise.low)
-      pointwise.high <- -log10(pointwise.high)
-      global.low <- -log10(global.low)
-      global.high <- -log10(global.high)
+      pointwise_low <- -log10(pointwise_low)
+      pointwise_high <- -log10(pointwise_high)
+      global_low <- -log10(global_low)
+      global_high <- -log10(global_high)
     }
 
     if ("ylim" %in% names(dots)) {
@@ -281,76 +260,76 @@ pp_conf_plot <- function(obs,
 
     } else {
 
-      global.low_temp <- global.low[is.finite(global.low)]
-      global.high_temp <- global.high[is.finite(global.high)]
-      bottom <- min(global.low_temp) - 1000
-      top <- max(global.high_temp) + 1000
+      global_low_temp <- global_low[is.finite(global_low)]
+      global_high_temp <- global_high[is.finite(global_high)]
+      bottom <- min(global_low_temp) - 1000
+      top <- max(global_high_temp) + 1000
 
     }
 
     if (difference) {
 
-      low_global_diff <- global.low - exp.pts
-      low_global_diff <- c(low_global_diff[1], low_global_diff, low_global_diff[samp.size])
-      high_global_diff <- global.high - exp.pts
-      high_global_diff <- c(high_global_diff[1], high_global_diff, high_global_diff[samp.size])
-      low_pointwise_diff <- pointwise.low - exp.pts
-      low_pointwise_diff <- c(low_pointwise_diff[1], low_pointwise_diff, low_pointwise_diff[samp.size])
-      high_pointwise_diff <- pointwise.high - exp.pts
-      high_pointwise_diff <- c(high_pointwise_diff[1], high_pointwise_diff, high_pointwise_diff[samp.size])
-      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      low_global_diff <- global_low - exp_pts
+      low_global_diff <- c(low_global_diff[1], low_global_diff, low_global_diff[samp_size])
+      high_global_diff <- global_high - exp_pts
+      high_global_diff <- c(high_global_diff[1], high_global_diff, high_global_diff[samp_size])
+      low_pointwise_diff <- pointwise_low - exp_pts
+      low_pointwise_diff <- c(low_pointwise_diff[1], low_pointwise_diff, low_pointwise_diff[samp_size])
+      high_pointwise_diff <- pointwise_high - exp_pts
+      high_pointwise_diff <- c(high_pointwise_diff[1], high_pointwise_diff, high_pointwise_diff[samp_size])
+      exp_pts <- c(low_exp_pt, exp_pts, high_exp_pt)
 
       do.call(
         polygon,
-        c(list(x = c(exp.pts, rev(exp.pts)),
+        c(list(x = c(exp_pts, rev(exp_pts)),
                y = pmin(pmax(c(low_global_diff, rev(high_global_diff)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
 
-        do.call(lines, c(list(x = exp.pts, y = low_pointwise_diff), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = high_pointwise_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = low_pointwise_diff), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = high_pointwise_diff), pointwise_lines_params))
 
       }
 
     } else {
 
       # code to extend region for visibility
-      global.low <- c(global.low[1], global.low, global.low[samp.size])
-      global.high <- c(global.high[1], global.high, global.high[samp.size])
-      pointwise.low <- c(pointwise.low[1], pointwise.low, pointwise.low[samp.size])
-      pointwise.high <- c(pointwise.high[1], pointwise.high, pointwise.high[samp.size])
-      exp.pts <- c(low_exp_pt, exp.pts, high_exp_pt)
+      global_low <- c(global_low[1], global_low, global_low[samp_size])
+      global_high <- c(global_high[1], global_high, global_high[samp_size])
+      pointwise_low <- c(pointwise_low[1], pointwise_low, pointwise_low[samp_size])
+      pointwise_high <- c(pointwise_high[1], pointwise_high, pointwise_high[samp_size])
+      exp_pts <- c(low_exp_pt, exp_pts, high_exp_pt)
 
       do.call(
         polygon,
-        c(list(x = c(exp.pts, rev(exp.pts)),
-               y = pmin(pmax(c(global.low, rev(global.high)), bottom), top)),
+        c(list(x = c(exp_pts, rev(exp_pts)),
+               y = pmin(pmax(c(global_low, rev(global_high)), bottom), top)),
           polygon_params)
       )
       if (plot_pointwise) {
 
-        do.call(lines, c(list(x = exp.pts, y = pointwise.low), pointwise_lines_params))
-        do.call(lines, c(list(x = exp.pts, y = pointwise.high), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = pointwise_low), pointwise_lines_params))
+        do.call(lines, c(list(x = exp_pts, y = pointwise_high), pointwise_lines_params))
 
       }
 
     }
 
-    do.call(points, c(list(x = exp.pts[2:(samp.size + 1)], y = y.pts), points_params))
+    do.call(points, c(list(x = exp_pts[2:(samp_size + 1)], y = y_pts), points_params))
 
   } else {
 
-    do.call(points, c(list(x = exp.pts, y = y.pts), points_params))
+    do.call(points, c(list(x = exp_pts, y = y_pts), points_params))
 
   }
   if (difference) {
 
-    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(0, 0)), line_params))
+    do.call(lines, c(list(x = c(min(exp_pts), max(exp_pts)), y = c(0, 0)), line_params))
 
   } else{
 
-    do.call(lines, c(list(x = c(min(exp.pts), max(exp.pts)), y = c(min(exp.pts), max(exp.pts))), line_params))
+    do.call(lines, c(list(x = c(min(exp_pts), max(exp_pts)), y = c(min(exp_pts), max(exp_pts))), line_params))
 
   }
 

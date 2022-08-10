@@ -66,7 +66,7 @@ check_bounds_two_sided <- function(lower_bounds,
 #' @param upper_bounds Numeric vector where the ith component is the lower bound
 #' for the ith order statistic. The values must be in ascending order and
 #' the ith component must be larger than the ith component of the lower bounds.
-#' @param num_sims (Optional) Number of simulations to be run, 1 Million by default.
+#' @param num_sims (optional) Number of simulations to be run, 1 Million by default.
 #'
 #' @return Type I Error Rate \eqn{\alpha}
 #'
@@ -180,8 +180,6 @@ get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 #' Kolmogorov-Smirnov type statistics. arXiv:2009.04954}}
 #' }
 #'
-#' @importFrom rlang .data
-#'
 #' @useDynLib qqconf
 #'
 #' @export
@@ -214,16 +212,16 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #'
 #' @param alpha Desired global significance level of the test.
 #' @param n Size of the dataset.
-#' @param tol (Optional) Relative tolerance of the \code{alpha} level of the
+#' @param tol (optional) Relative tolerance of the \code{alpha} level of the
 #' simultaneous test. Defaults to 1e-8. Used only if \code{method} is set to
 #' "search" or if method is set to "best_available" and the best available
 #' method is a search.
-#' @param max_it (Optional) Maximum number of iterations of Binary Search Algorithm
+#' @param max_it (optional) Maximum number of iterations of Binary Search Algorithm
 #' used to find the bounds. Defaults to 100 which should be much larger than necessary
 #' for a reasonable tolerance. Used only if \code{method} is set to
 #' "search" or if method is set to "best_available" and the best available
 #' method is a search.
-#' @param method (Optional) Parameter indicating if the calculation should be done using a highly
+#' @param method (optional) Argument indicating if the calculation should be done using a highly
 #' accurate approximation, "approximate", or if the calculations should be done using an exact
 #' binary search calculation, "search". The default is "best_available" (recommended), which uses the exact search
 #' when either (i) the approximation isn't available or (ii) the approximation is available but isn't highly accurate and the search method
@@ -237,7 +235,8 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #'   for the acceptance regions of the test of each order statistic.
 #'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
 #'   for the acceptance regions of the test of each order statistic.
-#'   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic. These are the x-coordinates for the bounds if used in a qq-plot.
+#'   \item x - Numeric vector of length \code{n} containing the expectation of each order statistic.
+#'   These are the x-coordinates for the bounds if used in a pp-plot.
 #'   The value is \code{c(1:n) / (n + 1)}.
 #'   \item local_level - Significance level \eqn{\eta} of the local test on each individual order statistic. It is equal for all order
 #'   statistics and will be less than \code{alpha} for all \code{n} > 1.
@@ -246,6 +245,7 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 #' @examples
 #' get_bounds_two_sided(alpha = .05, n = 100)
 #'
+#' @importFrom utils head tail
 #'
 #' @export
 get_bounds_two_sided <- function(alpha,
@@ -281,7 +281,6 @@ get_bounds_two_sided <- function(alpha,
 
   }
 
-  `%>%` <- magrittr::`%>%`
   n_param <- n
   if (n >= 10) {
 
@@ -340,39 +339,37 @@ get_bounds_two_sided <- function(alpha,
 
   else if (method == "approximate") {
 
-    if (!(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-          dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
-          dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
+    if (!(between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+          between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
+          between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))) {
 
       stop("The approximate method is only configured for alpha = .1, .05, .01. Consider setting method='search'")
 
     }
 
-    if (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
+    if (between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
 
       lookup_table <- alpha_01_df
 
-    } else if (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
+    } else if (between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
 
       lookup_table <- alpha_05_df
 
     }
 
     if (
-      dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-        dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
+      between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+        between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)
         ) {
 
       if (n %in% lookup_table$n) {
 
-        eta_df <- lookup_table %>%
-          dplyr::filter(n == n_param)
-
+        eta_df <- lookup_table[lookup_table$n == n_param, ]
         eta <- eta_df$local_level[1]
 
       } else if (
-        (dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) ||
-          (dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
+        (between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) && n > 10 ^ 5) ||
+          (between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) && n > 10 ^ 5)) {
 
         eta <- get_asymptotic_approx_corrected_alpha(n, alpha)
 
@@ -380,19 +377,13 @@ get_bounds_two_sided <- function(alpha,
       else {
 
         # Do linear interpolation
-        larger_n_df <- lookup_table %>%
-          dplyr::filter(n > n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_head()
-
+        larger_n_df <- lookup_table[lookup_table$n > n_param, ]
+        larger_n_df <- head(larger_n_df, 1)
         larger_n <- larger_n_df$n[1]
         larger_n_eta <- larger_n_df$local_level[1]
 
-        smaller_n_df <- lookup_table %>%
-          dplyr::filter(n < n_param) %>%
-          dplyr::arrange(n) %>%
-          dplyr::slice_tail()
-
+        smaller_n_df <- lookup_table[lookup_table$n < n_param, ]
+        smaller_n_df <- tail(smaller_n_df, 1)
         smaller_n <- smaller_n_df$n[1]
         smaller_n_eta <- smaller_n_df$local_level[1]
 
@@ -417,10 +408,10 @@ get_bounds_two_sided <- function(alpha,
   else if (method == "best_available") {
 
     # Don't return approximation for alpha = .1 and n <= 500, it's not accurate
-    if (dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon) && n <= 500 ||
-        !(dplyr::between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
-          dplyr::between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
-          dplyr::between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))
+    if (between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon) && n <= 500 ||
+        !(between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon) ||
+          between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon) ||
+          between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon))
         ) {
 
       return(
@@ -457,5 +448,221 @@ get_bounds_two_sided <- function(alpha,
               upper_bound = g_vals,
               x = order_stats_mean,
               local_level = eta))
+
+}
+
+#' Create QQ Plot Testing Band
+#'
+#' Flexible interface for creating a testing band for a Quantile-Quantile (QQ)
+#' plot.
+#'
+#' @param n,obs either a number of observations (specified by setting \code{n}),
+#' or a numeric vector of observations (specified by setting \code{obs}). One
+#' argument must be specified. If all parameters of \code{distribution}
+#' are known, then the testing band only depends on the number of observations \code{n}.
+#' Thus, providing \code{n} is simpler when all parameters
+#' of \code{distribution} are known and specified via \code{dparams}
+#' (or when using all default parameter choices of \code{distribution} is desired).
+#' If estimating parameters from the data is preferred, \code{obs} should be
+#' specified and estimation will take place as described in the documentation for
+#' argument \code{dparams}.
+#' @param alpha (optional) desired significance level of the testing band. If \code{method}
+#' is set to \code{"ell"} or \code{"ks"}, then this is the global significance
+#' level of the testing band. If \code{method} is set to \code{"pointwise"}, then
+#' the band is equivalent to simply conducting a level \code{alpha} test on each
+#' order statistic individually. Pointwise bands will generally have much
+#' larger global Type I error than \code{alpha}. Defaults to \code{.05}.
+#' @param distribution The quantile function for the specified distribution.
+#' Defaults to \code{qnorm}, which is appropriate for testing normality
+#' of the observations in a QQ plot.
+#' @param dparams (optional)  List of additional arguments for the \code{distribution} function
+#'   (e.g. df=1). If \code{obs} is not specified and this argument is left blank,
+#'   the default arguments of \code{distribution} are used. If \code{obs} is specified and this argument is left blank,
+#'   parameters are estimated from the data (except if \code{distribution} is set to \code{qunif},
+#'   in which case no estimation occurs and the default parameters are \code{max = 1} and \code{min = 0}).
+#'   For the normal distribution, we estimate the mean as the median and the standard deviation as \eqn{Sn} from the paper by Rousseeuw and Croux 1993
+#'   "Alternatives to the Median Absolute Deviation". For all other distributions besides uniform and normal,
+#'   the code uses MLE to estimate the parameters. Note that if any parameters of the distribution are specified
+#'   in \code{dparams}, parameter estimation will not be performed
+#'   on the unspecified parameters, and instead they will take on the default values
+#'   set by \code{distribution}.
+#' @param ell_params (optional) list of optional arguments for \code{get_bounds_two_sided}
+#'   (i.e. \code{tol}, \code{max_it}, \code{method}). Only used if \code{method}
+#'   is set to \code{"ell"}
+#' @param band_method (optional) method for creating the testing band. The default,
+#' \code{"ell"} uses the equal local levels method
+#' (see \code{get_bounds_two_sided} for more information). \code{"ks"} uses
+#' the Kolmogorov-Smirnov test. \code{"pointwise"} uses a pointwise band (see
+#' documentation for argument \code{alpha} for more information). \code{"ell"}
+#' is recommended and is the default.
+#' @param prob_pts_method (optional) method used to get probability points for
+#' use in a QQ plot. The quantile function will be applied to these points to
+#' get the expected values.  When this argument is set to \code{"normal"}
+#' (recommended for a normal QQ plot) \code{ppoints(n)} will be used,  which is what
+#' most other plotting software uses. When this argument is set to \code{"uniform"}
+#' (recommended for a uniform QQ plot) \code{ppoints(n, a=0)}, which are the expected
+#' values of the order statistics of Uniform(0, 1), will be used.  Finally,
+#'  when this argument is set to \code{"median"} (recommended for all other
+#'  distributions) \code{qbeta(.5, c(1:n), c(n:1))} will be used. Under the default
+#'  setting, \code{"best_available"}, the probability points as recommended above will
+#'  be used. Note that \code{"median"} is suitable for all distributions and is
+#'  particularly recommended when alpha is large.
+#'
+#' @return A list with components
+#' \itemize{
+#'   \item lower_bound - Numeric vector of length \code{n} containing the lower bounds
+#'   for the acceptance regions of the test corresponding to each order statistic.
+#'   These form the lower boundary of the testing band for the QQ-plot.
+#'   \item upper_bound - Numeric vector of length \code{n} containing the upper bounds
+#'   for the acceptance regions of the test corresponding to each order statistic.
+#'   These form the upper boundary of the testing band for the QQ-plot.
+#'   \item expected_value - Numeric vector of length \code{n} containing the
+#'   exact or approximate expectation (or median) of each order statistic, depending on how
+#'   \code{prob_pts_method} is set.
+#'   These are the x-coordinates for both the bounds and the data points
+#'   if used in a qq-plot. Note that
+#'   if adding a band to an already existing plot, it is essential that the same
+#'   x-coordinates be used for the bounds as were used to plot the data. Thus,
+#'   if some other x-coordinates have been used to plot the data those same
+#'   x-coordinates should always be used instead of this vector to plot the bounds.
+#'   \item dparams - List of arguments used to apply \code{distribution} to
+#'   \code{obs} (if observations are provided). If the user provides parameters,
+#'   then these parameters will simply be returned. If parameters are estimated
+#'   from the data, then the estimated parameters will be returned.
+#' }
+#' @export
+#'
+#' @examples
+#'
+#' # Get ell level .05 QQ testing band for normal(0, 1) distribution with 100 observations
+#' band <- get_qq_band(n = 100)
+#'
+#' # Get ell level .05 QQ testing band for normal distribution with unknown parameters
+#' obs <- rnorm(100)
+#' band <- get_qq_band(obs = obs)
+#'
+#' # Get ell level .05 QQ testing band for t(2) distribution with 100 observations
+#' band <- get_qq_band(
+#'   n = 100, distribution = qt, dparams = list(df = 2)
+#' )
+#'
+get_qq_band <- function(
+  n,
+  obs,
+  alpha = .05,
+  distribution = qnorm,
+  dparams = list(),
+  ell_params = list(),
+  band_method = c("ell", "ks", "pointwise"),
+  prob_pts_method = c("best_available", "normal", "uniform", "median")
+) {
+
+  if (missing(obs) && missing(n)) {
+
+    stop("one of obs or n must be supplied")
+
+  }
+
+  if (!("p" %in% names(formals(distribution)))) {
+
+    stop("distribution function must take 'p' as an argument.")
+
+  }
+
+  band_method <- match.arg(band_method)
+  prob_pts_method <- match.arg(prob_pts_method)
+  dist_name <- as.character(substitute(distribution))
+
+  if(!missing(obs)) {
+
+    n <- length(obs)
+    if (length(dparams) == 0) {
+
+      if (dist_name %in% c("qunif", "punif")) {
+
+        dparams['min'] <- 0
+        dparams['max'] <- 1
+
+      }
+      else {
+
+        cat("no dparams supplied. Estimating parameters from the data...\n")
+        MASS_name <- get_mass_name_from_distr(dist_name, "qq")
+        dparams <- estimate_params_from_data(MASS_name, obs)
+
+      }
+
+    }
+
+  }
+
+  if (prob_pts_method == "best_available") {
+
+    prob_pts_method <- get_best_available_prob_pts_method(dist_name)
+
+  }
+
+  if (prob_pts_method == "uniform") {
+
+    raw_exp_pts <- ppoints(n, a=0)
+
+  } else if (prob_pts_method == "normal") {
+
+    raw_exp_pts <- ppoints(n)
+
+  } else if (prob_pts_method == "median") {
+
+    raw_exp_pts <- qbeta(.5, c(1:n), c(n:1))
+
+  }
+
+  tryCatch(
+    expr = {
+
+      exp_pts <- do.call(distribution, c(list(p=raw_exp_pts), dparams))
+
+    },
+    error = function(e){
+      message('Error applying distribution to calculated bounds.')
+      message('Did you specify all necessary parameters of distribution?')
+      message(e)
+    }
+  )
+
+  if (band_method == "ell") {
+
+    ell_params["n"] <- n
+    ell_params["alpha"] <- alpha
+    ell_bounds <- do.call(get_bounds_two_sided, ell_params)
+    lower_bound <- ell_bounds$lower_bound
+    upper_bound <- ell_bounds$upper_bound
+
+  } else if (band_method == "ks") {
+
+    probs <- ppoints(n)
+    epsilon <- sqrt((1 / (2 * n)) * log(2 / alpha))
+    lower_bound <- pmax(probs - epsilon, rep(0, n))
+    upper_bound <- pmin(probs + epsilon, rep(1, n))
+
+  } else if (band_method == "pointwise") {
+
+    conf.int <- 1 - alpha
+    conf <- c(alpha / 2, conf.int + alpha / 2)
+    lower_bound <- qbeta(conf[1], 1:n, n:1)
+    upper_bound <- qbeta(conf[2], 1:n, n:1)
+
+  }
+
+  lower_bound <- do.call(distribution, c(list(p = lower_bound), dparams))
+  upper_bound <- do.call(distribution, c(list(p = upper_bound), dparams))
+
+  return(
+    list(
+      lower_bound = lower_bound,
+      upper_bound = upper_bound,
+      expected_value = exp_pts,
+      dparams = dparams
+    )
+  )
 
 }

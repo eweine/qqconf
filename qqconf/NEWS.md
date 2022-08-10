@@ -1,3 +1,7 @@
+# qqconf 1.3.0
+* Added function `get_qq_band()` to obtain testing band without making a plot.
+* Added argument `prob_pts_method` to control x-coordinates of PP and QQ plots.
+
 # qqconf 1.2.3
 
 * Replaced mm_malloc with fftw_malloc in cpp code for cross-compatibility.
