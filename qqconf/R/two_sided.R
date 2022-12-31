@@ -112,15 +112,16 @@ monte_carlo_two_sided <- function(lower_bounds,
 #' @return Approximate local level
 get_asymptotic_approx_corrected_alpha <- function(n, alpha) {
 
-  if (alpha == .01) {
+  alpha_epsilon <- 10 ^ (-5)
+  if (between(alpha, .01 - alpha_epsilon, .01 + alpha_epsilon)) {
 
     c_alpha <- 1.591
 
-  } else if (alpha == .05) {
+  } else if (between(alpha, .05 - alpha_epsilon, .05 + alpha_epsilon)) {
 
     c_alpha <- 1.3
 
-  } else if (alpha == .1) {
+  } else if (between(alpha, .1 - alpha_epsilon, .1 + alpha_epsilon)) {
 
     c_alpha <- 1.1
 
