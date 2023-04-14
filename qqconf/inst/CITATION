@@ -1,0 +1,13 @@
+bibentry(bibtype = "Article",
+  title        = "Application of Equal Local Levels to Improve {Q}-{Q} Plot Testing Bands with {R} Package {qqconf}",
+  author       = c(person(given = "Eric", family = "Weine", email = "ericweine15@gmail.com"),
+                   person(given = c("Mary", "Sara"), family = "McPeek", email = "mcpeek@uchicago.edu"),
+                   person(given = "Mark", family = "Abney", email = "abney@uchicago.edu")),
+  journal      = "Journal of Statistical Software",
+  year         = "2023",
+  volume       = "106",
+  number       = "10",
+  pages        = "1--31",
+  doi          = "10.18637/jss.v106.i10",
+  header       = "To cite qqconf in publications use:"
+)

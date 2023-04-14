@@ -189,7 +189,9 @@ get_level_from_bounds_two_sided <- function(lower_bounds,
 
   check_bounds_two_sided(lower_bounds, upper_bounds)
   alpha <- 1 - fft_get_level_from_bounds_two_sided(lower_bounds, upper_bounds)
-  return(alpha)
+  # for extremely tight bounds a negative answer may result from numerical
+  # instability. So, return 0 if the answer is negative
+  return(max(alpha, 0))
 
 }
 

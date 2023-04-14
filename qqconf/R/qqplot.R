@@ -108,7 +108,14 @@
 #'   line_params = list(col="red")
 #' )
 #'
-
+#' @references
+#' Weine, E., McPeek, MS., & Abney, M. (2023).
+#' Application of Equal Local Levels to Improve
+#' Q-Q Plot Testing Bands with R Package qqconf
+#' Journal of Statistical Software, 106(10).
+#' https://doi:10.18637/jss.v106.i10
+#'
+#'
 qq_conf_plot <- function(obs,
                          distribution = qnorm,
                          method = c("ell", "ks"),

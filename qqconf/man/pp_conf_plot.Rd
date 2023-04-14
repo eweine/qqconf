@@ -139,3 +139,10 @@ pp_conf_plot(
 )
 
 }
+\references{
+Weine, E., McPeek, MS., & Abney, M. (2023).
+Application of Equal Local Levels to Improve
+Q-Q Plot Testing Bands with R Package qqconf
+Journal of Statistical Software, 106(10).
+https://doi:10.18637/jss.v106.i10
+}

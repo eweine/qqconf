@@ -1,3 +1,9 @@
+# qqconf 1.3.2
+* Fixed bug where `get_level_from_bounds_two_sided()` will return negative values
+  (due to numerical instability) for very tight intervals which large `n`.
+* Added CITATION for JSS publication.
+* The DOI in the CITATION is for a new JSS publication that will be registered after publication on CRAN.
+
 # qqconf 1.3.1
 * Changed internal checking of alpha values for compatibility with `qqplotr`.
 
